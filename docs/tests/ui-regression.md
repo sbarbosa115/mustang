@@ -528,6 +528,44 @@ Signed in as sales, Settings. **Expected:** there is no Templates tab; the API l
 there) but creating one answers 403. Signed in as other@mustang.test, the list does not have First reply and its id
 answers 404, never 403. By hand: opening `/settings/templates` as sales or BDC lands on Today.
 
+**IMP-01 · A manager imports a customers file and the customers are there**
+Smoke: `e2e/imports.spec.ts`.
+Signed in as manager, open Settings, Import. **Expected:** "Customers" is chosen, its columns are explained and
+"Download the sample customers.csv" downloads the sample (three customers). Upload the sample as is: a toast says it is
+queued, Recent imports shows it as Queued or Importing, then Done with "3 created, 0 updated, 0 unchanged, 0 failed"
+without a reload. Elena Vargas is in Customers with her phone as (813) 555-7101, Sam Patel as Sales 1, a note with
+her notes and address, and on her consent page text and email granted with source import, "Imported from the dealer's
+previous CRM" and "Signed showroom form" as where. James Whitfield has no consent at all.
+
+**IMP-02 · The same file again updates and never duplicates**
+Smoke: `e2e/imports.spec.ts`.
+Upload the sample customers file a second time. **Expected:** "0 created, 0 updated, 3 unchanged, 0 failed"; still one
+Elena Vargas, one note, one consent per channel. Change her last name and add a new email in the file and upload it:
+"1 updated"; the customer has the new name and both emails. A row with the phone of a seeded customer updates that
+customer instead of adding one.
+
+**IMP-03 · Bad rows are listed by row and column, and the rest lands**
+Smoke: `e2e/imports.spec.ts`.
+Upload a customers file with a phone `12345`, a row without phone or email, `maybe` as sms_consent, a new customer
+without a last name, and one good row. **Expected:** Done with "1 created … 4 failed"; "Show 4 problems" lists each as
+"Row N:" (the header is row 1) with what is wrong and its column; nothing of a bad row is in Customers. A file without
+the last_name column, an empty file and a .png each fail with a reason; a file over 10 MB is refused before upload
+finishes with "The file is too large (10 MB at most)."
+
+**IMP-04 · A leads file opens a lead and its deal per row**
+Smoke (part): `e2e/imports.spec.ts` covers one lead; by hand: the deal, round robin and the timezone.
+Choose "Open leads" and upload the sample leads.csv. **Expected:** "3 created"; Leads lists Daniel Ortega (website,
+Sam Patel, received Jan 15 at 10:30 in the dealership's time), Priya Shah (phone) and Tom Becker (walk-in); Priya and
+Tom, who name no rep, went to the next reps in Lead routing's round robin. Each has a deal in New on Deals. Upload it
+again: "0 created", no second lead or deal. A received_at in the future or like `31/31/2025` fails its row.
+
+**IMP-05 · Only managers and admins import**
+Smoke: `e2e/imports.spec.ts`.
+Signed in as sales (and as bdc): Settings has no Import tab, `/settings/import` lands on Today, and the API answers 403
+to `GET /api/v1/imports`, to an upload and to the sample files. As admin the screen works as for a manager. Signed in
+as other@mustang.test, the address of a Mustang Motors import (`/api/v1/imports/{id}`) is 404 and their list does not
+show it.
+
 ## Emails
 
 **MAIL-01 · Every email is readable and links to a real screen**

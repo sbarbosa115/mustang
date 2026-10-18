@@ -184,3 +184,10 @@ deptrac:
     DataImportApplication: [DataImport, Shared, Events, CustomerApplication, LeadApplication, ComplianceApplication]
     Audit: [AuditApplication, Shared, Events, AccessApplication]
     AuditApplication: [Audit, Shared, Events, AccessApplication]
+  # Kept on purpose (item "data-import"): the Customer and Lead commands DataImport dispatches take these Domain enums
+  # as parameters (AddContact's kind, CaptureLead's source), so its adapters must name them to build the command.
+  skip_violations:
+    App\DataImport\Infrastructure\Adapter\CustomerRecordsAdapter:
+      - App\Customer\Domain\Model\ContactKind
+    App\DataImport\Infrastructure\Adapter\LeadIntakeAdapter:
+      - App\Lead\Domain\Model\LeadSource
