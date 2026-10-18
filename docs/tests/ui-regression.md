@@ -249,6 +249,56 @@ records, or say there are none; the Timeline tab says what will appear until the
 
 <!-- LEAD-01 – 06: item "leads". -->
 
+**LEAD-01 · Capture a walk-in for a new customer**
+Smoke: `e2e/leads.spec.ts`.
+As BDC, Leads, "Capture lead": source Walk-in, phone `813-555-0301`, first name `LEAD-01`, last name `Test`, vehicle
+`2025 RAV4 Hybrid`, Rep left on "Next in the round robin", then "Capture lead". **Expected:** a toast says the lead was
+captured and routed to a rep; the lead's page is titled "Lead from LEAD-01 Test" with status Assigned, source Walk-in,
+the vehicle and the rep's name (Jordan Reyes or Sam Patel, never "Unassigned"). "LEAD-01 Test" opens a new customer
+with the phone `(813) 555-0301`. By hand: the deal opened for the lead appears on the customer's Deals tab once
+"deals" lands.
+
+**LEAD-02 · A lead for a customer already on file is added to that customer**
+Smoke: `e2e/leads.spec.ts`.
+"Capture lead" with source Phone call and the phone `813.555.1001` (Sarah Johnson's number written with dots), no
+name. **Expected:** under the phone the form says "Adds the lead to Sarah Johnson, who is already a customer."; after
+capturing, the page says "Lead from Sarah Johnson" and searching customers for `813-555-1001` still finds one Sarah
+Johnson. By hand: the same with her email `Sarah.Johnson@example.com` typed in capitals and no phone.
+
+**LEAD-03 · The form explains what is missing**
+Smoke (part): `e2e/leads.spec.ts` covers the disabled button and the new customer without a name; by hand: the phone
+layout and the source list.
+Open "Capture lead". **Expected:** "Capture lead" stays disabled until there is a source and a phone or an email;
+with only an email nobody has (`lead03@example.com`) and no name, capturing says "This is a new customer: enter a
+first and a last name." and nothing is created. By hand: at 390 px the dialog scrolls and every field is reachable;
+the source list offers Phone call, Walk-in, Website, Entered by hand and Other (not Import); the Rep list offers the
+round robin, then active sales, BDC and manager users, never an admin or a deactivated user.
+
+**LEAD-04 · Round-robin order in Settings, Lead routing**
+Smoke: `e2e/leads.spec.ts`.
+As manager, Settings, "Lead routing". **Expected:** the active salespeople are listed (Jordan Reyes and Sam Patel)
+with the line "Next lead goes to …". Move Sam Patel up and "Save order": "Routing saved." and "Next lead goes to Sam
+Patel."; a lead captured with the round robin goes to Sam Patel and the next one to Jordan Reyes. Unticking everyone
+and saving says "Nobody is in the rotation: new leads wait unassigned." By hand: signed in as sales or BDC there is no
+"Lead routing" tab, and opening `/settings/routing` lands on Today; a deactivated salesperson disappears from the
+list and gets no leads.
+
+**LEAD-05 · Hand a lead to another rep, then close it**
+Smoke: `e2e/leads.spec.ts`.
+On a lead you captured: "Hand to" Brianna Diaz, "Assign"; then "Close lead" and confirm (the dialog names the
+customer). **Expected:** the Rep shows Brianna Diaz and a toast says the lead was handed to her; after closing the
+status is Closed, "Close lead" is gone and the rep picker is disabled. By hand: "Assign" is disabled while the picker
+shows the current rep.
+
+**LEAD-06 · Search and filter the list; another dealership cannot open a lead**
+Smoke (part): `e2e/leads.spec.ts` covers the search, the empty filter and the other dealership; by hand: the
+filters in the URL and the phone cards.
+On Leads, search `LEAD-0`, then choose status Closed with the search `zzz-nobody`, then "Show all". **Expected:**
+the leads captured above are listed newest first with their source, rep, status and a relative time (full timestamp
+on hover); the second search says "Nothing matches these filters." and "Show all" clears the search and both selects.
+Signed in as other@mustang.test, a lead's URL says "This lead does not exist or is not in your dealership." By hand:
+"My leads" lists only the signed-in rep's leads; status and source survive a reload; at 390 px each lead is a card.
+
 ## 8. Deals
 
 <!-- DEAL-01 – 07: item "deals". -->
