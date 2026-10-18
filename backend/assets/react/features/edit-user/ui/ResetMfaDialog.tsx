@@ -48,7 +48,9 @@ export function ResetMfaDialog({user, open, onOpenChange}: Props) {
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('mfa.title', {name: user.name})}</AlertDialogTitle>
+          <AlertDialogTitle>
+            {t('mfa.title', {name: user.name})}
+          </AlertDialogTitle>
           <AlertDialogDescription>
             {t('mfa.description', {name: user.name})}
           </AlertDialogDescription>

@@ -8,7 +8,6 @@ use App\Access\Application\Command\CreateUser;
 use App\Access\Application\Command\DeactivateUser;
 use App\Access\Application\Command\UpdateUser;
 use App\Access\Application\Query\UserQueries;
-use App\Access\Infrastructure\Security\SecurityUser;
 use App\Access\UI\Http\Input\CreateUserInput;
 use App\Access\UI\Http\Input\UpdateUserInput;
 use App\Access\UI\Http\Output\UserOutput;
@@ -20,6 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[OA\Tag(name: 'Users')]
 final class UserWriteController extends ApiController
@@ -47,7 +47,7 @@ final class UserWriteController extends ApiController
     #[OA\Response(response: 422, description: 'Invalid input', content: new OA\JsonContent(ref: '#/components/schemas/ValidationError'))]
     public function usersCreate(#[MapRequestPayload] CreateUserInput $input): JsonResponse
     {
-        $hash = $this->hashers->getPasswordHasher(SecurityUser::class)->hash((string) $input->password);
+        $hash = $this->hashers->getPasswordHasher(PasswordAuthenticatedUserInterface::class)->hash((string) $input->password);
         $id = $this->commands->dispatch(new CreateUser(
             (string) $input->email,
             (string) $input->firstName,

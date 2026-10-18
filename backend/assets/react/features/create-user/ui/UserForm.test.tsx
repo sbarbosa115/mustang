@@ -43,7 +43,9 @@ describe('UserForm', () => {
     renderForm();
     await fill('nina@mustang.test', 'too-short');
 
-    expect(await screen.findByText('Use at least 12 characters.')).toBeVisible();
+    expect(
+      await screen.findByText('Use at least 12 characters.'),
+    ).toBeVisible();
     expect(screen.getByRole('button', {name: 'Add user'})).toBeDisabled();
   });
 
@@ -51,7 +53,9 @@ describe('UserForm', () => {
     renderForm();
     await fill('nope');
 
-    expect(await screen.findByText('Enter a valid email address.')).toBeVisible();
+    expect(
+      await screen.findByText('Enter a valid email address.'),
+    ).toBeVisible();
     expect(screen.getByRole('button', {name: 'Add user'})).toBeDisabled();
   });
 

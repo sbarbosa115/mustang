@@ -142,7 +142,10 @@ export function EditUserDialog({user, open, onOpenChange}: Props) {
             >
               {t('common:action.cancel')}
             </Button>
-            <Button type="submit" disabled={!isValid || !isDirty || isSubmitting}>
+            <Button
+              type="submit"
+              disabled={!isValid || !isDirty || isSubmitting}
+            >
               {isSubmitting ? t('edit.submitting') : t('edit.submit')}
             </Button>
           </div>
