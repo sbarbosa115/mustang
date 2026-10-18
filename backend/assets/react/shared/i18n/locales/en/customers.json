@@ -10,5 +10,168 @@
       "bdc": "BDC",
       "none": "Not assigned"
     }
+  },
+  "list": {
+    "title": "Customers",
+    "search_label": "Search customers",
+    "search_placeholder": "Search by name, phone or email",
+    "scope_label": "Show",
+    "scope": {
+      "all": "All customers",
+      "mine": "My customers",
+      "archived": "Archived"
+    },
+    "column": {
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email",
+      "sales1": "Sales 1",
+      "stage": "Deal",
+      "updated": "Updated"
+    },
+    "unassigned": "Not assigned",
+    "no_deal": "No open deal",
+    "archived": "Archived",
+    "empty": "No customers yet. Add the first one.",
+    "empty_archived": "No archived customers."
+  },
+  "create": {
+    "open": "Add customer",
+    "title": "Add customer",
+    "description": "A phone number or an email is enough to start. You can add more later.",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "phone": "Phone",
+    "email": "Email",
+    "contact_hint": "Enter a phone number or an email.",
+    "preferred_channel": "Preferred channel",
+    "preferred_none": "No preference",
+    "sales1": "Sales 1",
+    "sales1_none": "Not assigned",
+    "submit": "Add customer",
+    "submitting": "Adding…",
+    "created": "{{name}} was added.",
+    "duplicate_phone": "A customer with this phone number already exists.",
+    "duplicate_email": "A customer with this email already exists.",
+    "open_existing": "Open that customer"
+  },
+  "edit": {
+    "action": "Edit details",
+    "title": "Edit customer",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "preferred_channel": "Preferred channel",
+    "preferred_none": "No preference",
+    "saved": "Changes saved."
+  },
+  "archive": {
+    "action": "Archive customer",
+    "title": "Archive {{name}}?",
+    "description": "They leave the customer list and the worklist. Their history is kept.",
+    "confirm": "Archive customer",
+    "done": "{{name}} was archived.",
+    "badge": "Archived"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "manage": "Manage contacts",
+    "add": "Add contact",
+    "edit": "Edit contact",
+    "add_title": "Add a contact",
+    "edit_title": "Edit contact",
+    "kind": "Type",
+    "kind_phone": "Phone",
+    "kind_email": "Email",
+    "value": "Value",
+    "label": "Label",
+    "label_placeholder": "mobile, home, work",
+    "primary": "Primary",
+    "primary_toggle": "Use as the primary {{kind}}",
+    "empty": "No phone or email yet.",
+    "remove": "Remove",
+    "remove_title": "Remove {{value}}?",
+    "remove_description": "{{name}} will no longer be reachable here. Consent already recorded stays in the ledger.",
+    "saved": "Contact saved.",
+    "removed": "Contact removed."
+  },
+  "vehicles": {
+    "title": "Vehicles owned",
+    "add": "Add vehicle",
+    "add_title": "Add a vehicle",
+    "year": "Year",
+    "make": "Make",
+    "model": "Model",
+    "trim": "Trim",
+    "vin": "VIN",
+    "purchased_at": "Purchased on",
+    "empty": "No vehicles on record. A vehicle they own now is a likely trade-in.",
+    "remove": "Remove vehicle",
+    "remove_title": "Remove {{vehicle}}?",
+    "remove_description": "It leaves {{name}}'s record.",
+    "unnamed": "this vehicle",
+    "hint": "Enter at least the year, make, model or VIN.",
+    "saved": "Vehicle added.",
+    "removed": "Vehicle removed.",
+    "year_hint": "Enter a four-digit year."
+  },
+  "team": {
+    "action": "Change team",
+    "title": "Change team",
+    "description": "Sales 1 owns the customer; Sales 2 and BDC help.",
+    "sales1": "Sales 1",
+    "sales2": "Sales 2",
+    "bdc": "BDC",
+    "none": "Not assigned",
+    "saved": "Team updated."
+  },
+  "notes": {
+    "title": "Notes",
+    "label": "New note",
+    "placeholder": "Write what the next person should know",
+    "add": "Add note",
+    "adding": "Adding…",
+    "empty": "No notes yet.",
+    "error": "Notes could not be loaded.",
+    "by": "{{name}}"
+  },
+  "detail": {
+    "back": "Customers",
+    "actions": "Customer actions",
+    "consent": "Consent",
+    "tabs_label": "Customer sections",
+    "tab": {
+      "overview": "Overview",
+      "timeline": "Timeline",
+      "deals": "Deals",
+      "appointments": "Appointments"
+    },
+    "timeline_pending": "The timeline of messages, deals and notes appears here.",
+    "deals_empty": "No deals for this customer yet.",
+    "deals_error": "Deals could not be loaded.",
+    "appointments_empty": "No appointments for this customer yet.",
+    "appointments_error": "Appointments could not be loaded.",
+    "kind": {
+      "visit": "Visit",
+      "test_drive": "Test drive",
+      "delivery": "Delivery"
+    },
+    "with_user": "with {{name}}",
+    "not_found": "This customer does not exist or is not in your dealership.",
+    "loading": "Loading customer"
+  },
+  "error": {
+    "duplicate_contact": "Another customer already has this contact.",
+    "invalid_phone": "Enter a valid phone number.",
+    "invalid_email": "Enter a valid email address.",
+    "invalid_name": "Enter a first and a last name.",
+    "invalid_date": "Enter a valid date.",
+    "vehicle_empty": "Enter at least the year, make, model or VIN.",
+    "invalid_note": "Write something in the note.",
+    "assignee_not_found": "That person is not an active member of the dealership.",
+    "assignee_wrong_role": "That person cannot take this role on a customer.",
+    "customer_not_found": "This customer does not exist or is not in your dealership.",
+    "contact_not_found": "That contact no longer exists.",
+    "owned_vehicle_not_found": "That vehicle no longer exists.",
+    "validation": "Some fields need attention."
   }
 }

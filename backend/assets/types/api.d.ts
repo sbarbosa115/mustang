@@ -518,7 +518,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Assign Sales 1, Sales 2 and BDC. */
+        /** Assign Sales 1, Sales 2 and BDC; the three slots are set together and a null empties its slot. */
         patch: operations["patch_api_customers_assign"];
         trace?: never;
     };
@@ -549,7 +549,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Archive a customer. */
+        /** Archive a customer; archiving twice changes nothing. */
         post: operations["post_api_customers_archive"];
         delete?: never;
         options?: never;
@@ -3679,15 +3679,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "customers") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_customers_lookup: {
@@ -3786,15 +3777,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "customers") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_customers_contacts_add: {
@@ -3848,15 +3830,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "customers") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     delete_api_customers_contacts_remove: {
@@ -3882,15 +3855,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "customers") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3952,15 +3916,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "customers") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_customers_owned_add: {
@@ -4005,15 +3960,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "customers") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     delete_api_customers_owned_remove: {
@@ -4039,15 +3985,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "customers") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4099,15 +4036,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "customers") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_customers_notes: {
@@ -4132,15 +4060,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "customers") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4192,15 +4111,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "customers") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_customers_archive: {
@@ -4225,15 +4135,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "customers") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };

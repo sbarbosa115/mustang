@@ -84,19 +84,19 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/consents/{id}/revoke` | Revoke consent | 200, 404, 409 | 501 until "compliance" |
 | `GET /api/v1/compliance/suppressions` | Contacts that opted out, across every dealership | 200 | 501 until "compliance" |
 | `GET /api/v1/customers` | The dealership's customers, most recently updated first; q matches a name, phone or email | 200 | Built |
-| `POST /api/v1/customers` | Create a customer | 201, 409, 422 | 501 until "customers" |
+| `POST /api/v1/customers` | Create a customer (phone and email normalised; a phone or an email is required; 409 `duplicate_contact` names the existing customer) | 201, 409, 422 | Built |
 | `GET /api/v1/customers/lookup` | Customers matching a phone or email, so a form can offer the existing record instead of a duplicate | 200 | Built |
 | `GET /api/v1/customers/{id}` | One customer with contacts, owned vehicles, team, open deal and consent per channel | 200, 404 | Built |
-| `PATCH /api/v1/customers/{id}` | Change a customer's name or preferred channel | 200, 404, 422 | 501 until "customers" |
-| `POST /api/v1/customers/{id}/contacts` | Add a phone number or email | 201, 404, 409, 422 | 501 until "customers" |
-| `DELETE /api/v1/customers/{id}/contacts/{contactId}` | Remove a phone number or email | 200, 404 | 501 until "customers" |
-| `PATCH /api/v1/customers/{id}/contacts/{contactId}` | Change a phone number or email | 200, 404, 409, 422 | 501 until "customers" |
-| `POST /api/v1/customers/{id}/vehicles-owned` | Add a vehicle the customer owns | 201, 404, 422 | 501 until "customers" |
-| `DELETE /api/v1/customers/{id}/vehicles-owned/{vehicleId}` | Remove a vehicle the customer owns | 200, 404 | 501 until "customers" |
-| `PATCH /api/v1/customers/{id}/assignments` | Assign Sales 1, Sales 2 and BDC | 200, 404, 422 | 501 until "customers" |
-| `GET /api/v1/customers/{id}/notes` | The notes on a customer, newest first | 200, 404 | 501 until "customers" |
-| `POST /api/v1/customers/{id}/notes` | Add a note | 201, 404, 422 | 501 until "customers" |
-| `POST /api/v1/customers/{id}/archive` | Archive a customer | 200, 404 | 501 until "customers" |
+| `PATCH /api/v1/customers/{id}` | Change a customer's name or preferred channel; fields left out stay | 200, 404, 422 | Built |
+| `POST /api/v1/customers/{id}/contacts` | Add a phone number or email | 201, 404, 409, 422 | Built |
+| `DELETE /api/v1/customers/{id}/contacts/{contactId}` | Remove a phone number or email; the next of its kind becomes primary | 200, 404 | Built |
+| `PATCH /api/v1/customers/{id}/contacts/{contactId}` | Change a phone number or email (value, label, primary) | 200, 404, 409, 422 | Built |
+| `POST /api/v1/customers/{id}/vehicles-owned` | Add a vehicle the customer owns | 201, 404, 422 | Built |
+| `DELETE /api/v1/customers/{id}/vehicles-owned/{vehicleId}` | Remove a vehicle the customer owns | 200, 404 | Built |
+| `PATCH /api/v1/customers/{id}/assignments` | Set Sales 1, Sales 2 and BDC together (null empties a slot); sales slots take sales or manager users, BDC a bdc user, all active in the dealership | 200, 404, 422 | Built |
+| `GET /api/v1/customers/{id}/notes` | The notes on a customer, newest first | 200, 404 | Built |
+| `POST /api/v1/customers/{id}/notes` | Add a note (raises NoteAdded) | 201, 404, 422 | Built |
+| `POST /api/v1/customers/{id}/archive` | Archive a customer; archiving twice changes nothing | 200, 404 | Built |
 | `GET /api/v1/imports` | Spreadsheet imports, newest first | 200 | 501 until "data-import" |
 | `POST /api/v1/imports` | Upload customers or leads from a CSV (manager) | 201, 413, 422 | 501 until "data-import" |
 | `GET /api/v1/imports/{id}` | Progress and errors of an import | 200, 404 | 501 until "data-import" |
