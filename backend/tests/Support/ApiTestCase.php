@@ -3,6 +3,7 @@
 namespace App\Tests\Support;
 
 use App\Access\Infrastructure\Security\UserProvider;
+use App\Access\UI\Http\Security\MfaSession;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -31,13 +32,14 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * Signs in a seed account. $role is a key of ACCOUNTS; "other" is the admin of the other dealership.
+     * Signs in a seed account, second factor given. $role is a key of ACCOUNTS; "other" is the admin of the other
+     * dealership. Tests of the sign-in steps themselves go through POST /api/v1/auth/login instead.
      */
     protected function signInAs(string $role): void
     {
         $email = self::ACCOUNTS[$role] ?? throw new \InvalidArgumentException('Unknown seed account '.$role);
         $user = static::getContainer()->get(UserProvider::class)->loadUserByIdentifier($email);
-        $this->client->loginUser($user);
+        $this->client->loginUser($user, 'main', [MfaSession::VERIFIED_ATTRIBUTE => true]);
     }
 
     /**

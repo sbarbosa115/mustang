@@ -16,7 +16,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * Answers POST /api/v1/auth/login with what the app shows next. Until MFA lands (item "mfa") that is always "ok".
+ * Answers POST /api/v1/auth/login with what the app shows next. MFA is mandatory, so a password alone never finishes
+ * sign-in: "enroll" for a user without a confirmed factor, "mfa" (the code step) otherwise.
  */
 final readonly class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
@@ -37,7 +38,7 @@ final readonly class LoginSuccessHandler implements AuthenticationSuccessHandler
         $enrolled = $this->users->mfaEnrolled([$user->id()])[$user->id()] ?? false;
 
         return new JsonResponse(
-            $this->serializer->serialize(new LoginOutput('ok', UserOutput::from($user, $enrolled)), 'json'),
+            $this->serializer->serialize(new LoginOutput($enrolled ? 'mfa' : 'enroll', UserOutput::from($user, $enrolled)), 'json'),
             Response::HTTP_OK,
             [],
             true,

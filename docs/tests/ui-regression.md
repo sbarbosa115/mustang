@@ -82,7 +82,44 @@ Smoke (part): `e2e/auth.spec.ts` covers the message; by hand: after five wrong a
 to wait.
 **Expected:** one generic message for a wrong password and for an unknown email.
 
-<!-- AUTH-04 – 08: item "mfa" (TOTP enrollment, the code step, recovery codes, admin reset). -->
+Every seed account has two-step sign-in on: the TOTP secret `MUSTANGDEVTOTPSECRET234567` (add it to an
+authenticator app, or compute the code with `otplib`) and the recovery codes `MUSTANG-RECOVERY-1` to
+`MUSTANG-RECOVERY-8` (dev only). A code is accepted once per account: a second sign-in within the same 30 seconds
+waits for the next code.
+
+**AUTH-04 · The first sign-in sets up two-step sign-in**
+By hand (it replaces the account's seed secret). As admin, reset sales2's MFA (`DELETE /api/v1/users/{id}/mfa`, or
+the Users screen once item "users-admin" lands), then sign in as sales2@mustang.test on a phone.
+**Expected:** after the password, "Set up two-step sign-in" shows a QR code that an authenticator app (Google
+Authenticator, 1Password…) scans, and the key in groups of four for typing. A wrong code says "That code is not
+right"; the right one shows eight recovery codes once, with "Copy codes"; "I saved my codes" lands on Today. Signing
+out and in again asks for the code (AUTH-05), never for enrollment. Reloading the enrollment screen shows a new QR
+code, and only the newest one works. Reseed (`mustang:seed-demo`) afterwards.
+
+**AUTH-05 · Sign-in asks for the code from the app**
+Smoke: `e2e/mfa.spec.ts`.
+Sign in with an enrolled account. **Expected:** after the password, "Enter your code"; a wrong code says "That code is
+not right. Check the app and try again."; the code the app shows lands on Today. The same code a second time (sign
+out and in within 30 seconds) says it was already used. Six wrong codes in five minutes say to wait a few minutes.
+"Sign in as someone else" goes back to the password.
+
+**AUTH-06 · A recovery code signs in once**
+Smoke: `e2e/mfa.spec.ts`.
+At the code step, "Use a recovery code instead", type `MUSTANG-RECOVERY-1` (case and dashes do not matter).
+**Expected:** lands on Today; Settings › Security says two-step sign-in is On with 7 recovery codes left. The same
+code again is refused. With two or fewer left, the Security tab warns and says how to get new ones.
+
+**AUTH-07 · A password alone reaches nothing**
+Smoke: `e2e/mfa.spec.ts`.
+Sign in through the API with the password only. **Expected:** every route but `/api/v1/auth/*` answers 403
+`mfa_required` (`/api/v1/customers`, `/api/v1/me`…); `GET /api/v1/auth/mfa` answers `verified: false`. Reloading the
+browser on the code step keeps the code step; opening `/today` instead goes back to sign-in.
+
+**AUTH-08 · Only an admin of the dealership resets MFA**
+Smoke: `e2e/mfa.spec.ts` (the refusals); by hand (the reset itself, with AUTH-04).
+**Expected:** `DELETE /api/v1/users/{id}/mfa` answers 403 for a manager or a rep and 404 for the admin of Other
+Motors; for Mustang's admin it answers 204 and that user sets up two-step sign-in again at the next sign-in (their
+open sessions stay signed in until they sign out).
 
 ## 3. App shell and theme
 
