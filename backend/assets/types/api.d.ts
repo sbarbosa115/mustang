@@ -234,10 +234,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Appointments in a period. */
+        /**
+         * Appointments in a period, by time. `from` is inclusive and `to` exclusive: an ISO instant, or a date
+         *     (2026-10-20) meaning midnight in the dealership's timezone. At most 500.
+         */
         get: operations["get_api_appointments_list"];
         put?: never;
-        /** Book an appointment. */
+        /**
+         * Book an appointment. `scheduled_at` is local time in the dealership's timezone (2026-10-20T15:30); the rep
+         *     defaults to the signed-in user.
+         */
         post: operations["post_api_appointments_book"];
         delete?: never;
         options?: never;
@@ -259,7 +265,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Reschedule or reassign an appointment. */
+        /** Reschedule or reassign an appointment, or change its length, kind or note; fields left out stay as they are. */
         patch: operations["patch_api_appointments_update"];
         trace?: never;
     };
@@ -3033,13 +3039,13 @@ export interface operations {
                     "application/json": components["schemas"]["AppointmentListOutput"];
                 };
             };
-            /** @description Not built yet (item "appointments") */
-            501: {
+            /** @description Invalid input */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiError"];
+                    "application/json": components["schemas"]["ValidationError"];
                 };
             };
         };
@@ -3093,15 +3099,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "appointments") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_appointments_get: {
@@ -3126,15 +3123,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "appointments") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3195,15 +3183,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "appointments") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_appointments_confirm: {
@@ -3237,15 +3216,6 @@ export interface operations {
             };
             /** @description Refused by a rule (see error) */
             409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "appointments") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3293,15 +3263,6 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "appointments") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_appointments_no_show: {
@@ -3342,15 +3303,6 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "appointments") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_appointments_cancel: {
@@ -3384,15 +3336,6 @@ export interface operations {
             };
             /** @description Refused by a rule (see error) */
             409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "appointments") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };

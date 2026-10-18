@@ -71,14 +71,14 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `PATCH /api/v1/users/{id}` | Change a user's name or role (admin) | 200, 404, 409, 422 | Built |
 | `POST /api/v1/users/{id}/deactivate` | Deactivate a user; they can no longer sign in (admin) | 200, 404, 409 | Built |
 | `POST /api/v1/users/{id}/activate` | Reactivate a user (admin) | 200, 404 | Built |
-| `GET /api/v1/appointments` | Appointments in a period | 200 | 501 until "appointments" |
-| `POST /api/v1/appointments` | Book an appointment | 201, 404, 409, 422 | 501 until "appointments" |
-| `GET /api/v1/appointments/{id}` | One appointment | 200, 404 | 501 until "appointments" |
-| `PATCH /api/v1/appointments/{id}` | Reschedule or reassign an appointment | 200, 404, 409, 422 | 501 until "appointments" |
-| `POST /api/v1/appointments/{id}/confirm` | Mark an appointment confirmed | 200, 404, 409 | 501 until "appointments" |
-| `POST /api/v1/appointments/{id}/show` | Mark that the customer showed | 200, 404, 409 | 501 until "appointments" |
-| `POST /api/v1/appointments/{id}/no-show` | Mark a no-show | 200, 404, 409 | 501 until "appointments" |
-| `POST /api/v1/appointments/{id}/cancel` | Cancel an appointment | 200, 404, 409 | 501 until "appointments" |
+| `GET /api/v1/appointments` | Appointments by time; `from` (inclusive) and `to` (exclusive) are an ISO instant or a date meaning midnight at the dealership, `user_id` and `customer_id` narrow it; at most 500; 422 `invalid_period` | 200 | Built |
+| `POST /api/v1/appointments` | Book a visit, test drive or delivery; `scheduled_at` is local time in the dealership's timezone (`2026-10-20T15:30`), the rep defaults to the caller, the customer's open deal is linked; 422 `appointment_in_past`, `invalid_scheduled_at`, `user_not_found`, `deal_not_found`; 404 `customer_not_found`; 409 `appointment_overlap` (same rep, cancelled and no-show ones do not count). Moves the deal to appointment and queues the rep's reminder | 201, 404, 409, 422 | Built |
+| `GET /api/v1/appointments/{id}` | One appointment | 200, 404 | Built |
+| `PATCH /api/v1/appointments/{id}` | Reschedule (back to scheduled, unconfirmed, a new reminder), reassign, or change length, kind or note; fields left out stay; 409 `appointment_not_open` once shown, missed or cancelled | 200, 404, 409, 422 | Built |
+| `POST /api/v1/appointments/{id}/confirm` | The customer confirmed (409 `appointment_not_open` once it is over) | 200, 404, 409 | Built |
+| `POST /api/v1/appointments/{id}/show` | The customer came; the deal moves to visit | 200, 404, 409 | Built |
+| `POST /api/v1/appointments/{id}/no-show` | The customer did not come; the slot is free again | 200, 404, 409 | Built |
+| `POST /api/v1/appointments/{id}/cancel` | Cancel an appointment; the slot is free again and the reminder is skipped | 200, 404, 409 | Built |
 | `GET /api/v1/audit` | Changes and customer record access (admin) | 200 | 501 until "audit-log" |
 | `GET /api/v1/customers/{id}/consents` | A customer's consent records (newest first, revoked ones kept) and the state per channel: the latest record of the primary phone (text, call) or email decides, a suppressed contact is `opted_out` | 200, 404 | Built |
 | `POST /api/v1/customers/{id}/consents` | Record consent for one of the customer's contacts on a channel: source (free text: verbal, written, website, sms_keyword, import…), where, when (`captured_at`, ISO 8601, not in the future; now when left out), wording, campaign; the signed-in user is who captured it. 422 `contact_not_on_customer`, `invalid_phone`, `invalid_email`, `captured_at_in_future` | 201, 404, 422 | Built |
@@ -151,6 +151,10 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 - Email addresses are unique across Mustang, so sign-in needs no dealership picker.
 - Records of different aggregates reference each other by id without database foreign keys: the Doctrine mapping owns
   the schema, and a foreign key it does not know about would be dropped by the next generated migration.
+- Appointments are typed in the dealership's timezone (`dealerships.timezone`) and stored in UTC. The rep is emailed
+  60 minutes before: booking or moving an appointment queues a delayed `SendReminder` message for the worker, which
+  skips it when the appointment was cancelled, moved to another time or already reminded. One that starts within the
+  hour gets no reminder.
 - Suppressions (opt-outs) have no dealership: a STOP at one dealership blocks every dealership (FR-12).
 
 ## Known gaps

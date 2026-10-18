@@ -653,7 +653,7 @@
                 "tags": [
                     "Appointments"
                 ],
-                "summary": "Appointments in a period.",
+                "summary": "Appointments in a period, by time. `from` is inclusive and `to` exclusive: an ISO instant, or a date\n(2026-10-20) meaning midnight in the dealership's timezone. At most 500.",
                 "operationId": "get_api_appointments_list",
                 "parameters": [
                     {
@@ -708,12 +708,12 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"appointments\")",
+                    "422": {
+                        "description": "Invalid input",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -724,7 +724,7 @@
                 "tags": [
                     "Appointments"
                 ],
-                "summary": "Book an appointment.",
+                "summary": "Book an appointment. `scheduled_at` is local time in the dealership's timezone (2026-10-20T15:30); the rep\ndefaults to the signed-in user.",
                 "operationId": "post_api_appointments_book",
                 "requestBody": {
                     "required": true,
@@ -776,16 +776,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"appointments\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -827,16 +817,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"appointments\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -844,7 +824,7 @@
                 "tags": [
                     "Appointments"
                 ],
-                "summary": "Reschedule or reassign an appointment.",
+                "summary": "Reschedule or reassign an appointment, or change its length, kind or note; fields left out stay as they are.",
                 "operationId": "patch_api_appointments_update",
                 "parameters": [
                     {
@@ -906,16 +886,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"appointments\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -960,16 +930,6 @@
                     },
                     "409": {
                         "description": "Refused by a rule (see error)",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"appointments\")",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1028,16 +988,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"appointments\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1089,16 +1039,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"appointments\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1143,16 +1083,6 @@
                     },
                     "409": {
                         "description": "Refused by a rule (see error)",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"appointments\")",
                         "content": {
                             "application/json": {
                                 "schema": {
