@@ -53,27 +53,33 @@ final class LoginTimingEqualizerTest extends TestCase
         new LoginTimingEqualizer($factory)(new LoginFailureEvent($exception, $this->createStub(AuthenticatorInterface::class), $request, null, 'main'));
     }
 
-    private function spy(): PasswordHasherInterface
+    private function spy(): CountingHasher
     {
-        return new class implements PasswordHasherInterface {
-            public int $hashes = 0;
+        return new CountingHasher();
+    }
+}
 
-            public function hash(#[\SensitiveParameter] string $plainPassword): string
-            {
-                ++$this->hashes;
+/**
+ * Counts the password hashes a failure spends.
+ */
+final class CountingHasher implements PasswordHasherInterface
+{
+    public int $hashes = 0;
 
-                return 'hashed';
-            }
+    public function hash(#[\SensitiveParameter] string $plainPassword): string
+    {
+        ++$this->hashes;
 
-            public function verify(string $hashedPassword, #[\SensitiveParameter] string $plainPassword): bool
-            {
-                return false;
-            }
+        return 'hashed';
+    }
 
-            public function needsRehash(string $hashedPassword): bool
-            {
-                return false;
-            }
-        };
+    public function verify(string $hashedPassword, #[\SensitiveParameter] string $plainPassword): bool
+    {
+        return false;
+    }
+
+    public function needsRehash(string $hashedPassword): bool
+    {
+        return false;
     }
 }
