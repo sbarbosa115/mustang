@@ -60,4 +60,16 @@ final class LoginApiTest extends ApiTestCase
         $this->request('GET', '/api/v1/me');
         $this->assertStatus(401, 'After sign-out the API answers as signed out.');
     }
+
+    public function testSignOutNeedsAPostFromTheApp(): void
+    {
+        // Security audit 2026-10-18, finding 2: GET /auth/logout signed the user out, so any link on another site could.
+        $this->signInAs('sales');
+
+        $body = $this->request('GET', '/api/v1/auth/logout');
+
+        $this->assertError(405, 'method_not_allowed', $body);
+        $this->request('GET', '/api/v1/me');
+        $this->assertStatus(200, 'The session survives a GET to the sign-out path.');
+    }
 }
