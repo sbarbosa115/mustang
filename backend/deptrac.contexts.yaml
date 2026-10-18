@@ -1,7 +1,8 @@
 # Deptrac: which context may call which (steps/04-build.md §4.1). A context reaches another only through its
 # Application layer or its domain events; every context may use Shared. Pairs below are deliberate:
 #   Lead -> Customer (match a lead to a customer); DataImport -> Customer, Lead, Compliance (it creates them);
-#   Messaging -> Compliance (the send check); Worklist, Reporting, Timeline -> every context (read sides);
+#   Messaging -> Compliance (the send check), Lead (an inbound message from an unknown contact captures a lead, source
+#   other, which creates the customer); Worklist, Reporting, Timeline -> every context (read sides);
 #   Audit -> Access (who acted).
 deptrac:
   paths: [./src]
@@ -172,8 +173,8 @@ deptrac:
     AppointmentApplication: [Appointment, Shared, Events]
     Inventory: [InventoryApplication, Shared, Events]
     InventoryApplication: [Inventory, Shared, Events]
-    Messaging: [MessagingApplication, Shared, Events, ComplianceApplication]
-    MessagingApplication: [Messaging, Shared, Events, ComplianceApplication]
+    Messaging: [MessagingApplication, Shared, Events, ComplianceApplication, LeadApplication]
+    MessagingApplication: [Messaging, Shared, Events, ComplianceApplication, LeadApplication]
     Compliance: [ComplianceApplication, Shared, Events]
     ComplianceApplication: [Compliance, Shared, Events]
     Worklist: [WorklistApplication, Shared, Events, AccessApplication, CustomerApplication, TimelineApplication, LeadApplication, DealApplication, AppointmentApplication, InventoryApplication, MessagingApplication, ComplianceApplication, ReportingApplication, DataImportApplication, AuditApplication]
@@ -190,4 +191,8 @@ deptrac:
     App\DataImport\Infrastructure\Adapter\CustomerRecordsAdapter:
       - App\Customer\Domain\Model\ContactKind
     App\DataImport\Infrastructure\Adapter\LeadIntakeAdapter:
+      - App\Lead\Domain\Model\LeadSource
+    # Kept on purpose (inbound from an unknown contact): CaptureLead takes the LeadSource enum as a parameter, so
+    # Messaging's adapter must name it (LeadSource::Other) to build the command.
+    App\Messaging\Infrastructure\Adapter\LeadIntakeAdapter:
       - App\Lead\Domain\Model\LeadSource

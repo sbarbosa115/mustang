@@ -4197,7 +4197,7 @@
                     "Inbox"
                 ],
                 "summary": "Simulate a customer reply (dev and test only).",
-                "description": "from is a phone (channel text, the default) or an email of a customer of the signed-in user's dealership.\n422 unknown_contact, invalid_phone, invalid_email.",
+                "description": "from is a phone (channel text, the default) or an email. A contact no customer of the signed-in user's dealership\nhas becomes a new customer (source other) with a lead, routed round robin. 422 invalid_phone, invalid_email.",
                 "operationId": "post_api_dev_inbound",
                 "requestBody": {
                     "required": true,
