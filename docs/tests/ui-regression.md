@@ -462,6 +462,44 @@ is offered, and choosing it opens its page.
 <!-- USR-01 – 05: item "users-admin". TPL-01 – 04: item "templates". IMP-01 – 05: item "data-import".
      AUD-01 – 04: item "audit-log". -->
 
+**USR-01 · An admin adds a user, who sets up two-step sign-in at first sign-in**
+Smoke: `e2e/users.spec.ts`.
+As admin, Settings, Users, "Add user": first name `USR01`, last name `Test`, a new email, role BDC, a temporary password of
+12 characters or more, then "Add user". **Expected:** a toast says the user was added; searching the last name finds the
+row with role BDC, status Active and two-step sign-in "Not set up". Signing in as that user with the password asks to set
+up two-step sign-in (the enroll screen), not for a code. By hand: scan the QR code, confirm, and sign in again, which now
+asks for a code.
+
+**USR-02 · An admin edits a name and a role**
+Smoke: `e2e/users.spec.ts`.
+On a user you added, row menu "Edit": "Save changes" stays disabled until something changes; change the first name and the
+role to Manager. **Expected:** a toast says the user was updated and the row shows the new name and role. By hand: while
+that user is signed in elsewhere, their next request ends the session (a role change signs them out); signing in again
+shows the screens of the new role.
+
+**USR-03 · The form explains what is missing, and a taken email is refused**
+Smoke: `e2e/users.spec.ts`.
+"Add user" with nothing filled: the button is disabled. Type `not-an-email` ("Enter a valid email address.") and a
+password of 5 characters ("Use at least 12 characters."). Then `Sales@mustang.test` with a valid password and submit.
+**Expected:** "Another account already uses this email." under the email and the dialog stays open. By hand: an email of
+the other dealership (`other@mustang.test`) is refused the same way, and the same email in capitals is too.
+
+**USR-04 · Deactivating asks first, ends their session and blocks sign-in; activating restores it**
+Smoke: `e2e/users.spec.ts`.
+On a user who is signed in (with two-step sign-in set up), row menu "Deactivate". **Expected:** a dialog titled
+"Deactivate <name>?" names the user; Cancel changes nothing; the confirm button "Deactivate <name>" shows a toast and the
+row's status becomes Deactivated. The user's open session answers 401 on its next request, signing in with their password
+is refused, and row menu "Activate" lets them sign in again. By hand: the signed-in user sees the sign-in screen on their
+next click, with no data left on screen.
+
+**USR-05 · Own row, last admin and the two-step reset**
+Smoke: `e2e/users.spec.ts`.
+As the only admin (Alex Admin), the row menu's "Deactivate" on your own row is disabled; "Edit" with role Manager shows
+"A dealership needs at least one active admin…" and the row stays Admin. On another user with two-step sign-in set up, row
+menu "Reset two-step sign-in" opens a dialog that names the user; confirming shows a toast and the row says "Not set up".
+**Expected:** that user's next sign-in goes to the enroll screen. By hand: "Reset two-step sign-in" is disabled for a user
+who has none; on a phone (390 px) the users appear as cards with the same menu.
+
 **TPL-01 · A manager writes a text template with the placeholder helper**
 Smoke: `e2e/templates.spec.ts`.
 As manager, Settings, Templates, "New template". **Expected:** "Save template" is disabled until there is a name and a
