@@ -82,6 +82,28 @@ describe('NotesPanel', () => {
     expect(box).toHaveValue('Second.');
   });
 
+  it('marks the customer timeline stale, so the new note shows there without a reload', async () => {
+    listNotes.mockResolvedValue([]);
+    addNote.mockResolvedValue(note('n2', 'Call after 5 pm.'));
+    const {queryClient} = renderWithProviders(<NotesPanel customerId="c1" />);
+    await screen.findByText('No notes yet.');
+    queryClient.setQueryData(['timeline', 'list', {customerId: 'c1'}], {
+      items: [],
+      total: 0,
+    });
+
+    await userEvent.type(screen.getByLabelText('New note'), 'Call after 5 pm.');
+    await userEvent.click(screen.getByRole('button', {name: 'Add note'}));
+
+    await waitFor(() =>
+      expect(
+        queryClient.getQueryState(['timeline', 'list', {customerId: 'c1'}])
+          ?.isInvalidated,
+        'the timeline cached while it was empty would stay empty for 15 seconds',
+      ).toBe(true),
+    );
+  });
+
   it('offers a retry when the notes cannot be loaded', async () => {
     listNotes.mockImplementationOnce(() => Promise.reject(new Error('down')));
     listNotes.mockResolvedValue([note('n1', 'Back again.')]);

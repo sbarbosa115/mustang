@@ -2,6 +2,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {StickyNote} from 'lucide-react';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {timelineKeys} from '@/entities/activity';
 import {addNote, listNotes} from '@/entities/customer';
 import {Button} from '@/shared/ui/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/shared/ui/card';
@@ -28,6 +29,8 @@ export function NotesPanel({customerId}: {customerId: string}) {
       // Only the text that was saved is cleared: what was typed meanwhile for the next note stays.
       setBody((current) => (current.trim() === text ? '' : current));
       void queryClient.invalidateQueries({queryKey: notesKey(customerId)});
+      // The note lands on the customer's timeline too; a timeline cached while empty must not stay empty.
+      void queryClient.invalidateQueries({queryKey: timelineKeys.all});
     },
   });
 
