@@ -122,4 +122,30 @@ class User
     {
         $this->theme = $theme;
     }
+
+    public function isActiveAdmin(): bool
+    {
+        return $this->active && Role::Admin === $this->role;
+    }
+
+    public function rename(string $firstName, string $lastName): void
+    {
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+    }
+
+    public function changeRole(Role $role): void
+    {
+        $this->role = $role;
+    }
+
+    public function deactivate(): void
+    {
+        $this->active = false;
+    }
+
+    public function activate(): void
+    {
+        $this->active = true;
+    }
 }
