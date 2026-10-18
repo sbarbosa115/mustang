@@ -4505,7 +4505,7 @@
                 "tags": [
                     "Reports"
                 ],
-                "summary": "KPIs for a period and the one before (manager).",
+                "summary": "KPIs for a period and the one before (manager). `from` and `to` are dates (yyyy-mm-dd, inclusive) in the\ndealership's timezone; left out, the period is the last 30 days ending today. A rate with nothing to divide\nby has a null value; the previous period has the same number of days and ends the day before `from`.",
                 "operationId": "get_api_reports_kpis",
                 "parameters": [
                     {
@@ -4550,8 +4550,8 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"dashboard\")",
+                    "403": {
+                        "description": "Managers only",
                         "content": {
                             "application/json": {
                                 "schema": {

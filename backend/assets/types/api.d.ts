@@ -1119,7 +1119,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** KPIs for a period and the one before (manager). */
+        /**
+         * KPIs for a period and the one before (manager). `from` and `to` are dates (yyyy-mm-dd, inclusive) in the
+         *     dealership's timezone; left out, the period is the last 30 days ending today. A rate with nothing to divide
+         *     by has a null value; the previous period has the same number of days and ends the day before `from`.
+         */
         get: operations["get_api_reports_kpis"];
         put?: never;
         post?: never;
@@ -5531,6 +5535,15 @@ export interface operations {
                     "application/json": components["schemas"]["KpiReportOutput"];
                 };
             };
+            /** @description Managers only */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
             /** @description Invalid input */
             422: {
                 headers: {
@@ -5538,15 +5551,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Not built yet (item "dashboard") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };
