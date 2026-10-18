@@ -1,0 +1,14 @@
+{
+  "_owner": "item 2",
+  "panel": {
+    "phone": "Phone",
+    "email": "Email",
+    "open_deal": "Open deal",
+    "team": {
+      "sales1": "Sales 1",
+      "sales2": "Sales 2",
+      "bdc": "BDC",
+      "none": "Not assigned"
+    }
+  }
+}

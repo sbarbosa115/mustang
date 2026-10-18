@@ -1,0 +1,10 @@
+{
+  "_owner": "item 9",
+  "status": {
+    "scheduled": "Scheduled",
+    "confirmed": "Confirmed",
+    "shown": "Showed",
+    "no_show": "No-show",
+    "cancelled": "Cancelled"
+  }
+}

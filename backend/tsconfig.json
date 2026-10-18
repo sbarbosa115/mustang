@@ -14,9 +14,20 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom", "node"],
+    "types": [
+      "vite/client",
+      "vitest/globals",
+      "@testing-library/jest-dom",
+      "node"
+    ],
     "baseUrl": ".",
     "paths": {"@/*": ["assets/react/*"]}
   },
-  "include": ["assets/react", "assets/types", "vite.config.ts", "e2e", "playwright.config.ts"]
+  "include": [
+    "assets/react",
+    "assets/types",
+    "vite.config.ts",
+    "e2e",
+    "playwright.config.ts"
+  ]
 }

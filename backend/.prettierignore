@@ -12,3 +12,13 @@ assets/types/openapi.json
 composer.lock
 package-lock.json
 *.md
+components.json
+
+# Symfony config keeps its own (4-space) YAML style.
+*.yaml
+*.yml
+*.neon
+composer.json
+config/
+migrations/
+templates/

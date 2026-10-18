@@ -1,0 +1,30 @@
+{
+  "_owner": "item 0",
+  "title": "Settings",
+  "tabs": {
+    "profile": "Profile",
+    "users": "Users",
+    "templates": "Templates",
+    "import": "Import",
+    "routing": "Lead routing",
+    "suppressions": "Opt-outs",
+    "audit": "Audit log",
+    "security": "Security"
+  },
+  "profile": {
+    "title": "Your profile",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "dealership": "Dealership",
+    "theme": "Theme",
+    "theme_help": "Applies on every device you sign in on.",
+    "saved": "Theme saved."
+  },
+  "role": {
+    "sales": "Sales",
+    "bdc": "BDC",
+    "manager": "Manager",
+    "admin": "Admin"
+  }
+}
