@@ -179,3 +179,17 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 See "Left out on purpose" in [`docs/pdr/prd-mvp.md`](docs/pdr/prd-mvp.md): everything in the baseline's backlog, all
 integrations (no SMS carrier, DNC check, lead feeds, DMS or CRM migration), Spanish strings, and security work beyond
 the baseline (SOC 2, penetration test). Security policies are drafts to confirm: [`docs/security/policies.md`](docs/security/policies.md).
+
+Open from the security audit ([`docs/security/audits/2026-10-18-mvp.md`](docs/security/audits/2026-10-18-mvp.md)):
+
+- **START lifts every dealership's opt-out (medium, finding 10).** A STOP to one dealership revokes that dealership's
+  consents and suppresses the phone everywhere; a later START to another dealership removes the suppression, so a
+  third dealership with an older consent can text again. Needs a compliance decision: a suppression per dealership that
+  received the STOP, or STOP revoking every dealership's consents.
+- **Vehicle uploads (low, finding 11).** Any role may upload inventory (customer and lead imports are manager-only),
+  and a 10 MB file is imported in one unit of work with no row cap.
+- **Uploaded CSVs are kept (low, finding 12)** under `var/uploads/`; deleting them waits for the retention policy.
+- **Last admin race (low, finding 14).** Two admins removing each other at the same instant can leave none.
+- **Headers (low, findings 8 and 15).** The Content-Security-Policy does not restrict scripts yet (the theme script
+  is inline and the dev build is served by Vite); the dev images send `Server` and `X-Powered-By` versions, and health
+  names the environment.

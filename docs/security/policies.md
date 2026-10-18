@@ -11,16 +11,18 @@ per dealership. No payment card data, no Social Security numbers, no credit appl
 ## Access control
 
 - Every user signs in with email, password and a TOTP code (NFR-02); sessions are cookies (HttpOnly, SameSite=Lax,
-  Secure over HTTPS).
+  Secure in production). State-changing requests from other sites are refused, and other sites cannot frame the app.
 - Roles per dealership: sales, BDC, manager, admin (NFR-03). A user sees only their own dealership's records; another
   dealership's id answers "not found".
-- Sign-in is limited to 5 attempts per minute per IP and email.
+- Sign-in is limited to 5 attempts per minute per IP and email; a refusal does not say, by its wording or its timing,
+  whether the account exists. MFA codes are limited to 5 per user in 5 minutes.
 
 ## Encryption
 
 - In transit: HTTPS only in production. _To confirm: the host terminates TLS 1.2+._
 - At rest: the database disk is encrypted by the host (_To confirm: the hosting provider and its setting_); MFA
-  secrets are also encrypted in the application with libsodium (`MUSTANG_ENCRYPTION_KEY`).
+  secrets are also encrypted in the application with libsodium (`MUSTANG_ENCRYPTION_KEY`, set per environment;
+  production refuses the development key), and recovery codes are stored hashed.
 
 ## Audit log (NFR-04)
 
