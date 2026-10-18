@@ -21,7 +21,9 @@ export function SettingsImportPage() {
       <div className="space-y-6">
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>{t('page.title')}</CardTitle>
+            <CardTitle>
+              <h2>{t('page.title')}</h2>
+            </CardTitle>
             <CardDescription>{t('page.description')}</CardDescription>
           </CardHeader>
           <CardContent>
