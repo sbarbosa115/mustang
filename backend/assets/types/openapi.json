@@ -133,6 +133,27 @@
                 }
             }
         },
+        "/api/v1/auth/mfa": {
+            "get": {
+                "tags": [
+                    "MFA"
+                ],
+                "summary": "Whether the signed-in user has two-step sign-in, whether this session gave its code, and the recovery codes left.",
+                "operationId": "get_api_mfa_status",
+                "responses": {
+                    "200": {
+                        "description": "The signed-in user's two-step sign-in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MfaStatusOutput"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/auth/mfa/enroll": {
             "post": {
                 "tags": [
@@ -152,17 +173,7 @@
                         }
                     },
                     "409": {
-                        "description": "Refused by a rule (see error)",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"mfa\")",
+                        "description": "mfa_already_enrolled: only an admin reset replaces a confirmed factor",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -202,8 +213,18 @@
                             }
                         }
                     },
+                    "409": {
+                        "description": "mfa_not_enrolled (enroll first) or mfa_already_enrolled",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
                     "422": {
-                        "description": "Invalid input",
+                        "description": "validation, or mfa_invalid_code",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -212,8 +233,8 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"mfa\")",
+                    "429": {
+                        "description": "mfa_too_many_attempts",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -253,8 +274,18 @@
                             }
                         }
                     },
+                    "409": {
+                        "description": "mfa_not_enrolled",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
                     "422": {
-                        "description": "Invalid input",
+                        "description": "validation, mfa_invalid_code or mfa_code_reused",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -264,17 +295,7 @@
                         }
                     },
                     "429": {
-                        "description": "Too many attempts",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"mfa\")",
+                        "description": "mfa_too_many_attempts",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -309,16 +330,6 @@
                     },
                     "404": {
                         "description": "Not found, or another dealership's record",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"mfa\")",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -7169,6 +7180,25 @@
                 },
                 "type": "object"
             },
+            "MfaStatusOutput": {
+                "required": [
+                    "enrolled",
+                    "verified",
+                    "recovery_codes_remaining"
+                ],
+                "properties": {
+                    "enrolled": {
+                        "type": "boolean"
+                    },
+                    "verified": {
+                        "type": "boolean"
+                    },
+                    "recovery_codes_remaining": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "MfaEnrollmentOutput": {
                 "required": [
                     "secret",
@@ -7198,25 +7228,6 @@
                         "items": {
                             "type": "string"
                         }
-                    }
-                },
-                "type": "object"
-            },
-            "MfaStatusOutput": {
-                "required": [
-                    "enrolled",
-                    "verified",
-                    "recovery_codes_remaining"
-                ],
-                "properties": {
-                    "enrolled": {
-                        "type": "boolean"
-                    },
-                    "verified": {
-                        "type": "boolean"
-                    },
-                    "recovery_codes_remaining": {
-                        "type": "integer"
                     }
                 },
                 "type": "object"

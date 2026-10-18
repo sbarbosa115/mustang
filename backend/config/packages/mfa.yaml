@@ -1,0 +1,12 @@
+# MFA code attempts (item "mfa"): five per user in five minutes, in a pool of their own so tests can clear it.
+framework:
+    cache:
+        pools:
+            cache.mfa_attempts:
+                adapter: cache.app
+    rate_limiter:
+        mfa_verify:
+            policy: sliding_window
+            limit: 5
+            interval: '5 minutes'
+            cache_pool: cache.mfa_attempts

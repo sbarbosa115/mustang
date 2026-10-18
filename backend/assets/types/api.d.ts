@@ -72,6 +72,23 @@ export interface paths {
         patch: operations["patch_api_me_preferences"];
         trace?: never;
     };
+    "/api/v1/auth/mfa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Whether the signed-in user has two-step sign-in, whether this session gave its code, and the recovery codes left. */
+        get: operations["get_api_mfa_status"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/mfa/enroll": {
         parameters: {
             query?: never;
@@ -1728,6 +1745,11 @@ export interface components {
             dealership: components["schemas"]["DealershipOutput"];
             roles: string[];
         };
+        MfaStatusOutput: {
+            enrolled: boolean;
+            verified: boolean;
+            recovery_codes_remaining: number;
+        };
         MfaEnrollmentOutput: {
             secret: string;
             otpauth_url: string;
@@ -1735,11 +1757,6 @@ export interface components {
         };
         MfaRecoveryCodesOutput: {
             recovery_codes: string[];
-        };
-        MfaStatusOutput: {
-            enrolled: boolean;
-            verified: boolean;
-            recovery_codes_remaining: number;
         };
         UserPageOutput: {
             items: components["schemas"]["UserOutput"][];
@@ -2579,6 +2596,26 @@ export interface operations {
             };
         };
     };
+    get_api_mfa_status: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The signed-in user's two-step sign-in */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MfaStatusOutput"];
+                };
+            };
+        };
+    };
     post_api_mfa_enroll: {
         parameters: {
             query?: never;
@@ -2597,17 +2634,8 @@ export interface operations {
                     "application/json": components["schemas"]["MfaEnrollmentOutput"];
                 };
             };
-            /** @description Refused by a rule (see error) */
+            /** @description mfa_already_enrolled: only an admin reset replaces a confirmed factor */
             409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "mfa") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2639,7 +2667,16 @@ export interface operations {
                     "application/json": components["schemas"]["MfaRecoveryCodesOutput"];
                 };
             };
-            /** @description Invalid input */
+            /** @description mfa_not_enrolled (enroll first) or mfa_already_enrolled */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description validation, or mfa_invalid_code */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2648,8 +2685,8 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "mfa") */
-            501: {
+            /** @description mfa_too_many_attempts */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2681,7 +2718,16 @@ export interface operations {
                     "application/json": components["schemas"]["MfaStatusOutput"];
                 };
             };
-            /** @description Invalid input */
+            /** @description mfa_not_enrolled */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description validation, mfa_invalid_code or mfa_code_reused */
             422: {
                 headers: {
                     [name: string]: unknown;
@@ -2690,17 +2736,8 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Too many attempts */
+            /** @description mfa_too_many_attempts */
             429: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "mfa") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2730,15 +2767,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "mfa") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
