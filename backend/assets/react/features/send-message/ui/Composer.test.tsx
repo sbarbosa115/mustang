@@ -30,9 +30,7 @@ const sent = {
   created_at: '2026-10-18T12:00:00+00:00',
 };
 
-function renderComposer(
-  props: Partial<Parameters<typeof Composer>[0]> = {},
-) {
+function renderComposer(props: Partial<Parameters<typeof Composer>[0]> = {}) {
   return renderWithProviders(
     <Composer
       conversationId="v1"
@@ -94,9 +92,10 @@ describe('Composer', () => {
     expect(screen.getByText('No consent recorded for Email')).toBeVisible();
     expect(screen.getByRole('button', {name: 'Send'})).toBeDisabled();
     expect(screen.getByLabelText('Message')).toBeDisabled();
-    expect(
-      screen.getByRole('link', {name: 'Record consent'}),
-    ).toHaveAttribute('href', '/customers/c1/consent');
+    expect(screen.getByRole('link', {name: 'Record consent'})).toHaveAttribute(
+      'href',
+      '/customers/c1/consent',
+    );
   });
 
   it('disables a revoked channel with its reason and starts on the one that is allowed', () => {
@@ -117,9 +116,7 @@ describe('Composer', () => {
     renderComposer({
       consent: {text: 'opted_out', email: 'missing', call: 'missing'},
     });
-    expect(
-      screen.getByText('This contact opted out of Text'),
-    ).toBeVisible();
+    expect(screen.getByText('This contact opted out of Text')).toBeVisible();
   });
 
   it('says when there is no phone number to text', () => {
@@ -134,7 +131,11 @@ describe('Composer', () => {
 
   it('switches to email, which needs a subject', async () => {
     const user = userEvent.setup();
-    sendMessage.mockResolvedValue({...sent, channel: 'email', status: 'queued'});
+    sendMessage.mockResolvedValue({
+      ...sent,
+      channel: 'email',
+      status: 'queued',
+    });
     renderComposer();
 
     await user.click(screen.getByRole('button', {name: 'Email'}));

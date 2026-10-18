@@ -13,7 +13,12 @@ interface Props {
 }
 
 /** One conversation: who, the last message, when, unread and the unreplied / fumbled markers (with words). */
-export function ConversationRow({conversation, href, selected, timeZone}: Props) {
+export function ConversationRow({
+  conversation,
+  href,
+  selected,
+  timeZone,
+}: Props) {
   const {t} = useTranslation('inbox');
   const last = conversation.last_message;
   const unread = conversation.unread_count > 0;
@@ -27,7 +32,9 @@ export function ConversationRow({conversation, href, selected, timeZone}: Props)
       )}
     >
       <span className="flex items-baseline justify-between gap-2">
-        <span className={cn('truncate', unread ? 'font-semibold' : 'font-medium')}>
+        <span
+          className={cn('truncate', unread ? 'font-semibold' : 'font-medium')}
+        >
           {conversation.customer.name}
         </span>
         {conversation.last_message_at && (

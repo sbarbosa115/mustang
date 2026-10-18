@@ -89,8 +89,7 @@ export function Composer({
   ) as Record<SendChannel, Block | null>;
   const blocked = blocks[channel] !== null;
   const needsSubject = channel === 'email' && subject.trim() === '';
-  const canSend =
-    !blocked && !sending && body.trim() !== '' && !needsSubject;
+  const canSend = !blocked && !sending && body.trim() !== '' && !needsSubject;
   const unfilled = [
     ...new Set(
       [...`${subject} ${body}`.matchAll(/\{([a-z_]+)\}/g)]
@@ -117,7 +116,9 @@ export function Composer({
       return;
     }
     setBody((current) =>
-      current.trim() === '' ? draft.body : `${current.trimEnd()}\n\n${draft.body}`,
+      current.trim() === ''
+        ? draft.body
+        : `${current.trimEnd()}\n\n${draft.body}`,
     );
     if (draft.subject && subject.trim() === '') setSubject(draft.subject);
   }

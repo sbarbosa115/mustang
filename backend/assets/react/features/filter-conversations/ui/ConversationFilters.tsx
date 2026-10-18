@@ -16,7 +16,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/ui/select';
-import {FOLDERS, type ConversationFilters as Filters} from '../model/useConversationFilters';
+import {
+  FOLDERS,
+  type ConversationFilters as Filters,
+} from '../model/useConversationFilters';
 
 const EVERYONE = 'everyone';
 const REP_ROLES = ['sales', 'bdc', 'manager'];
@@ -80,9 +83,7 @@ export function ConversationFilters({filters, className}: Props) {
                   )}
                 >
                   <span aria-hidden>{count}</span>
-                  <span className="sr-only">
-                    {t('folders.count', {count})}
-                  </span>
+                  <span className="sr-only">{t('folders.count', {count})}</span>
                 </span>
               )}
             </button>
