@@ -229,7 +229,7 @@ final class DealEventHandlersTest extends ApiTestCase
      */
     private function dealsOf(int $customer): array
     {
-        /** @var list<array<string, mixed>> */
+        /* @var list<array<string, mixed>> */
         return $this->db()->fetchAllAssociative('SELECT * FROM deals WHERE customer_id = ? ORDER BY created_at, id', [$this->customerId($customer)]);
     }
 

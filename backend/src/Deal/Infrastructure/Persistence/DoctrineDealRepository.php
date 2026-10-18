@@ -50,7 +50,7 @@ final class DoctrineDealRepository extends TenantScopedRepository implements Dea
             }
         }
 
-        /** @var Deal|null */
+        /* @var Deal|null */
         return $this->em->createQueryBuilder()
             ->select('d')
             ->from(Deal::class, 'd')

@@ -2,14 +2,6 @@
 
 namespace App\Deal\UI\Http\Controller;
 
-use App\Deal\UI\Http\Input\AttachVehicleInput;
-use App\Deal\UI\Http\Input\ChangeStageInput;
-use App\Deal\UI\Http\Input\CreateDealInput;
-use App\Deal\UI\Http\Input\DealAssigneeInput;
-use App\Deal\UI\Http\Input\DealListQuery;
-use App\Deal\UI\Http\Input\TradeInInput;
-use App\Deal\UI\Http\Output\DealOutput;
-use App\Deal\UI\Http\Output\DealPageOutput;
 use App\Deal\Application\Command\AssignDeal;
 use App\Deal\Application\Command\AttachVehicle;
 use App\Deal\Application\Command\ChangeStage;
@@ -18,6 +10,14 @@ use App\Deal\Application\Command\SetTradeIn;
 use App\Deal\Application\Query\DealFilter;
 use App\Deal\Application\Query\DealQueries;
 use App\Deal\UI\Http\DealPresenter;
+use App\Deal\UI\Http\Input\AttachVehicleInput;
+use App\Deal\UI\Http\Input\ChangeStageInput;
+use App\Deal\UI\Http\Input\CreateDealInput;
+use App\Deal\UI\Http\Input\DealAssigneeInput;
+use App\Deal\UI\Http\Input\DealListQuery;
+use App\Deal\UI\Http\Input\TradeInInput;
+use App\Deal\UI\Http\Output\DealOutput;
+use App\Deal\UI\Http\Output\DealPageOutput;
 use App\Shared\Application\Bus\CommandBus;
 use App\Shared\Application\Port\TenantContext;
 use App\Shared\UI\Http\ApiController;

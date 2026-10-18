@@ -49,7 +49,8 @@ final readonly class DealPresenter
         $now = $this->clock->now();
 
         return array_map(static function (Deal $deal) use ($customers, $users, $vehicles, $now): DealOutput {
-            $vehicle = null === $deal->vehicleId() ? null : ($vehicles[$deal->vehicleId()] ?? null);
+            $vehicleId = $deal->vehicleId();
+            $vehicle = null === $vehicleId || !isset($vehicles[$vehicleId]) ? null : new DealVehicleOutput($vehicleId, $vehicles[$vehicleId]['title'], $vehicles[$vehicleId]['stock_number']);
             $tradeIn = $deal->tradeIn();
             $assignee = $deal->assignedUserId();
 
@@ -62,7 +63,7 @@ final readonly class DealPresenter
                 createdAt: $deal->createdAt(),
                 assignee: null === $assignee ? null : new UserRefOutput($assignee, $users[$assignee] ?? ''),
                 leadId: $deal->leadId(),
-                vehicle: null === $vehicle || null === $deal->vehicleId() ? null : new DealVehicleOutput($deal->vehicleId(), $vehicle['title'], $vehicle['stock_number']),
+                vehicle: $vehicle,
                 vehicleText: $deal->vehicleText(),
                 tradeIn: null === $tradeIn ? null : new TradeInOutput($tradeIn->year, $tradeIn->make, $tradeIn->model, $tradeIn->mileage, $tradeIn->payoffCents),
                 expectedGrossCents: $deal->expectedGrossCents(),
