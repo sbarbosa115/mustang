@@ -1,6 +1,15 @@
-import {ACCOUNTS, PASSWORD, consoleErrors, expect, test} from './support/test';
+import {
+  ACCOUNTS,
+  PASSWORD,
+  consoleErrors,
+  enterTotpCode,
+  expect,
+  test,
+} from './support/test';
 
 test.describe('AUTH-01 · sign in and out as each role', () => {
+  // Each sign-in may wait up to 30 s for a fresh TOTP code.
+  test.setTimeout(75_000);
   for (const account of ['sales', 'bdc', 'manager', 'admin'] as const) {
     test(`AUTH-01 · ${account}`, async ({page}) => {
       const errors = consoleErrors(page);
@@ -8,6 +17,7 @@ test.describe('AUTH-01 · sign in and out as each role', () => {
       await page.getByLabel('Email').fill(ACCOUNTS[account]);
       await page.getByLabel('Password').fill(PASSWORD);
       await page.getByRole('button', {name: 'Sign in'}).click();
+      await enterTotpCode(page);
 
       await expect(page).toHaveURL(/\/today$/);
       await expect(page.getByRole('heading', {name: 'Today'})).toBeVisible();

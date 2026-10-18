@@ -29,6 +29,8 @@ abstract class ApiTestCase extends WebTestCase
     {
         parent::setUp();
         $this->client = static::createClient();
+        // A client address of its own per test, so the sign-in rate limit (kept across runs) never leaks between tests.
+        $this->client->setServerParameter('REMOTE_ADDR', \sprintf('10.%d.%d.%d', random_int(1, 254), random_int(1, 254), random_int(1, 254)));
     }
 
     /**

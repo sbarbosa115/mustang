@@ -4,10 +4,9 @@ import {
   PASSWORD,
   SEED_RECOVERY_CODES,
   consoleErrors,
+  enterTotpCode,
   expect,
-  seedTotp,
   test,
-  waitForNextTotp,
 } from './support/test';
 
 // A code step may wait for the next 30-second code (each code is accepted once per account).
@@ -18,31 +17,6 @@ async function passwordStep(page: Page, email: string): Promise<void> {
   await page.getByLabel('Email').fill(email);
   await page.getByLabel('Password').fill(PASSWORD);
   await page.getByRole('button', {name: 'Sign in'}).click();
-}
-
-/** Types the current code; when this account already used it in this run, waits for the next one. */
-async function enterCode(page: Page): Promise<void> {
-  const field = page.getByLabel('Code from your authenticator app');
-  await field.fill(seedTotp());
-  await page.getByRole('button', {name: 'Verify'}).click();
-  const reused = page
-    .getByRole('alert')
-    .filter({hasText: 'That code was already used'});
-  const outcome = await Promise.race([
-    page
-      .waitForURL(/\/today$/)
-      .then(() => 'in' as const)
-      .catch(() => 'none' as const),
-    reused
-      .waitFor()
-      .then(() => 'reused' as const)
-      .catch(() => 'none' as const),
-  ]);
-  if (outcome === 'reused') {
-    await waitForNextTotp();
-    await field.fill(seedTotp());
-    await page.getByRole('button', {name: 'Verify'}).click();
-  }
 }
 
 test('AUTH-05 · sign-in asks for the code from the app', async ({page}) => {
@@ -60,7 +34,7 @@ test('AUTH-05 · sign-in asks for the code from the app', async ({page}) => {
     'That code is not right. Check the app and try again.',
   );
 
-  await enterCode(page);
+  await enterTotpCode(page);
   await expect(page).toHaveURL(/\/today$/);
   await expect(page.getByRole('heading', {name: 'Today'})).toBeVisible();
   expect(errors).toEqual([]);

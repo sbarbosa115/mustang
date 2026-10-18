@@ -172,3 +172,28 @@ export function consoleErrors(page: Page): string[] {
   page.on('pageerror', (error) => errors.push(error.message));
   return errors;
 }
+
+/** Types the current code; when this account already used it in this run, waits for the next one. */
+export async function enterTotpCode(page: Page): Promise<void> {
+  const field = page.getByLabel('Code from your authenticator app');
+  await field.fill(seedTotp());
+  await page.getByRole('button', {name: 'Verify'}).click();
+  const reused = page
+    .getByRole('alert')
+    .filter({hasText: 'That code was already used'});
+  const outcome = await Promise.race([
+    page
+      .waitForURL(/\/today$/)
+      .then(() => 'in' as const)
+      .catch(() => 'none' as const),
+    reused
+      .waitFor()
+      .then(() => 'reused' as const)
+      .catch(() => 'none' as const),
+  ]);
+  if (outcome === 'reused') {
+    await waitForNextTotp();
+    await field.fill(seedTotp());
+    await page.getByRole('button', {name: 'Verify'}).click();
+  }
+}

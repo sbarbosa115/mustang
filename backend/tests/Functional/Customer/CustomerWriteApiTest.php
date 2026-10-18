@@ -353,7 +353,7 @@ final class CustomerWriteApiTest extends ApiTestCase
     public function testANoteIsAddedWithItsAuthorAndListedNewestFirst(): void
     {
         $this->signInAs('sales');
-        $id = $this->customerId(1);
+        $id = $this->customerId(18);
         $first = $this->request('POST', '/api/v1/customers/'.$id.'/notes', ['body' => 'Wants a third row, budget around 45k.']);
         $this->assertStatus(201);
         self::assertSame('Wants a third row, budget around 45k.', $first['body']);
@@ -383,9 +383,9 @@ final class CustomerWriteApiTest extends ApiTestCase
     public function testNotesOfOtherCustomersDoNotLeakIn(): void
     {
         $this->signInAs('sales');
-        $this->request('POST', '/api/v1/customers/'.$this->customerId(2).'/notes', ['body' => 'Only on customer 2.']);
+        $this->request('POST', '/api/v1/customers/'.$this->customerId(19).'/notes', ['body' => 'Only on customer 2.']);
 
-        $list = $this->request('GET', '/api/v1/customers/'.$this->customerId(1).'/notes');
+        $list = $this->request('GET', '/api/v1/customers/'.$this->customerId(18).'/notes');
 
         self::assertSame([], $list);
     }

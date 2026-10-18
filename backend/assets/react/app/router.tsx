@@ -61,7 +61,8 @@ function RequireRole({role, children}: {role: Role; children: ReactNode}) {
 }
 
 export const router = createBrowserRouter([
-  {path: '/login', element: page(() => import('@/pages/login'), 'LoginPage')},
+  // /login, /login/mfa and /login/enroll: the sign-in steps (item "mfa").
+  {path: '/login/*', element: page(() => import('@/pages/login'), 'LoginPage')},
   {
     element: <RequireAuth />,
     children: [
