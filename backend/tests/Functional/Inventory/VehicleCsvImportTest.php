@@ -44,10 +44,9 @@ final class VehicleCsvImportTest extends ApiTestCase
         foreach ($transport->getSent() as $envelope) {
             $message = $envelope->getMessage();
             if ($message instanceof ImportVehiclesCsv) {
-                static::getContainer()->get(\App\Inventory\Application\Command\ImportVehiclesCsvHandler::class)($message);
+                static::getContainer()->get(\App\Inventory\Application\EventHandler\ImportVehiclesCsvHandler::class)($message);
             }
         }
-        static::getContainer()->get('doctrine.orm.entity_manager')->flush();
         $transport->reset();
     }
 

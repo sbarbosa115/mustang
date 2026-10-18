@@ -5,7 +5,7 @@ namespace App\Inventory\Application\Command;
 use App\Shared\Application\Bus\AsyncMessage;
 
 /**
- * Processes a pending vehicles upload on the worker.
+ * Queued when an upload is recorded: on the worker, ImportVehiclesCsvHandler turns it into a ProcessVehicleImport command.
  */
 final readonly class ImportVehiclesCsv implements AsyncMessage
 {

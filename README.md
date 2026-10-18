@@ -108,14 +108,14 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `PATCH /api/v1/deals/{id}/vehicle` | Set the vehicle of interest | 200, 404, 422 | 501 until "deals" |
 | `PATCH /api/v1/deals/{id}/trade-in` | Set the trade-in | 200, 404, 422 | 501 until "deals" |
 | `PATCH /api/v1/deals/{id}/assignee` | Assign a deal to a rep ("Assign to me") | 200, 404, 422 | 501 until "deals" |
-| `GET /api/v1/vehicles` | Search inventory | 200 | 501 until "inventory" |
-| `POST /api/v1/vehicles` | Add a vehicle | 201, 409, 422 | 501 until "inventory" |
-| `GET /api/v1/vehicles/facets` | Filter values with counts | 200 | 501 until "inventory" |
-| `GET /api/v1/vehicles/{id}` | One vehicle | 200, 404 | 501 until "inventory" |
-| `PATCH /api/v1/vehicles/{id}` | Change a vehicle | 200, 404, 422 | 501 until "inventory" |
-| `POST /api/v1/vehicles/{id}/status` | Change a vehicle's status | 200, 404, 422 | 501 until "inventory" |
-| `POST /api/v1/vehicles/import` | Upload vehicles from a CSV (processed by the worker) | 201, 413, 422 | 501 until "inventory" |
-| `GET /api/v1/vehicles/import/{id}` | Progress and errors of a vehicles upload | 200, 404 | 501 until "inventory" |
+| `GET /api/v1/vehicles` | Search inventory by q (stock number, VIN, make, model, year words), status, condition, make, model, year, price (whole dollars), mileage, color, body, drivetrain, fuel and sort; paged | 200 | Built |
+| `POST /api/v1/vehicles` | Add a vehicle | 201, 409, 422 | Built |
+| `GET /api/v1/vehicles/facets` | Filter values with counts | 200 | Built |
+| `GET /api/v1/vehicles/{id}` | One vehicle | 200, 404 | Built |
+| `PATCH /api/v1/vehicles/{id}` | Change a vehicle | 200, 404, 422 | Built |
+| `POST /api/v1/vehicles/{id}/status` | Change a vehicle's status | 200, 404, 422 | Built |
+| `POST /api/v1/vehicles/import` | Upload vehicles from a CSV (processed by the worker; a stock number already in the inventory is updated; a sample file is at /samples/vehicles.csv) | 201, 413, 422 | Built |
+| `GET /api/v1/vehicles/import/{id}` | Progress and errors of a vehicles upload | 200, 404 | Built |
 | `GET /api/v1/leads` | Leads, newest first | 200 | 501 until "leads" |
 | `POST /api/v1/leads` | Capture a lead: match or create the customer, route it to a rep | 201, 422 | 501 until "leads" |
 | `GET /api/v1/leads/{id}` | One lead | 200, 404 | 501 until "leads" |

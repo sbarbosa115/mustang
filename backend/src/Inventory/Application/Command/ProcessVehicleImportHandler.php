@@ -14,11 +14,11 @@ use App\Shared\Application\Bus\CommandHandler;
 use App\Shared\Domain\Error\InvalidValue;
 
 /**
- * Runs on the worker, so nobody is signed in: the import carries its dealership. A bad row is reported and skipped, the
+ * Reads a stored upload and adds or updates its vehicles. Runs on the worker, so nobody is signed in: the import carries its dealership. A bad row is reported and skipped, the
  * rest of the file still lands; a stock number already in the inventory is updated, never duplicated, so uploading the
  * same file twice changes nothing.
  */
-final readonly class ImportVehiclesCsvHandler implements CommandHandler
+final readonly class ProcessVehicleImportHandler implements CommandHandler
 {
     private const int MAX_REPORTED_ERRORS = 200;
 
@@ -29,7 +29,7 @@ final readonly class ImportVehiclesCsvHandler implements CommandHandler
     ) {
     }
 
-    public function __invoke(ImportVehiclesCsv $command): void
+    public function __invoke(ProcessVehicleImport $command): void
     {
         $import = $this->imports->getForWorker($command->importId);
         if (VehicleImportStatus::Done === $import->status() || VehicleImportStatus::Failed === $import->status()) {
