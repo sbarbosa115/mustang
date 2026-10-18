@@ -40,7 +40,11 @@ test('TL-01 · a customer with history shows it by day, newest first', async ({
   const days = page.getByTestId('customer-timeline').getByRole('region');
   await expect(days.first()).toBeVisible();
   expect(await days.count()).toBeGreaterThan(1);
-  await expect(page.getByText('Lead received')).toBeVisible();
+  // LEAD-02 may have added a lead to Sarah too, so look at the seeded one by its summary.
+  const seeded = days
+    .getByRole('listitem')
+    .filter({hasText: 'interested in white F-150'});
+  await expect(seeded.getByText('Lead received', {exact: true})).toBeVisible();
   await expect(page.getByText('Text sent').first()).toBeVisible();
   await expect(page.getByText('Deal moved to Engaged')).toBeVisible();
   expect(errors).toEqual([]);
