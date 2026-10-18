@@ -1,11 +1,16 @@
 import {screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {api, ApiError} from '@/shared/api';
+import {ApiError} from '@/shared/api';
 import {renderWithProviders} from '@/shared/test/render';
 import {SimulateInbound} from './SimulateInbound';
 
 const simulateInbound = vi.hoisted(() => vi.fn());
+const fetchHealth = vi.hoisted(() => vi.fn());
+vi.mock('@/entities/system', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/entities/system')>()),
+  fetchHealth,
+}));
 vi.mock('@/entities/conversation', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/entities/conversation')>()),
   simulateInbound,
@@ -13,10 +18,11 @@ vi.mock('@/entities/conversation', async (importOriginal) => ({
 
 /** The health check says which environment the API runs in; the dev endpoint exists in dev and test. */
 function environment(name: string) {
-  vi.spyOn(api, 'GET').mockResolvedValue({
-    data: {status: 'ok', environment: name, sms_transport: 'fake'},
-    response: new Response('{}', {status: 200}),
-  } as never);
+  fetchHealth.mockResolvedValue({
+    status: 'ok',
+    environment: name,
+    sms_transport: 'fake',
+  });
   simulateInbound.mockResolvedValue({
     customer_id: 'c1',
     conversation_id: 'v1',
@@ -27,6 +33,7 @@ function environment(name: string) {
 describe('SimulateInbound', () => {
   beforeEach(() => {
     simulateInbound.mockReset();
+    fetchHealth.mockReset();
   });
   afterEach(() => {
     vi.restoreAllMocks();
@@ -35,11 +42,25 @@ describe('SimulateInbound', () => {
   it('is not shown when the API does not expose the dev endpoint', async () => {
     environment('prod');
     renderWithProviders(<SimulateInbound />);
-    await waitFor(() => expect(api.GET).toHaveBeenCalledWith('/api/v1/health'));
+    await waitFor(() => expect(fetchHealth).toHaveBeenCalled());
     expect(
       screen.queryByRole('button', {name: 'Simulate a reply'}),
       'production never shows the simulator',
     ).toBeNull();
+  });
+
+  it('is shown in dev and in test', async () => {
+    environment('dev');
+    const dev = renderWithProviders(<SimulateInbound />);
+    expect(
+      await screen.findByRole('button', {name: 'Simulate a reply'}),
+    ).toBeVisible();
+    dev.unmount();
+    environment('test');
+    renderWithProviders(<SimulateInbound />);
+    expect(
+      await screen.findByRole('button', {name: 'Simulate a reply'}),
+    ).toBeVisible();
   });
 
   it('adds a text reply from the customer phone it was opened for', async () => {
