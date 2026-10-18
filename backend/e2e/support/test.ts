@@ -23,8 +23,35 @@ export const ACCOUNTS = {
 } as const;
 export type Account = keyof typeof ACCOUNTS;
 export const PASSWORD = 'Mustang-dev-1';
-/** Every seed user's TOTP secret once MFA is enrolled by the seed (item "mfa"). */
+/** Every seed user's TOTP secret, enrolled by the seed (MfaSeeder). */
 export const SEED_TOTP_SECRET = 'MUSTANGDEVTOTPSECRET234567';
+/** Every seed user's recovery codes (MfaSeeder); each signs in once per seeded database. */
+export const SEED_RECOVERY_CODES = [
+  'MUSTANG-RECOVERY-1',
+  'MUSTANG-RECOVERY-2',
+  'MUSTANG-RECOVERY-3',
+  'MUSTANG-RECOVERY-4',
+  'MUSTANG-RECOVERY-5',
+  'MUSTANG-RECOVERY-6',
+  'MUSTANG-RECOVERY-7',
+  'MUSTANG-RECOVERY-8',
+] as const;
+
+/** The code an authenticator app shows now for the seed secret. */
+export function seedTotp(): string {
+  return generateSync({secret: SEED_TOTP_SECRET});
+}
+
+/**
+ * Waits until the app would show its next code. Mustang accepts each code once per account, so a second sign-in of
+ * the same account within one 30-second step must wait for the next code.
+ */
+export async function waitForNextTotp(): Promise<void> {
+  const step = 30_000;
+  await new Promise((resolve) =>
+    setTimeout(resolve, step - (Date.now() % step) + 500),
+  );
+}
 
 const AUTH_DIR = path.join(process.cwd(), 'e2e', '.results', 'auth');
 let addresses = 0;
@@ -54,11 +81,18 @@ export async function signInThroughApi(
   expect(login.status(), `signing in as ${email}`).toBe(200);
   const {next} = (await login.json()) as {next: 'ok' | 'mfa' | 'enroll'};
   if (next === 'mfa') {
-    const verify = await request.post('/api/v1/auth/mfa/verify', {
-      data: {code: generateSync({secret: SEED_TOTP_SECRET})},
-      headers: {Origin: origin},
-    });
-    expect(verify.status(), `the TOTP step for ${email}`).toBe(200);
+    const verify = () =>
+      request.post('/api/v1/auth/mfa/verify', {
+        data: {code: seedTotp()},
+        headers: {Origin: origin},
+      });
+    let answer = await verify();
+    if (answer.status() === 422) {
+      // This account already used the current code in this run (mfa_code_reused): take the next one.
+      await waitForNextTotp();
+      answer = await verify();
+    }
+    expect(answer.status(), `the TOTP step for ${email}`).toBe(200);
   } else {
     expect(next, `${email} must not need MFA enrollment in a smoke run`).toBe(
       'ok',

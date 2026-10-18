@@ -60,10 +60,11 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/auth/logout` | Sign out; ends the session. Handled by the firewall's logout | 204 | Built |
 | `GET /api/v1/me` | The signed-in user, their dealership and their roles | 200 | Built |
 | `PATCH /api/v1/me/preferences` | Change the signed-in user's preferences (the colour theme) | 200, 422 | Built |
-| `POST /api/v1/auth/mfa/enroll` | Start TOTP enrollment: a new secret and its QR code | 200, 409 | 501 until "mfa" |
-| `POST /api/v1/auth/mfa/confirm` | Confirm enrollment with a code from the app; returns the recovery codes once | 200, 422 | 501 until "mfa" |
-| `POST /api/v1/auth/mfa/verify` | Finish sign-in with a TOTP code or a recovery code | 200, 422, 429 | 501 until "mfa" |
-| `DELETE /api/v1/users/{id}/mfa` | Reset a user's MFA so they enroll again at next sign-in (admin) | 204, 404 | 501 until "mfa" |
+| `GET /api/v1/auth/mfa` | The signed-in user's two-step sign-in: enrolled, whether this session gave its code, recovery codes left | 200 | Built |
+| `POST /api/v1/auth/mfa/enroll` | Start TOTP enrollment: a new secret and its QR code (again before confirming replaces the secret) | 200, 409 | Built |
+| `POST /api/v1/auth/mfa/confirm` | Confirm enrollment with a code from the app; returns the eight recovery codes once | 200, 409, 422, 429 | Built |
+| `POST /api/v1/auth/mfa/verify` | Finish sign-in with a TOTP code or a recovery code; each is accepted once, five tries per five minutes. Until then every route but `/auth/*` answers 403 `mfa_required` | 200, 409, 422, 429 | Built |
+| `DELETE /api/v1/users/{id}/mfa` | Reset a user's MFA so they enroll again at next sign-in (admin) | 204, 403, 404 | Built |
 | `GET /api/v1/users` | The dealership's users, by name. Every signed-in user may read it (to pick an assignee) | 200 | Built |
 | `POST /api/v1/users` | Create a user (admin) | 201, 409, 422 | 501 until "users-admin" |
 | `GET /api/v1/users/{id}` | One user | 200, 404 | Built |
