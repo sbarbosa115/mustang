@@ -90,11 +90,12 @@ final class SendMessageTest extends MessagingTestCase
         $envelope = array_values($queue->getSent())[0];
 
         // What the worker reports when the last of the mail queue's 5 retries failed.
-        $failure = new WorkerMessageFailedEvent($envelope->with(new RedeliveryStamp(5)), 'mail', new \RuntimeException('Connection refused'));
+        $failure = new WorkerMessageFailedEvent($envelope->with(new RedeliveryStamp(5)), 'mail', new \RuntimeException('Connection could not be established with host "smtp.internal:2525": Connection refused'));
         static::getContainer()->get(EventDispatcherInterface::class)->dispatch($failure);
 
         $row = $this->db()->fetchAssociative('SELECT status, failed_reason FROM messages WHERE id = ?', [$message['id']]);
-        self::assertSame(['status' => 'failed', 'failed_reason' => 'Connection refused'], $row, 'The rep can see the email never left.');
+        // Security audit 2026-10-18, finding 6: the mail server's own error (its host and port) reached the API.
+        self::assertSame(['status' => 'failed', 'failed_reason' => 'delivery_failed'], $row, 'The rep sees the email never left, not the server\'s error.');
     }
 
     public function testATextWithoutConsentIsBlockedAndTheRefusalIsKept(): void

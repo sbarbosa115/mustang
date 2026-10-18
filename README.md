@@ -33,6 +33,23 @@ docker compose exec php php bin/console mustang:seed-demo
 | The whole gate | `~/.claude/skills/symfony-react-app/scripts/gate.sh` |
 | API types | `docker compose exec php php bin/console nelmio:apidoc:dump --format=json > backend/assets/types/openapi.json && docker compose run --rm --no-deps node npm run -s api:types` |
 
+## Production
+
+There is no production deployment yet. Whoever builds it sets these in the real environment (or `.env.prod.local`,
+or Symfony secrets), never in a committed file: `backend/.env` holds development values only.
+
+| Variable | Production value |
+|---|---|
+| `APP_ENV`, `APP_DEBUG` | `prod` and `0`. Without them `.env` makes the app run as dev (debug pages, profiler, the dev inbound route) |
+| `APP_SECRET` | A random value of its own (`php -r 'echo bin2hex(random_bytes(32));'`); `.env` leaves it empty |
+| `MUSTANG_ENCRYPTION_KEY` | 32 random bytes, base64 (`php -r 'echo base64_encode(random_bytes(32));'`). The app refuses the committed dev key in prod. Changing it later makes the stored MFA secrets unreadable, so it is kept with the database backups |
+| `DATABASE_URL`, `MAILER_DSN`, `MESSENGER_TRANSPORT_DSN` | The real services, with their own credentials |
+| `APP_URL` | The public `https://` origin: the same-origin check on state-changing requests compares `Origin` with it |
+| `TRUSTED_PROXIES` | The TLS-terminating proxy, so client IPs (sign-in throttling, audit log) and HTTPS are seen correctly |
+
+The session cookie is `Secure` in prod whatever the proxy says. The TLS proxy adds HSTS
+(`Strict-Transport-Security: max-age=31536000`); the app sets the other security headers itself.
+
 ## Stack
 
 PHP 8.4.26, Symfony 8.1 (framework 8.1.7), Doctrine ORM 3, MariaDB 10.11.19, Messenger with a worker, Mailpit;
@@ -165,3 +182,17 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 See "Left out on purpose" in [`docs/pdr/prd-mvp.md`](docs/pdr/prd-mvp.md): everything in the baseline's backlog, all
 integrations (no SMS carrier, DNC check, lead feeds, DMS or CRM migration), Spanish strings, and security work beyond
 the baseline (SOC 2, penetration test). Security policies are drafts to confirm: [`docs/security/policies.md`](docs/security/policies.md).
+
+Open from the security audit ([`docs/security/audits/2026-10-18-mvp.md`](docs/security/audits/2026-10-18-mvp.md)):
+
+- **START lifts every dealership's opt-out (medium, finding 10).** A STOP to one dealership revokes that dealership's
+  consents and suppresses the phone everywhere; a later START to another dealership removes the suppression, so a
+  third dealership with an older consent can text again. Needs a compliance decision: a suppression per dealership that
+  received the STOP, or STOP revoking every dealership's consents.
+- **Vehicle uploads (low, finding 11).** Any role may upload inventory (customer and lead imports are manager-only),
+  and a 10 MB file is imported in one unit of work with no row cap.
+- **Uploaded CSVs are kept (low, finding 12)** under `var/uploads/`; deleting them waits for the retention policy.
+- **Last admin race (low, finding 14).** Two admins removing each other at the same instant can leave none.
+- **Headers (low, findings 8 and 15).** The Content-Security-Policy does not restrict scripts yet (the theme script
+  is inline and the dev build is served by Vite); the dev images send `Server` and `X-Powered-By` versions, and health
+  names the environment.

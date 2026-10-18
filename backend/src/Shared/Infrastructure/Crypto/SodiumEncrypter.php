@@ -7,10 +7,18 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 final readonly class SodiumEncrypter implements Encrypter
 {
+    /** The development key committed in backend/.env: anyone with the repository has it. */
+    private const string DEV_KEY = 'bXVzdGFuZy1kZXYta2V5LW5vdC1mb3ItcHJvZC11c2U=';
+
     private string $key;
 
-    public function __construct(#[Autowire(env: 'MUSTANG_ENCRYPTION_KEY')] string $base64Key)
-    {
+    public function __construct(
+        #[Autowire(env: 'MUSTANG_ENCRYPTION_KEY')] string $base64Key,
+        #[Autowire('%kernel.environment%')] string $environment,
+    ) {
+        if ('prod' === $environment && hash_equals(self::DEV_KEY, $base64Key)) {
+            throw new \InvalidArgumentException('MUSTANG_ENCRYPTION_KEY is the development key: production must set its own (see README, "Production").');
+        }
         $key = base64_decode($base64Key, true);
         if (false === $key || \SODIUM_CRYPTO_SECRETBOX_KEYBYTES !== \strlen($key)) {
             throw new \InvalidArgumentException('MUSTANG_ENCRYPTION_KEY must be 32 bytes, base64-encoded.');
