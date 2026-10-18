@@ -1307,7 +1307,7 @@
                 "tags": [
                     "Consent"
                 ],
-                "summary": "A customer's consent records and the state per channel.",
+                "summary": "A customer's consent records, newest first, and the state per channel.",
                 "operationId": "get_api_consents_list",
                 "parameters": [
                     {
@@ -1321,7 +1321,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "A customer's consent records and the state per channel",
+                        "description": "A customer's consent records, newest first, and the state per channel",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1339,16 +1339,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"compliance\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -1356,7 +1346,7 @@
                 "tags": [
                     "Consent"
                 ],
-                "summary": "Record consent.",
+                "summary": "Record consent for one of the customer's contacts on a channel.",
                 "operationId": "post_api_consents_record",
                 "parameters": [
                     {
@@ -1408,16 +1398,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"compliance\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1427,7 +1407,7 @@
                 "tags": [
                     "Consent"
                 ],
-                "summary": "Revoke consent.",
+                "summary": "Revoke consent: this record and every other grant for the same contact and channel.",
                 "operationId": "post_api_consents_revoke",
                 "parameters": [
                     {
@@ -1440,7 +1420,7 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true,
+                    "required": false,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -1479,16 +1459,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"compliance\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1498,7 +1468,7 @@
                 "tags": [
                     "Consent"
                 ],
-                "summary": "Contacts that opted out, across every dealership.",
+                "summary": "Contacts of this dealership's customers that opted out, at any dealership, newest first; q matches the phone or email.",
                 "operationId": "get_api_suppressions_list",
                 "parameters": [
                     {
@@ -1542,16 +1512,6 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/SuppressionPageOutput"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"compliance\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
                                 }
                             }
                         }

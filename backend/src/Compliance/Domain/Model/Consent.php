@@ -2,6 +2,7 @@
 
 namespace App\Compliance\Domain\Model;
 
+use App\Shared\Domain\Error\Conflict;
 use App\Shared\Domain\Id;
 use App\Shared\Domain\Model\Timestamps;
 use Doctrine\ORM\Mapping as ORM;
@@ -78,6 +79,35 @@ class Consent
         $this->campaign = $campaign;
         $this->revokedAt = $revokedAt;
         $this->revokedReason = $revokedReason;
+    }
+
+    /**
+     * Ends this consent: the customer (or STOP) withdrew it. A revoked record stays in the ledger.
+     *
+     * @throws Conflict when it was already revoked
+     */
+    public function revoke(\DateTimeImmutable $at, ?string $reason): void
+    {
+        if (ConsentState::Revoked === $this->state) {
+            throw new Conflict('consent_already_revoked', 'This consent was already revoked.', ['id' => $this->id]);
+        }
+        $this->state = ConsentState::Revoked;
+        $this->revokedAt = $at;
+        $this->revokedReason = $reason;
+    }
+
+    public function isGranted(): bool
+    {
+        return ConsentState::Granted === $this->state;
+    }
+
+    /**
+     * When this record took effect: its revocation for a revoked record, its capture otherwise. The latest record per
+     * contact and channel decides the state.
+     */
+    public function effectiveAt(): \DateTimeImmutable
+    {
+        return $this->revokedAt ?? $this->capturedAt;
     }
 
     public function id(): string
