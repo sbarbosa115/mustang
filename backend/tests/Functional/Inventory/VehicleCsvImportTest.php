@@ -143,6 +143,16 @@ final class VehicleCsvImportTest extends ApiTestCase
         $this->assertStatus(422, 'No file is a validation error, not a crash.');
     }
 
+    public function testALongFileNameIsShortenedNotACrash(): void
+    {
+        // Security audit 2026-10-18, finding 5: a client file name over 255 characters answered 500.
+        $this->signInAs('sales');
+        $import = $this->upload("stock_number,year,make,model,condition\n", str_repeat('a', 400).'.csv');
+
+        $this->assertStatus(201);
+        self::assertSame(255, mb_strlen((string) $this->db()->fetchOne('SELECT file_name FROM vehicle_imports WHERE id = ?', [$import['id']])));
+    }
+
     public function testAnotherDealershipCannotReadAnImport(): void
     {
         $this->signInAs('sales');

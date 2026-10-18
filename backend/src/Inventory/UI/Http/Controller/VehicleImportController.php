@@ -65,7 +65,7 @@ final class VehicleImportController extends ApiController
         $file->move($this->uploadDir, $stored);
 
         /** @var string $id */
-        $id = $this->commands->dispatch(new UploadVehiclesCsv($file->getClientOriginalName(), $this->uploadDir.'/'.$stored));
+        $id = $this->commands->dispatch(new UploadVehiclesCsv(mb_substr($file->getClientOriginalName(), 0, 255), $this->uploadDir.'/'.$stored));
 
         return $this->created($this->presenter->import($this->imports->get($id)));
     }
