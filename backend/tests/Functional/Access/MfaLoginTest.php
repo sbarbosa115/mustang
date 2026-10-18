@@ -47,7 +47,7 @@ final class MfaLoginTest extends ApiTestCase
         $this->assertStatus(200, 'The MFA routes stay open so the step can be finished.');
         self::assertFalse($status['verified']);
 
-        $verified = $this->request('POST', '/api/v1/auth/mfa/verify', ['code' => $this->codeFor(self::SEED_SECRET)]);
+        $verified = $this->request('POST', '/api/v1/auth/mfa/verify', ['code' => $this->codeFor(MfaSeeder::SECRET)]);
 
         $this->assertStatus(200);
         self::assertSame(['enrolled' => true, 'verified' => true, 'recovery_codes_remaining' => 8], $verified);
@@ -59,7 +59,7 @@ final class MfaLoginTest extends ApiTestCase
     {
         $this->passwordStep('sales');
 
-        $body = $this->request('POST', '/api/v1/auth/mfa/verify', ['code' => $this->wrongCodeFor(self::SEED_SECRET)]);
+        $body = $this->request('POST', '/api/v1/auth/mfa/verify', ['code' => $this->wrongCodeFor(MfaSeeder::SECRET)]);
 
         $this->assertError(422, 'mfa_invalid_code', $body);
         $this->request('GET', '/api/v1/customers');
@@ -96,11 +96,11 @@ final class MfaLoginTest extends ApiTestCase
     {
         $this->passwordStep('sales2');
         for ($i = 0; $i < 5; ++$i) {
-            $this->request('POST', '/api/v1/auth/mfa/verify', ['code' => $this->wrongCodeFor(self::SEED_SECRET)]);
+            $this->request('POST', '/api/v1/auth/mfa/verify', ['code' => $this->wrongCodeFor(MfaSeeder::SECRET)]);
             $this->assertStatus(422);
         }
 
-        $body = $this->request('POST', '/api/v1/auth/mfa/verify', ['code' => $this->codeFor(self::SEED_SECRET)]);
+        $body = $this->request('POST', '/api/v1/auth/mfa/verify', ['code' => $this->codeFor(MfaSeeder::SECRET)]);
 
         $this->assertError(429, 'mfa_too_many_attempts', $body, 'Six digits fall to guessing without a limit.');
     }

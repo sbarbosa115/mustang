@@ -116,7 +116,7 @@ class MfaCredential
         }
         $this->confirmedAt = $at;
         $this->recoveryCodesJson = [
-            'hashes' => array_values(array_map(RecoveryCode::hash(...), $recoveryCodes)),
+            'hashes' => array_map(RecoveryCode::hash(...), $recoveryCodes),
             'last_step' => $step,
         ];
     }

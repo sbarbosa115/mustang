@@ -11,9 +11,6 @@ use Symfony\Component\Clock\NativeClock;
  */
 trait MfaTestTrait
 {
-    /** Every seed user's secret (MfaSeeder). */
-    private const string SEED_SECRET = 'MUSTANGDEVTOTPSECRET234567';
-
     /**
      * Failed-code counts live in a cache pool that outlives the test's transaction: start every test from zero.
      */
