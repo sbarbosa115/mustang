@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 final readonly class MfaSeeder implements DemoSeeder
 {
-    public const string SECRET = 'MUSTANGDEVTOTPSECRET234567';
+    public const string SECRET = 'MUSTANGDEVTOTPSECRET234567ABCDEF';
     public const array RECOVERY_CODES = [
         'MUSTANG-RECOVERY-1', 'MUSTANG-RECOVERY-2', 'MUSTANG-RECOVERY-3', 'MUSTANG-RECOVERY-4',
         'MUSTANG-RECOVERY-5', 'MUSTANG-RECOVERY-6', 'MUSTANG-RECOVERY-7', 'MUSTANG-RECOVERY-8',

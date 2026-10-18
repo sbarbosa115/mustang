@@ -24,7 +24,7 @@ export const ACCOUNTS = {
 export type Account = keyof typeof ACCOUNTS;
 export const PASSWORD = 'Mustang-dev-1';
 /** Every seed user's TOTP secret, enrolled by the seed (MfaSeeder). */
-export const SEED_TOTP_SECRET = 'MUSTANGDEVTOTPSECRET234567';
+export const SEED_TOTP_SECRET = 'MUSTANGDEVTOTPSECRET234567ABCDEF';
 /** Every seed user's recovery codes (MfaSeeder); each signs in once per seeded database. */
 export const SEED_RECOVERY_CODES = [
   'MUSTANG-RECOVERY-1',

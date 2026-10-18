@@ -64,7 +64,7 @@ configs from the skill's templates: `.php-cs-fixer.dist.php`, `phpstan.dist.neon
   Reps see every customer of their rooftop; assignment drives lists and queues, not access.
 - Session cookie (`lax`, `httponly`), `json_login` at `POST /api/v1/auth/login` with a 5/min rate limit per IP and
   email, same-origin check on every state-changing `/api` request, generic error on wrong credentials.
-- Seed accounts (`mustang:seed-demo`, dev only, password `Mustang-dev-1`, TOTP secret `MUSTANGDEVTOTPSECRET234567`
+- Seed accounts (`mustang:seed-demo`, dev only, password `Mustang-dev-1`, TOTP secret `MUSTANGDEVTOTPSECRET234567ABCDEF`
   for every seed user): dealership "Mustang Motors Tampa" with `admin@mustang.test`, `manager@mustang.test`,
   `bdc@mustang.test`, `sales@mustang.test`, `sales2@mustang.test`; dealership "Other Motors" with
   `other@mustang.test` (admin). `tests/Support/ApiTestCase::signInAs(role, dealership)` uses `loginUser()`.

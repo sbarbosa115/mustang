@@ -36,7 +36,7 @@ docker compose exec php php bin/console mustang:seed-demo
   `docker compose exec php php bin/console mustang:messaging:simulate-inbound <phone or email> "<text>"`.
 
 **Accounts.** Dev only, never reuse this password: every account signs in with `Mustang-dev-1` (and, once MFA lands,
-the TOTP secret `MUSTANGDEVTOTPSECRET234567` in any authenticator app).
+the TOTP secret `MUSTANGDEVTOTPSECRET234567ABCDEF` in any authenticator app).
 
 | Role | Sign in with | Dealership | Lands on |
 |---|---|---|---|
@@ -82,7 +82,7 @@ Smoke (part): `e2e/auth.spec.ts` covers the message; by hand: after five wrong a
 to wait.
 **Expected:** one generic message for a wrong password and for an unknown email.
 
-Every seed account has two-step sign-in on: the TOTP secret `MUSTANGDEVTOTPSECRET234567` (add it to an
+Every seed account has two-step sign-in on: the TOTP secret `MUSTANGDEVTOTPSECRET234567ABCDEF` (add it to an
 authenticator app, or compute the code with `otplib`) and the recovery codes `MUSTANG-RECOVERY-1` to
 `MUSTANG-RECOVERY-8` (dev only). A code is accepted once per account: a second sign-in within the same 30 seconds
 waits for the next code.
