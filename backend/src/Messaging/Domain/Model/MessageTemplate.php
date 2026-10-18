@@ -26,8 +26,8 @@ class MessageTemplate
     private string $dealershipId;
     #[ORM\Column(type: 'string', length: 120, name: 'name')]
     private string $name;
-    #[ORM\Column(type: 'string', length: 20, enumType: \App\Shared\Domain\Channel::class, name: 'channel')]
-    private \App\Shared\Domain\Channel $channel;
+    #[ORM\Column(type: 'string', length: 20, enumType: Channel::class, name: 'channel')]
+    private Channel $channel;
     #[ORM\Column(type: 'text', name: 'body')]
     private string $body;
     #[ORM\Column(type: 'guid', name: 'created_by_user_id')]
@@ -40,7 +40,7 @@ class MessageTemplate
     public function __construct(
         string $dealershipId,
         string $name,
-        \App\Shared\Domain\Channel $channel,
+        Channel $channel,
         string $body,
         string $createdByUserId,
         ?string $subject = null,
@@ -122,7 +122,7 @@ class MessageTemplate
         return $this->name;
     }
 
-    public function channel(): \App\Shared\Domain\Channel
+    public function channel(): Channel
     {
         return $this->channel;
     }

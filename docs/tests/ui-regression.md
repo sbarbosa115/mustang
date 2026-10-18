@@ -364,6 +364,34 @@ is offered, and choosing it opens its page.
 <!-- USR-01 – 05: item "users-admin". TPL-01 – 04: item "templates". IMP-01 – 05: item "data-import".
      AUD-01 – 04: item "audit-log". -->
 
+**TPL-01 · A manager writes a text template with the placeholder helper**
+Smoke: `e2e/templates.spec.ts`.
+As manager, Settings, Templates, "New template". **Expected:** "Save template" is disabled until there is a name and a
+message. Typing `Hi `, choosing `{first_name}`, typing `, ` and choosing `{rep_name}` gives the message
+`Hi {first_name}, {rep_name}` and the Preview reads "Hi Maria, Sam". Saving shows "TPL-01 Greeting was saved." and the
+list row says Text, Active and the message. By hand: the buttons add the tag at the caret, in the middle of the text
+too; at 390 px the dialog scrolls and the list shows cards.
+
+**TPL-02 · An email needs a subject and an unknown placeholder is refused**
+Smoke: `e2e/templates.spec.ts`.
+In "New template" choose Email. **Expected:** the Subject field appears and Save stays disabled until it is filled.
+Writing `Hello {pet_name}` says "Unknown placeholder: {pet_name}. Use only the ones listed above." and keeps Save
+disabled; the API answers 422 `unknown_placeholder` for the same text. With `{first_name}` it saves and the list says
+Email. By hand: `{pet_name}` in the subject is refused the same way; the Preview shows the subject above the message.
+
+**TPL-03 · Edit, deactivate and delete a template**
+Smoke: `e2e/templates.spec.ts`.
+Create a template, then Edit it. **Expected:** the Channel is shown but cannot be changed; renaming and switching
+Active off saves and the row says Inactive. Delete opens a dialog titled "Delete <name>?"; Cancel keeps the row;
+"Delete template" removes it with "<name> was deleted." By hand: an inactive template is not offered in the inbox
+(item "inbox-ui"), and a message already sent from a deleted template still shows in its conversation.
+
+**TPL-04 · Reps only read templates; another dealership sees none**
+Smoke: `e2e/templates.spec.ts`.
+Signed in as sales, Settings. **Expected:** there is no Templates tab; the API lists the templates (First reply is
+there) but creating one answers 403. Signed in as other@mustang.test, the list does not have First reply and its id
+answers 404, never 403. By hand: opening `/settings/templates` as sales or BDC lands on Today.
+
 ## Emails
 
 **MAIL-01 · Every email is readable and links to a real screen**
