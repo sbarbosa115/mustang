@@ -109,7 +109,6 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `PATCH /api/v1/deals/{id}/vehicle` | Set the vehicle of interest | 200, 404, 422 | 501 until "deals" |
 | `PATCH /api/v1/deals/{id}/trade-in` | Set the trade-in | 200, 404, 422 | 501 until "deals" |
 | `PATCH /api/v1/deals/{id}/assignee` | Assign a deal to a rep ("Assign to me") | 200, 404, 422 | 501 until "deals" |
-<<<<<<< HEAD
 | `GET /api/v1/vehicles` | Search inventory by q (stock number, VIN, make, model, year words), status, condition, make, model, year, price (whole dollars), mileage, color, body, drivetrain, fuel and sort; paged | 200 | Built |
 | `POST /api/v1/vehicles` | Add a vehicle | 201, 409, 422 | Built |
 | `GET /api/v1/vehicles/facets` | Filter values with counts | 200 | Built |
@@ -118,13 +117,13 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/vehicles/{id}/status` | Change a vehicle's status | 200, 404, 422 | Built |
 | `POST /api/v1/vehicles/import` | Upload vehicles from a CSV (processed by the worker; a stock number already in the inventory is updated; a sample file is at /samples/vehicles.csv) | 201, 413, 422 | Built |
 | `GET /api/v1/vehicles/import/{id}` | Progress and errors of a vehicles upload | 200, 404 | Built |
-| `GET /api/v1/leads` | Leads, newest first | 200 | 501 until "leads" |
-| `POST /api/v1/leads` | Capture a lead: match or create the customer, route it to a rep | 201, 422 | 501 until "leads" |
-| `GET /api/v1/leads/{id}` | One lead | 200, 404 | 501 until "leads" |
-| `PATCH /api/v1/leads/{id}/assignee` | Assign a lead to a rep | 200, 404, 422 | 501 until "leads" |
-| `POST /api/v1/leads/{id}/close` | Close a lead | 200, 404, 409 | 501 until "leads" |
-| `GET /api/v1/settings/routing` | The round-robin order for new leads (manager) | 200 | 501 until "leads" |
-| `PUT /api/v1/settings/routing` | Set the round-robin order (manager) | 200, 422 | 501 until "leads" |
+| `GET /api/v1/leads` | Leads, newest received first; filters `status`, `source`, `assigned_to`; `q` matches the customer's name, phone or email, or the vehicle of interest | 200 | Built |
+| `POST /api/v1/leads` | Capture a lead (source required): the customer by `customer_id`, else matched by phone then email, else created with the lead's source; the rep is `assigned_user_id` or the next in the round robin; raises LeadCaptured | 201, 409, 422 | Built |
+| `GET /api/v1/leads/{id}` | One lead | 200, 404 | Built |
+| `PATCH /api/v1/leads/{id}/assignee` | Hand a lead to an active sales, BDC or manager user (raises LeadAssigned); 409 `lead_closed` | 200, 404, 409, 422 | Built |
+| `POST /api/v1/leads/{id}/close` | Close a lead; closing twice is 409 `lead_closed` (the optional reason is not stored in the MVP) | 200, 404, 409 | Built |
+| `GET /api/v1/settings/routing` | The round-robin order for new leads and whose turn is next; until a manager sets it, the active salespeople by name (manager) | 200, 403 | Built |
+| `PUT /api/v1/settings/routing` | Set the round-robin order: active salespeople, each once; an empty list leaves new leads unassigned (manager) | 200, 403, 422 | Built |
 | `GET /api/v1/conversations` | Conversations, most recent first; `folder` all, unreplied (the customer wrote last) or fumbled (unreplied for more than `WORKLIST_FUMBLED_MINUTES`, 30), `user_id` the assigned rep, `q` a name, phone or email | 200, 422 | Built |
 | `GET /api/v1/conversations/counts` | Counts per folder, and unreplied conversations per assigned rep | 200 | Built |
 | `GET /api/v1/conversations/{id}` | A conversation, its messages oldest first (refused attempts included) and the customer's phone and email | 200, 404 | Built |
@@ -133,31 +132,6 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/dev/inbound` | Simulate a customer reply from a customer's phone or email (dev and test only; also `bin/console mustang:messaging:simulate-inbound <phone or email> "<text>" [--channel=email]`) | 201, 422 | Built |
 | `POST /api/v1/conversations/{id}/messages` | Send a text (fake transport, sent at once) or an email (queued, then sent by the worker); refused with 409 `consent_missing` or `opted_out`, the attempt kept with its consent snapshot | 201, 404, 409, 422 | Built |
 | `GET /api/v1/messages/{id}/provenance` | Who sent a message, under which consent and through which transport | 200, 404 | Built |
-=======
-| `GET /api/v1/vehicles` | Search inventory | 200 | 501 until "inventory" |
-| `POST /api/v1/vehicles` | Add a vehicle | 201, 409, 422 | 501 until "inventory" |
-| `GET /api/v1/vehicles/facets` | Filter values with counts | 200 | 501 until "inventory" |
-| `GET /api/v1/vehicles/{id}` | One vehicle | 200, 404 | 501 until "inventory" |
-| `PATCH /api/v1/vehicles/{id}` | Change a vehicle | 200, 404, 422 | 501 until "inventory" |
-| `POST /api/v1/vehicles/{id}/status` | Change a vehicle's status | 200, 404, 422 | 501 until "inventory" |
-| `POST /api/v1/vehicles/import` | Upload vehicles from a CSV (processed by the worker) | 201, 413, 422 | 501 until "inventory" |
-| `GET /api/v1/vehicles/import/{id}` | Progress and errors of a vehicles upload | 200, 404 | 501 until "inventory" |
-| `GET /api/v1/leads` | Leads, newest received first; filters `status`, `source`, `assigned_to`; `q` matches the customer's name, phone or email, or the vehicle of interest | 200 | Built |
-| `POST /api/v1/leads` | Capture a lead (source required): the customer by `customer_id`, else matched by phone then email, else created with the lead's source; the rep is `assigned_user_id` or the next in the round robin; raises LeadCaptured | 201, 409, 422 | Built |
-| `GET /api/v1/leads/{id}` | One lead | 200, 404 | Built |
-| `PATCH /api/v1/leads/{id}/assignee` | Hand a lead to an active sales, BDC or manager user (raises LeadAssigned); 409 `lead_closed` | 200, 404, 409, 422 | Built |
-| `POST /api/v1/leads/{id}/close` | Close a lead; closing twice is 409 `lead_closed` (the optional reason is not stored in the MVP) | 200, 404, 409 | Built |
-| `GET /api/v1/settings/routing` | The round-robin order for new leads and whose turn is next; until a manager sets it, the active salespeople by name (manager) | 200, 403 | Built |
-| `PUT /api/v1/settings/routing` | Set the round-robin order: active salespeople, each once; an empty list leaves new leads unassigned (manager) | 200, 403, 422 | Built |
-| `GET /api/v1/conversations` | Conversations, most recent first | 200 | 501 until "messaging-api" |
-| `GET /api/v1/conversations/counts` | Counts per folder and per rep | 200 | 501 until "messaging-api" |
-| `GET /api/v1/conversations/{id}` | A conversation and its messages | 200, 404 | 501 until "messaging-api" |
-| `POST /api/v1/conversations/{id}/read` | Mark a conversation read | 200, 404 | 501 until "messaging-api" |
-| `GET /api/v1/customers/{id}/conversation` | The customer's conversation, created if there is none | 200, 404 | 501 until "messaging-api" |
-| `POST /api/v1/dev/inbound` | Simulate a customer reply (dev and test only) | 201, 422 | 501 until "messaging-api" |
-| `POST /api/v1/conversations/{id}/messages` | Send a text or email; refused without consent | 201, 404, 409, 422 | 501 until "messaging-api" |
-| `GET /api/v1/messages/{id}/provenance` | Who sent a message, under which consent and transport | 200, 404 | 501 until "messaging-api" |
->>>>>>> feature/mvp-leads
 | `GET /api/v1/templates` | Message templates | 200 | 501 until "templates" |
 | `POST /api/v1/templates` | Create a template (manager) | 201, 422 | 501 until "templates" |
 | `GET /api/v1/templates/{id}` | One template | 200, 404 | 501 until "templates" |
