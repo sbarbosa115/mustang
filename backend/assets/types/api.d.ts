@@ -1026,8 +1026,8 @@ export interface paths {
         put?: never;
         /**
          * Simulate a customer reply (dev and test only).
-         * @description from is a phone (channel text, the default) or an email of a customer of the signed-in user's dealership.
-         *     422 unknown_contact, invalid_phone, invalid_email.
+         * @description from is a phone (channel text, the default) or an email. A contact no customer of the signed-in user's dealership
+         *     has becomes a new customer (source other) with a lead, routed round robin. 422 invalid_phone, invalid_email.
          */
         post: operations["post_api_dev_inbound"];
         delete?: never;

@@ -163,8 +163,11 @@ Smoke (part): `e2e/messaging.spec.ts` covers the dev endpoint; by hand: the cons
 Run `docker compose exec php php bin/console mustang:messaging:simulate-inbound "(813) 555-1005" "Is the Civic still
 there?"`. **Expected:** it says "Reply from Ashley Garcia (+18135551005) added to conversation …". In the inbox,
 Ashley Garcia's conversation is at the top, unread (1) and in the "Unreplied" folder; the folder counts went up by one.
-Run it again with `nobody@example.com "Hi" --channel=email`: it fails with "No customer has email nobody@example.com"
-and nothing changes.
+Run it again with `nobody@example.com "Hi" --channel=email`: it fails with "No customer has email nobody@example.com;
+pass --dealership=<id> …" and nothing changes. Add `--dealership=<Mustang Motors' id>`: it says "Reply from Unknown
+nobody@example.com …"; Customers lists that new customer with source "other", Leads has a new lead (source other,
+"First contact by email") assigned round robin, Deals has its deal in stage new, and the inbox shows the message in
+the new customer's conversation.
 
 **MSG-02 · A send without consent is refused, and the refusal is kept**
 Smoke: `e2e/messaging.spec.ts`.

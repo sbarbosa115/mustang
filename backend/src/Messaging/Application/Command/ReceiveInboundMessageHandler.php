@@ -3,6 +3,7 @@
 namespace App\Messaging\Application\Command;
 
 use App\Messaging\Application\Port\CustomerContacts;
+use App\Messaging\Application\Port\LeadIntake;
 use App\Messaging\Application\Port\MessageTransport;
 use App\Messaging\Domain\Event\InboundMessageReceived;
 use App\Messaging\Domain\Model\Conversation;
@@ -21,7 +22,10 @@ use App\Shared\Domain\PhoneNumber;
 
 /**
  * Finds the customer by the contact the reply came from, finds or opens their conversation, appends the message
- * and raises InboundMessageReceived (Compliance reads STOP and START from it).
+ * and raises InboundMessageReceived (Compliance reads STOP and START from it). A contact no customer of the dealership
+ * has is a first contact: the Lead context captures a lead (source other), which creates the customer, and the message
+ * goes to that customer's new conversation. The lead capture reads the dealership from TenantContext, so the command's
+ * dealership must be the signed-in (or acting) user's.
  */
 final readonly class ReceiveInboundMessageHandler implements CommandHandler
 {
@@ -29,6 +33,7 @@ final readonly class ReceiveInboundMessageHandler implements CommandHandler
         private ConversationRepository $conversations,
         private MessageRepository $messages,
         private CustomerContacts $contacts,
+        private LeadIntake $leads,
         private MessageTransport $transport,
         private EventBus $events,
         private Clock $clock,
@@ -38,10 +43,8 @@ final readonly class ReceiveInboundMessageHandler implements CommandHandler
     public function __invoke(ReceiveInboundMessage $command): InboundResult
     {
         [$kind, $from] = self::contact($command->channel, $command->from);
-        $customer = $this->contacts->customerWith($command->dealershipId, $kind, $from);
-        if (null === $customer) {
-            throw new InvalidValue('unknown_contact', 'No customer of this dealership has this phone or email.', ['from' => $from]);
-        }
+        $customer = $this->contacts->customerWith($command->dealershipId, $kind, $from)
+            ?? $this->firstContact($command->dealershipId, $command->channel, $kind, $from);
 
         $conversation = $this->conversations->findByCustomer($command->dealershipId, $customer);
         if (null === $conversation) {
@@ -78,6 +81,26 @@ final readonly class ReceiveInboundMessageHandler implements CommandHandler
         ));
 
         return new InboundResult($customer, $conversation->id(), $message->id());
+    }
+
+    /**
+     * Captures a lead for the unknown contact and answers the customer it created (CaptureLead's nested dispatch has
+     * flushed it, so the contact lookup sees it).
+     *
+     * @param 'phone'|'email' $kind
+     */
+    private function firstContact(string $dealershipId, Channel $channel, string $kind, string $from): string
+    {
+        $this->leads->captureFirstContact(
+            'phone' === $kind ? $from : null,
+            'email' === $kind ? $from : null,
+            'Unknown',
+            $from,
+            Channel::Email === $channel ? 'First contact by email' : 'First contact by text',
+        );
+
+        return $this->contacts->customerWith($dealershipId, $kind, $from)
+            ?? throw new \LogicException('The lead was captured in another dealership than the inbound message\'s.');
     }
 
     /**

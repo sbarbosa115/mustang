@@ -98,12 +98,19 @@ test('MSG-01 · a simulated text reply lands in the customer conversation', asyn
   expect(thread.conversation.unread_count).toBe(1);
   expect(thread.messages.at(-1).body).toBe('Is the Civic still there?');
 
+  // An unknown contact becomes a new customer (source other) with a lead; a fresh address per run, so it is unknown.
+  const stranger = `msg-01-${Date.now()}@example.com`;
   const unknown = await request.post('/api/v1/dev/inbound', {
     headers,
-    data: {from: 'nobody@example.com', channel: 'email', body: 'Hi'},
+    data: {from: stranger, channel: 'email', body: 'Hi'},
   });
-  expect(unknown.status()).toBe(422);
-  expect((await unknown.json()).error).toBe('unknown_contact');
+  expect(unknown.status()).toBe(201);
+  const created = (await unknown.json()) as {customer_id: string};
+  expect(created.customer_id).not.toBe(customerId);
+  const newcomer = await (
+    await request.get(`/api/v1/customers/${created.customer_id}`)
+  ).json();
+  expect(newcomer.source).toBe('other');
 });
 
 test('MSG-02 · a send without consent is refused and kept', async ({

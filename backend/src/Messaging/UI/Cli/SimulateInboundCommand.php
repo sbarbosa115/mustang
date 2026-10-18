@@ -5,6 +5,7 @@ namespace App\Messaging\UI\Cli;
 use App\Messaging\Application\Command\InboundResult;
 use App\Messaging\Application\Command\ReceiveInboundMessage;
 use App\Messaging\Application\Command\ReceiveInboundMessageHandler;
+use App\Messaging\Application\Port\ActingUser;
 use App\Messaging\Application\Port\CustomerContacts;
 use App\Shared\Application\Bus\CommandBus;
 use App\Shared\Domain\Channel;
@@ -18,7 +19,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * A customer's reply without a carrier: the same command the dev endpoint dispatches. The dealership is the one whose
- * customer has that phone or email (pass --dealership when several do).
+ * customer has that phone or email (pass --dealership when several do, or when none does: the unknown contact then
+ * becomes a new customer with a lead). Nobody is signed in on the console, so it acts as the dealership's first active
+ * admin for the length of the command.
  */
 #[AsCommand(name: 'mustang:messaging:simulate-inbound', description: 'Simulate a customer reply by text or email (dev and test only)')]
 final readonly class SimulateInboundCommand
@@ -26,6 +29,7 @@ final readonly class SimulateInboundCommand
     public function __construct(
         private CommandBus $commands,
         private CustomerContacts $contacts,
+        private ActingUser $actingUser,
         #[Autowire('%kernel.environment%')] private string $environment,
     ) {
     }
@@ -54,7 +58,7 @@ final readonly class SimulateInboundCommand
             [$contactKind, $value] = ReceiveInboundMessageHandler::contact($kind, $from);
             $dealerships = null === $dealership ? $this->contacts->dealershipsWith($contactKind, $value) : [$dealership];
             if ([] === $dealerships) {
-                $io->error(\sprintf('No customer has %s %s.', $contactKind, $value));
+                $io->error(\sprintf('No customer has %s %s; pass --dealership=<id> to receive it as a new customer with a lead.', $contactKind, $value));
 
                 return Command::FAILURE;
             }
@@ -64,7 +68,10 @@ final readonly class SimulateInboundCommand
                 return Command::FAILURE;
             }
             /** @var InboundResult $result */
-            $result = $this->commands->dispatch(new ReceiveInboundMessage($dealerships[0], $kind, $from, $body, $subject));
+            $result = $this->actingUser->runAsAdminOf(
+                $dealerships[0],
+                fn (): mixed => $this->commands->dispatch(new ReceiveInboundMessage($dealerships[0], $kind, $from, $body, $subject)),
+            );
         } catch (DomainError $e) {
             $io->error(\sprintf('%s (%s)', $e->getMessage(), $e->errorCode()));
 

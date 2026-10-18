@@ -26,8 +26,8 @@ final class DevInboundController extends ApiController
     /**
      * Simulate a customer reply (dev and test only).
      *
-     * from is a phone (channel text, the default) or an email of a customer of the signed-in user's dealership.
-     * 422 unknown_contact, invalid_phone, invalid_email.
+     * from is a phone (channel text, the default) or an email. A contact no customer of the signed-in user's dealership
+     * has becomes a new customer (source other) with a lead, routed round robin. 422 invalid_phone, invalid_email.
      */
     #[Route('/api/v1/dev/inbound', name: 'api_dev_inbound', methods: ['POST'], condition: "env('APP_ENV') in ['dev', 'test']")]
     #[OA\Response(response: 201, description: 'Simulate a customer reply (dev and test only)', content: new Model(type: DevInboundOutput::class))]
