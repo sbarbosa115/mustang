@@ -80,10 +80,10 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/appointments/{id}/no-show` | Mark a no-show | 200, 404, 409 | 501 until "appointments" |
 | `POST /api/v1/appointments/{id}/cancel` | Cancel an appointment | 200, 404, 409 | 501 until "appointments" |
 | `GET /api/v1/audit` | Changes and customer record access (admin) | 200 | 501 until "audit-log" |
-| `GET /api/v1/customers/{id}/consents` | A customer's consent records and the state per channel | 200, 404 | 501 until "compliance" |
-| `POST /api/v1/customers/{id}/consents` | Record consent | 201, 404, 422 | 501 until "compliance" |
-| `POST /api/v1/consents/{id}/revoke` | Revoke consent | 200, 404, 409 | 501 until "compliance" |
-| `GET /api/v1/compliance/suppressions` | Contacts that opted out, across every dealership | 200 | 501 until "compliance" |
+| `GET /api/v1/customers/{id}/consents` | A customer's consent records (newest first, revoked ones kept) and the state per channel: the latest record of the primary phone (text, call) or email decides, a suppressed contact is `opted_out` | 200, 404 | Built |
+| `POST /api/v1/customers/{id}/consents` | Record consent for one of the customer's contacts on a channel: source (free text: verbal, written, website, sms_keyword, import…), where, when (`captured_at`, ISO 8601, not in the future; now when left out), wording, campaign; the signed-in user is who captured it. 422 `contact_not_on_customer`, `invalid_phone`, `invalid_email`, `captured_at_in_future` | 201, 404, 422 | Built |
+| `POST /api/v1/consents/{id}/revoke` | Revoke consent (optional reason): this record and every other grant for the same contact and channel; 409 `consent_already_revoked`. An inbound text STOP, STOPALL, UNSUBSCRIBE, CANCEL, END or QUIT revokes text and call for that phone and suppresses it for every dealership; START or UNSTOP lifts the suppression and records text consent with source `sms_keyword` | 200, 404, 409 | Built |
+| `GET /api/v1/compliance/suppressions` | Contacts that opted out (at any dealership) among this dealership's customers' contacts, newest first; `q` matches a phone however typed, or an email | 200 | Built |
 | `GET /api/v1/customers` | The dealership's customers, most recently updated first; q matches a name, phone or email | 200 | Built |
 | `POST /api/v1/customers` | Create a customer (phone and email normalised; a phone or an email is required; 409 `duplicate_contact` names the existing customer) | 201, 409, 422 | Built |
 | `GET /api/v1/customers/lookup` | Customers matching a phone or email, so a form can offer the existing record instead of a duplicate | 200 | Built |

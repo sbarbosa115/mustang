@@ -355,10 +355,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** A customer's consent records and the state per channel. */
+        /** A customer's consent records, newest first, and the state per channel. */
         get: operations["get_api_consents_list"];
         put?: never;
-        /** Record consent. */
+        /** Record consent for one of the customer's contacts on a channel. */
         post: operations["post_api_consents_record"];
         delete?: never;
         options?: never;
@@ -375,7 +375,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Revoke consent. */
+        /** Revoke consent: this record and every other grant for the same contact and channel. */
         post: operations["post_api_consents_revoke"];
         delete?: never;
         options?: never;
@@ -390,7 +390,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Contacts that opted out, across every dealership. */
+        /** Contacts of this dealership's customers that opted out, at any dealership, newest first; q matches the phone or email. */
         get: operations["get_api_suppressions_list"];
         put?: never;
         post?: never;
@@ -3486,7 +3486,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description A customer's consent records and the state per channel */
+            /** @description A customer's consent records, newest first, and the state per channel */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -3497,15 +3497,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "compliance") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3557,15 +3548,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "compliance") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_consents_revoke: {
@@ -3577,7 +3559,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
                 "application/json": components["schemas"]["RevokeConsentInput"];
             };
@@ -3610,15 +3592,6 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "compliance") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_suppressions_list: {
@@ -3641,15 +3614,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SuppressionPageOutput"];
-                };
-            };
-            /** @description Not built yet (item "compliance") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };

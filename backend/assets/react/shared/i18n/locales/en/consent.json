@@ -1,3 +1,97 @@
 {
-  "_owner": "item 7"
+  "_owner": "item 7",
+  "page": {
+    "title": "Consent for {{name}}",
+    "description": "Who agreed to be contacted, on which channel, and when. Mustang sends only on a channel with consent.",
+    "back": "Back to {{name}}",
+    "loading": "Loading consent",
+    "not_found": "This customer does not exist or is not in your dealership.",
+    "summary": "Can we contact them now?",
+    "history": "Consent history",
+    "empty": "No consent recorded yet.",
+    "opted_out_note": "{{channel}} is blocked: this contact replied STOP or unsubscribed. Only the customer can lift it, by texting START."
+  },
+  "column": {
+    "channel": "Channel",
+    "contact": "Contact",
+    "state": "State",
+    "source": "Source",
+    "captured": "Captured",
+    "details": "Details",
+    "actions": "Actions"
+  },
+  "state": {
+    "granted": "Granted",
+    "revoked": "Revoked"
+  },
+  "source": {
+    "verbal": "Verbal",
+    "written": "Written form",
+    "website": "Website",
+    "sms_keyword": "Text keyword",
+    "import": "Import",
+    "other": "Other"
+  },
+  "captured_by": "by {{name}}",
+  "captured_by_customer": "by the customer",
+  "revoked_on": "Revoked",
+  "revoked_reason": {
+    "stop_keyword": "Replied STOP"
+  },
+  "wording": "Wording",
+  "campaign": "Campaign",
+  "where": "Where",
+  "record": {
+    "action": "Record consent",
+    "title": "Record consent",
+    "description": "Write down what the customer agreed to. Consent is for one phone number or email on one channel.",
+    "channel": "Channel",
+    "contact": "Phone number or email",
+    "no_contact_phone": "This customer has no phone number. Add one before recording text or call consent.",
+    "no_contact_email": "This customer has no email. Add one before recording email consent.",
+    "source": "How they agreed",
+    "where": "Where",
+    "where_placeholder": "Showroom, phone call, website form…",
+    "captured_at": "When",
+    "captured_at_help": "Leave empty for now.",
+    "wording": "What they agreed to",
+    "wording_placeholder": "The words on the form or what you read to them",
+    "campaign": "Campaign",
+    "campaign_placeholder": "Optional",
+    "submit": "Record consent",
+    "done": "{{channel}} consent recorded for {{contact}}."
+  },
+  "revoke": {
+    "action": "Revoke",
+    "action_label": "Revoke {{channel}} consent for {{contact}}",
+    "title": "Revoke {{channel}} consent for {{contact}}?",
+    "description": "Mustang stops sending on this channel to this contact at once. The record stays in the history.",
+    "reason": "Reason",
+    "reason_placeholder": "Optional, e.g. asked us to stop calling",
+    "confirm": "Revoke consent",
+    "done": "{{channel}} consent revoked for {{contact}}."
+  },
+  "suppressions": {
+    "title": "Opt-outs",
+    "description": "Contacts of your customers that replied STOP or unsubscribed, at any dealership on Mustang. Nobody can send to them until they text START.",
+    "search_label": "Search opt-outs",
+    "search_placeholder": "Phone number or email",
+    "empty": "Nobody has opted out.",
+    "since": "Opted out",
+    "reason": "Reason",
+    "reasons": {
+      "stop_keyword": "Replied STOP",
+      "unsubscribe": "Unsubscribed"
+    }
+  },
+  "error": {
+    "contact_not_on_customer": "This contact is not one of the customer's. Add it to the customer first.",
+    "invalid_phone": "Enter a valid phone number.",
+    "invalid_email": "Enter a valid email address.",
+    "invalid_captured_at": "Enter a valid date and time.",
+    "captured_at_in_future": "Consent cannot be captured in the future.",
+    "consent_already_revoked": "This consent was already revoked.",
+    "customer_not_found": "This customer does not exist or is not in your dealership.",
+    "consent_not_found": "This consent record no longer exists."
+  }
 }

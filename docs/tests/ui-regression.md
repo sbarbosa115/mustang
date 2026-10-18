@@ -245,6 +245,53 @@ URL says "This customer does not exist or is not in your dealership." By hand: O
 Appointments tabs open and keep the choice in the URL (`?tab=deals`); Deals and Appointments list the customer's own
 records, or say there are none; the Timeline tab says what will appear until the timeline ships.
 
+**CONS-01 · Record text consent from the consent page**
+Smoke (part): `e2e/consent.spec.ts` covers the record and the summary; by hand: at 390 px the history is a list of
+cards and the dialog scrolls with the keyboard open; "When" is typed in the dealership's timezone.
+Signed in as sales@mustang.test, on a customer you created with a phone: Customer actions, "Consent". The page says
+"No consent recorded yet." and every channel is "Missing". "Record consent": the phone is preselected (primary
+first), channel Text, "How they agreed" Verbal; fill Where and "What they agreed to" and record. **Expected:** "Text
+consent recorded for (813) 555-…" appears; the summary shows "Text: Granted" (with an icon, not colour alone); the
+history row says Verbal, "by Sam Patel", a relative time with the full timestamp on hover, and the wording. By hand:
+choosing Email offers the customer's emails, and a customer without an email says to add one first; a "When" in the
+future says "Consent cannot be captured in the future."
+
+**CONS-02 · Revoke consent; the send is refused**
+Smoke: `e2e/consent.spec.ts`.
+On a customer with text consent, "Revoke" on the history row. **Expected:** the confirmation names the channel and
+the phone; with a reason and "Revoke consent", the summary turns "Text: Revoked", the row keeps its history with
+"Revoked: <reason>", and no Revoke button is left on it. A text to that customer is refused with `opted_out` (the
+composer shows the reason once the inbox ships).
+
+**CONS-03 · A STOP reply opts the phone out at every dealership**
+Smoke (part): `e2e/consent.spec.ts` covers the opt-out on the consent page; by hand: the other dealership.
+On a customer with text consent, simulate the reply `STOP` (`mustang:messaging:simulate-inbound <phone> STOP`, or
+STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT in any case). **Expected:** the consent page shows "Text: Opted out" and
+"Text is blocked: this contact replied STOP…"; the text record is revoked with "Replied STOP" and call consent for
+that phone is revoked too; email is untouched. A sentence such as "Can you stop by?" changes nothing. By hand: give a
+customer of Other Motors the same phone (signed in as other@mustang.test); after the STOP at Mustang Motors that
+customer is "Opted out" for text as well, and the number is on Other Motors' opt-outs list.
+
+**CONS-04 · START lifts the opt-out**
+Smoke: `e2e/consent.spec.ts`.
+After a STOP, simulate the reply `START` (or UNSTOP). **Expected:** the summary is back to "Text: Granted"; the newest
+history row is Granted with source "Text keyword", "by the customer", and the customer's words as the wording; the
+phone is gone from the opt-outs list.
+
+**CONS-05 · The opt-outs screen lists and searches**
+Smoke: `e2e/consent.spec.ts`.
+At desktop width, as manager, Settings, "Opt-outs" tab (every role sees it). **Expected:** contacts of this
+dealership's customers that opted out, newest first, with the channel (icon and word), the reason and since when;
+searching `813-555-…` (any format) finds the phone; a search that finds nothing says "Nothing matches these filters."
+and "Show all" empties the search. By hand: with nobody opted out it says "Nobody has opted out."; Other Motors never
+sees Mustang Motors' contacts here unless one of its own customers has the same contact.
+
+**CONS-06 · Another dealership cannot see or change a customer's consent**
+Smoke (part): `e2e/consent.spec.ts` covers the page and the API; by hand: the layout in the dark theme.
+Signed in as other@mustang.test, open `/customers/<a Mustang Motors customer id>/consent`. **Expected:** "This
+customer does not exist or is not in your dealership."; reading, recording or revoking through the API answers 404.
+By hand: in the dark theme the summary chips and the Granted and Revoked badges stay readable.
+
 ## 7. Leads
 
 <!-- LEAD-01 – 06: item "leads". -->

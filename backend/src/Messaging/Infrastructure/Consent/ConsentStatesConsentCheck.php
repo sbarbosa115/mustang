@@ -9,8 +9,8 @@ use App\Shared\Application\Port\ConsentStates;
 use App\Shared\Domain\Channel;
 
 /**
- * The send check over the Compliance ledger's shared port: the latest row per customer and channel decides granted or
- * revoked, no row is missing, and a suppressed contact is opted out.
+ * The send check over the Compliance ledger's shared port: the latest record of the contact on the channel decides
+ * granted or revoked (and is named in the provenance), no record is missing, and a suppressed contact is opted out.
  */
 final readonly class ConsentStatesConsentCheck implements ConsentCheck
 {
@@ -20,8 +20,8 @@ final readonly class ConsentStatesConsentCheck implements ConsentCheck
 
     public function check(string $customerId, Channel $channel, string $contactValue): ConsentDecision
     {
-        $state = $this->states->forCustomers([$customerId])[$customerId][$channel->value] ?? 'missing';
+        $decided = $this->states->forContact($customerId, $channel, $contactValue);
 
-        return new ConsentDecision($state, $channel, $contactValue, $this->clock->now());
+        return new ConsentDecision($decided['state'], $channel, $contactValue, $this->clock->now(), $decided['consent_id']);
     }
 }
