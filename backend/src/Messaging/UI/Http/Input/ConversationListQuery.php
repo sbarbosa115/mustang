@@ -16,6 +16,7 @@ final class ConversationListQuery
         #[Assert\Length(max: 120)]
         public ?string $q = null,
         #[OA\Property(enum: ['all', 'unreplied', 'fumbled'])]
+        #[Assert\Choice(choices: ['all', 'unreplied', 'fumbled'])]
         public ?string $folder = null,
         #[Assert\Uuid(strict: false)]
         public ?string $userId = null,

@@ -121,6 +121,34 @@ tablet: the menu button opens the sidebar; desktop: the dark sidebar and the top
 
 <!-- MSG-01 – 04: item "messaging-api" (console command and dev endpoint). INB-01 – 08: item "inbox-ui". -->
 
+**MSG-01 · A customer's text reply lands in their conversation**
+Smoke (part): `e2e/messaging.spec.ts` covers the dev endpoint; by hand: the console command.
+Run `docker compose exec php php bin/console mustang:messaging:simulate-inbound "(813) 555-1005" "Is the Civic still
+there?"`. **Expected:** it says "Reply from Ashley Garcia (+18135551005) added to conversation …". In the inbox,
+Ashley Garcia's conversation is at the top, unread (1) and in the "Unreplied" folder; the folder counts went up by one.
+Run it again with `nobody@example.com "Hi" --channel=email`: it fails with "No customer has email nobody@example.com"
+and nothing changes.
+
+**MSG-02 · A send without consent is refused, and the refusal is kept**
+Smoke: `e2e/messaging.spec.ts`.
+For a customer with no text consent, send a text to their conversation. **Expected:** 409 `consent_missing` (with a
+revoked consent or a STOP: 409 `opted_out`); nothing reaches a transport, the conversation's last message and
+"unreplied" flag do not change, and the message's provenance says `blocked` with the consent state it was checked
+against.
+
+**MSG-03 · A text to a consenting customer is sent by the fake transport, with its provenance**
+Smoke: `e2e/messaging.spec.ts`.
+Record text consent for a customer, then send them a text. **Expected:** 201 with status `sent`; the provenance names
+the rep who sent it, the transport `fake_sms` with a `fake-…` id, and the consent snapshot `granted` with the phone
+it went to. The conversation leaves the "Unreplied" folder.
+
+**MSG-04 · An email is queued, sent by the worker and lands in Mailpit**
+Smoke: `e2e/messaging.spec.ts`.
+Record email consent for a customer, then send them an email with a subject. **Expected:** 201 with status `queued`;
+within a few seconds the email arrives in Mailpit (from no-reply@mustang.test, with that subject) and the message's
+provenance turns `sent` with the transport `mailer`. By hand: with the worker stopped (`docker compose stop worker`)
+the message stays `queued`; starting it again sends it.
+
 ## 6. Customers
 
 <!-- CUS-01 – 08: item "customers". TL-01 – 04: item "timeline". CONS-01 – 06: item "compliance". -->

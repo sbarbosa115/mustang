@@ -4,6 +4,8 @@ namespace App\Messaging\Infrastructure\Persistence;
 
 use App\Messaging\Domain\Model\Message;
 use App\Messaging\Domain\Repository\MessageRepository;
+use App\Shared\Domain\Error\NotFound;
+use App\Shared\Domain\Id;
 use App\Shared\Infrastructure\Persistence\TenantScopedRepository;
 
 /**
@@ -29,5 +31,12 @@ final class DoctrineMessageRepository extends TenantScopedRepository implements 
     public function add(Message $message): void
     {
         $this->persist($message);
+    }
+
+    public function getInDealership(string $id, string $dealershipId): Message
+    {
+        $message = Id::isValid($id) ? $this->em->getRepository(Message::class)->findOneBy(['id' => $id, 'dealershipId' => $dealershipId]) : null;
+
+        return $message ?? throw new NotFound($this->notFoundCode(), 'The record does not exist.', ['id' => $id]);
     }
 }

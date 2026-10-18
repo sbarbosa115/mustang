@@ -95,4 +95,52 @@ class Conversation
     {
         return $this->unreadCount;
     }
+
+    /**
+     * The customer wrote: the thread moves to the top and counts one more unread message.
+     */
+    public function recordInbound(\DateTimeImmutable $at): void
+    {
+        $this->lastMessageAt = $at;
+        $this->lastInboundAt = $at;
+        ++$this->unreadCount;
+    }
+
+    /**
+     * The dealership wrote (a text sent or an email queued); a blocked attempt is not a reply.
+     */
+    public function recordOutbound(\DateTimeImmutable $at): void
+    {
+        $this->lastMessageAt = $at;
+        $this->lastOutboundAt = $at;
+    }
+
+    public function markRead(): void
+    {
+        $this->unreadCount = 0;
+    }
+
+    public function assignIfUnassigned(?string $userId): void
+    {
+        $this->assignedUserId ??= $userId;
+    }
+
+    /**
+     * The last message is the customer's: somebody owes them an answer.
+     */
+    public function isUnreplied(): bool
+    {
+        return null !== $this->lastInboundAt
+            && (null === $this->lastOutboundAt || $this->lastInboundAt > $this->lastOutboundAt);
+    }
+
+    /**
+     * Unreplied for more than $minutes.
+     */
+    public function isFumbled(\DateTimeImmutable $now, int $minutes): bool
+    {
+        return $this->isUnreplied()
+            && null !== $this->lastInboundAt
+            && $this->lastInboundAt < $now->modify(\sprintf('-%d minutes', $minutes));
+    }
 }
