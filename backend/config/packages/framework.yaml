@@ -1,12 +1,15 @@
-# see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
-
-    # Note that the session will be started ONLY if you read or write from it.
-    session: true
-
-    #esi: true
-    #fragments: true
+    trusted_proxies: '%env(default::TRUSTED_PROXIES)%'
+    session:
+        cookie_samesite: lax
+        cookie_httponly: true
+        cookie_secure: auto
+        name: MUSTANGSESSID
+    serializer:
+        name_converter: serializer.name_converter.camel_case_to_snake_case
+    property_info:
+        with_constructor_extractor: true
 
 when@test:
     framework:

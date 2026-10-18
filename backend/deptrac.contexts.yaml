@@ -1,0 +1,186 @@
+# Deptrac: which context may call which (steps/04-build.md §4.1). A context reaches another only through its
+# Application layer or its domain events; every context may use Shared. Pairs below are deliberate:
+#   Lead -> Customer (match a lead to a customer); DataImport -> Customer, Lead, Compliance (it creates them);
+#   Messaging -> Compliance (the send check); Worklist, Reporting, Timeline -> every context (read sides);
+#   Audit -> Access (who acted).
+deptrac:
+  paths: [./src]
+  layers:
+    - name: Shared
+      collectors:
+        - { type: classLike, value: '^App\\Shared\\.*' }
+    - name: Events
+      collectors:
+        - { type: classLike, value: '^App\\(?!Shared\\)[A-Za-z]+\\Domain\\Event\\.*' }
+    - name: Access
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Access\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Access\\Application\\.*' }
+            - { type: classLike, value: '^App\\Access\\Domain\\Event\\.*' }
+    - name: AccessApplication
+      collectors:
+        - { type: classLike, value: '^App\\Access\\Application\\.*' }
+    - name: Customer
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Customer\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Customer\\Application\\.*' }
+            - { type: classLike, value: '^App\\Customer\\Domain\\Event\\.*' }
+    - name: CustomerApplication
+      collectors:
+        - { type: classLike, value: '^App\\Customer\\Application\\.*' }
+    - name: Timeline
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Timeline\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Timeline\\Application\\.*' }
+            - { type: classLike, value: '^App\\Timeline\\Domain\\Event\\.*' }
+    - name: TimelineApplication
+      collectors:
+        - { type: classLike, value: '^App\\Timeline\\Application\\.*' }
+    - name: Lead
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Lead\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Lead\\Application\\.*' }
+            - { type: classLike, value: '^App\\Lead\\Domain\\Event\\.*' }
+    - name: LeadApplication
+      collectors:
+        - { type: classLike, value: '^App\\Lead\\Application\\.*' }
+    - name: Deal
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Deal\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Deal\\Application\\.*' }
+            - { type: classLike, value: '^App\\Deal\\Domain\\Event\\.*' }
+    - name: DealApplication
+      collectors:
+        - { type: classLike, value: '^App\\Deal\\Application\\.*' }
+    - name: Appointment
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Appointment\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Appointment\\Application\\.*' }
+            - { type: classLike, value: '^App\\Appointment\\Domain\\Event\\.*' }
+    - name: AppointmentApplication
+      collectors:
+        - { type: classLike, value: '^App\\Appointment\\Application\\.*' }
+    - name: Inventory
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Inventory\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Inventory\\Application\\.*' }
+            - { type: classLike, value: '^App\\Inventory\\Domain\\Event\\.*' }
+    - name: InventoryApplication
+      collectors:
+        - { type: classLike, value: '^App\\Inventory\\Application\\.*' }
+    - name: Messaging
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Messaging\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Messaging\\Application\\.*' }
+            - { type: classLike, value: '^App\\Messaging\\Domain\\Event\\.*' }
+    - name: MessagingApplication
+      collectors:
+        - { type: classLike, value: '^App\\Messaging\\Application\\.*' }
+    - name: Compliance
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Compliance\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Compliance\\Application\\.*' }
+            - { type: classLike, value: '^App\\Compliance\\Domain\\Event\\.*' }
+    - name: ComplianceApplication
+      collectors:
+        - { type: classLike, value: '^App\\Compliance\\Application\\.*' }
+    - name: Worklist
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Worklist\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Worklist\\Application\\.*' }
+            - { type: classLike, value: '^App\\Worklist\\Domain\\Event\\.*' }
+    - name: WorklistApplication
+      collectors:
+        - { type: classLike, value: '^App\\Worklist\\Application\\.*' }
+    - name: Reporting
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Reporting\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Reporting\\Application\\.*' }
+            - { type: classLike, value: '^App\\Reporting\\Domain\\Event\\.*' }
+    - name: ReportingApplication
+      collectors:
+        - { type: classLike, value: '^App\\Reporting\\Application\\.*' }
+    - name: DataImport
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\DataImport\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\DataImport\\Application\\.*' }
+            - { type: classLike, value: '^App\\DataImport\\Domain\\Event\\.*' }
+    - name: DataImportApplication
+      collectors:
+        - { type: classLike, value: '^App\\DataImport\\Application\\.*' }
+    - name: Audit
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^App\\Audit\\.*' }
+          must_not:
+            - { type: classLike, value: '^App\\Audit\\Application\\.*' }
+            - { type: classLike, value: '^App\\Audit\\Domain\\Event\\.*' }
+    - name: AuditApplication
+      collectors:
+        - { type: classLike, value: '^App\\Audit\\Application\\.*' }
+  ruleset:
+    Shared: ~
+    Events: [Shared]
+    Access: [AccessApplication, Shared, Events]
+    AccessApplication: [Access, Shared, Events]
+    Customer: [CustomerApplication, Shared, Events]
+    CustomerApplication: [Customer, Shared, Events]
+    Timeline: [TimelineApplication, Shared, Events, AccessApplication, CustomerApplication, LeadApplication, DealApplication, AppointmentApplication, InventoryApplication, MessagingApplication, ComplianceApplication, WorklistApplication, ReportingApplication, DataImportApplication, AuditApplication]
+    TimelineApplication: [Timeline, Shared, Events, AccessApplication, CustomerApplication, LeadApplication, DealApplication, AppointmentApplication, InventoryApplication, MessagingApplication, ComplianceApplication, WorklistApplication, ReportingApplication, DataImportApplication, AuditApplication]
+    Lead: [LeadApplication, Shared, Events, CustomerApplication]
+    LeadApplication: [Lead, Shared, Events, CustomerApplication]
+    Deal: [DealApplication, Shared, Events]
+    DealApplication: [Deal, Shared, Events]
+    Appointment: [AppointmentApplication, Shared, Events]
+    AppointmentApplication: [Appointment, Shared, Events]
+    Inventory: [InventoryApplication, Shared, Events]
+    InventoryApplication: [Inventory, Shared, Events]
+    Messaging: [MessagingApplication, Shared, Events, ComplianceApplication]
+    MessagingApplication: [Messaging, Shared, Events, ComplianceApplication]
+    Compliance: [ComplianceApplication, Shared, Events]
+    ComplianceApplication: [Compliance, Shared, Events]
+    Worklist: [WorklistApplication, Shared, Events, AccessApplication, CustomerApplication, TimelineApplication, LeadApplication, DealApplication, AppointmentApplication, InventoryApplication, MessagingApplication, ComplianceApplication, ReportingApplication, DataImportApplication, AuditApplication]
+    WorklistApplication: [Worklist, Shared, Events, AccessApplication, CustomerApplication, TimelineApplication, LeadApplication, DealApplication, AppointmentApplication, InventoryApplication, MessagingApplication, ComplianceApplication, ReportingApplication, DataImportApplication, AuditApplication]
+    Reporting: [ReportingApplication, Shared, Events, AccessApplication, CustomerApplication, TimelineApplication, LeadApplication, DealApplication, AppointmentApplication, InventoryApplication, MessagingApplication, ComplianceApplication, WorklistApplication, DataImportApplication, AuditApplication]
+    ReportingApplication: [Reporting, Shared, Events, AccessApplication, CustomerApplication, TimelineApplication, LeadApplication, DealApplication, AppointmentApplication, InventoryApplication, MessagingApplication, ComplianceApplication, WorklistApplication, DataImportApplication, AuditApplication]
+    DataImport: [DataImportApplication, Shared, Events, CustomerApplication, LeadApplication, ComplianceApplication]
+    DataImportApplication: [DataImport, Shared, Events, CustomerApplication, LeadApplication, ComplianceApplication]
+    Audit: [AuditApplication, Shared, Events, AccessApplication]
+    AuditApplication: [Audit, Shared, Events, AccessApplication]

@@ -22,6 +22,7 @@
         "symfony/console": "8.1.*",
         "symfony/doctrine-messenger": "8.1.*",
         "symfony/dotenv": "8.1.*",
+        "symfony/expression-language": "8.1.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "8.1.7",
         "symfony/intl": "8.1.*",
@@ -85,6 +86,18 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "cs": "php-cs-fixer fix --dry-run --diff",
+        "cs:fix": "php-cs-fixer fix",
+        "deptrac": [
+            "deptrac analyse --config-file=deptrac.yaml --no-progress",
+            "deptrac analyse --config-file=deptrac.contexts.yaml --no-progress"
+        ],
+        "test": "phpunit",
+        "analyse": [
+            "@cs",
+            "phpstan analyse --no-progress",
+            "@deptrac"
         ]
     },
     "conflict": {

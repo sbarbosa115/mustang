@@ -1,30 +1,86 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
-
         profiling_collect_backtrace: '%kernel.debug%'
+        default_table_options:
+            charset: utf8mb4
+            collate: utf8mb4_unicode_ci
     orm:
         validate_xml_mapping: true
         naming_strategy: doctrine.orm.naming_strategy.underscore
-        identity_generation_preferences:
-            Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
         auto_mapping: true
         mappings:
-            App:
+            Access:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+                dir: '%kernel.project_dir%/src/Access/Domain/Model'
+                prefix: 'App\Access\Domain\Model'
+                alias: Access
+            Customer:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Customer/Domain/Model'
+                prefix: 'App\Customer\Domain\Model'
+                alias: Customer
+            Timeline:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Timeline/Domain/Model'
+                prefix: 'App\Timeline\Domain\Model'
+                alias: Timeline
+            Lead:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Lead/Domain/Model'
+                prefix: 'App\Lead\Domain\Model'
+                alias: Lead
+            Deal:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Deal/Domain/Model'
+                prefix: 'App\Deal\Domain\Model'
+                alias: Deal
+            Appointment:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Appointment/Domain/Model'
+                prefix: 'App\Appointment\Domain\Model'
+                alias: Appointment
+            Inventory:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Inventory/Domain/Model'
+                prefix: 'App\Inventory\Domain\Model'
+                alias: Inventory
+            Messaging:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Messaging/Domain/Model'
+                prefix: 'App\Messaging\Domain\Model'
+                alias: Messaging
+            Compliance:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Compliance/Domain/Model'
+                prefix: 'App\Compliance\Domain\Model'
+                alias: Compliance
+            DataImport:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/DataImport/Domain/Model'
+                prefix: 'App\DataImport\Domain\Model'
+                alias: DataImport
+            Audit:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Audit/Domain/Model'
+                prefix: 'App\Audit\Domain\Model'
+                alias: Audit
 
 when@test:
     doctrine:
         dbal:
-            # "TEST_TOKEN" is typically set by ParaTest
+            # "TEST_TOKEN" is set by ParaTest when the suite runs in parallel.
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
 when@prod:

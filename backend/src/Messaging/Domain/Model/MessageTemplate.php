@@ -1,0 +1,96 @@
+<?php
+
+namespace App\Messaging\Domain\Model;
+
+use App\Shared\Domain\Id;
+use App\Shared\Domain\Model\Timestamps;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * A reusable text or email with placeholders (CRM-09).
+ */
+#[ORM\Entity]
+#[ORM\Table(name: 'message_templates')]
+#[ORM\Index(name: 'idx_message_templates_dealership', columns: ['dealership_id'])]
+#[ORM\HasLifecycleCallbacks]
+class MessageTemplate
+{
+    use Timestamps;
+
+    #[ORM\Id]
+    #[ORM\Column(type: 'guid')]
+    private string $id;
+    #[ORM\Column(type: 'guid', name: 'dealership_id')]
+    private string $dealershipId;
+    #[ORM\Column(type: 'string', length: 120, name: 'name')]
+    private string $name;
+    #[ORM\Column(type: 'string', length: 20, enumType: \App\Shared\Domain\Channel::class, name: 'channel')]
+    private \App\Shared\Domain\Channel $channel;
+    #[ORM\Column(type: 'text', name: 'body')]
+    private string $body;
+    #[ORM\Column(type: 'guid', name: 'created_by_user_id')]
+    private string $createdByUserId;
+    #[ORM\Column(type: 'string', length: 255, name: 'subject', nullable: true)]
+    private ?string $subject;
+    #[ORM\Column(type: 'boolean', name: 'active')]
+    private bool $active;
+
+    public function __construct(
+        string $dealershipId,
+        string $name,
+        \App\Shared\Domain\Channel $channel,
+        string $body,
+        string $createdByUserId,
+        ?string $subject = null,
+        bool $active = true,
+    ) {
+        $this->id = Id::new();
+        $this->dealershipId = $dealershipId;
+        $this->name = $name;
+        $this->channel = $channel;
+        $this->body = $body;
+        $this->createdByUserId = $createdByUserId;
+        $this->subject = $subject;
+        $this->active = $active;
+    }
+
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    public function dealershipId(): string
+    {
+        return $this->dealershipId;
+    }
+
+    public function name(): string
+    {
+        return $this->name;
+    }
+
+    public function channel(): \App\Shared\Domain\Channel
+    {
+        return $this->channel;
+    }
+
+    public function body(): string
+    {
+        return $this->body;
+    }
+
+    public function createdByUserId(): string
+    {
+        return $this->createdByUserId;
+    }
+
+    public function subject(): ?string
+    {
+        return $this->subject;
+    }
+
+    public function active(): bool
+    {
+        return $this->active;
+    }
+}

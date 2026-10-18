@@ -9,7 +9,7 @@
     "test": "vitest run",
     "format": "prettier --write . && eslint . --fix",
     "format:check": "prettier --check . && eslint .",
-    "api:types": "openapi-typescript assets/types/openapi.json -o assets/types/api.d.ts",
+    "api:types": "node scripts/api-types.mjs",
     "watch": "vite build --watch --mode development",
     "build:assets": "vite build",
     "test:e2e": "playwright test"
