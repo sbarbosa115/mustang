@@ -1,5 +1,6 @@
 import {screen, waitFor, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import {useLocation} from 'react-router';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {api, ApiError} from '@/shared/api';
 import {renderWithProviders} from '@/shared/test/render';
@@ -9,6 +10,11 @@ const fetchConversation = vi.hoisted(() => vi.fn());
 const markConversationRead = vi.hoisted(() => vi.fn());
 const fetchCustomer = vi.hoisted(() => vi.fn());
 const listTemplates = vi.hoisted(() => vi.fn());
+const fetchAppointment = vi.hoisted(() => vi.fn());
+vi.mock('@/entities/appointment', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/entities/appointment')>()),
+  fetchAppointment,
+}));
 vi.mock('@/entities/conversation', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/entities/conversation')>()),
   fetchConversation,
@@ -119,6 +125,21 @@ const customer = {
   },
 };
 
+function Search() {
+  return <output aria-label="url search">{useLocation().search}</output>;
+}
+
+const confirmation = {
+  id: 't2',
+  name: 'Appointment confirmation',
+  channel: 'text',
+  subject: null,
+  body: 'Hi {first_name}, see you {appointment_time} at {dealership}.',
+  active: true,
+  created_at: '2026-10-01T00:00:00Z',
+  updated_at: '2026-10-01T00:00:00Z',
+};
+
 describe('ConversationThread', () => {
   beforeEach(() => {
     vi.useFakeTimers({toFake: ['Date']});
@@ -127,6 +148,7 @@ describe('ConversationThread', () => {
     markConversationRead.mockReset();
     fetchCustomer.mockReset();
     listTemplates.mockReset();
+    fetchAppointment.mockReset();
     // Production: the dev reply simulator is not offered.
     vi.spyOn(api, 'GET').mockResolvedValue({
       data: {status: 'ok', environment: 'prod', sms_transport: 'fake'},
@@ -248,5 +270,51 @@ describe('ConversationThread', () => {
     expect(screen.getByLabelText('Message')).toHaveValue(
       'Hi Ana, Sam Patel from Mustang Motors here about the 2022 Honda Civic.',
     );
+  });
+
+  it('fills the composer with the confirmation and the appointment time, then drops the parameters', async () => {
+    fetchConversation.mockResolvedValue(detail());
+    listTemplates.mockResolvedValue({items: [confirmation]});
+    fetchAppointment.mockResolvedValue({
+      id: 'a1',
+      scheduled_at: '2026-10-20T19:30:00Z',
+    });
+    renderWithProviders(
+      <>
+        <ConversationThread conversationId="v1" />
+        <Search />
+      </>,
+      {route: '/inbox/v1?template=appointment-confirmation&appointment=a1'},
+    );
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Message')).toHaveValue(
+        'Hi Ana, see you Tue, Oct 20 at 3:30 PM at Mustang Motors.',
+      ),
+    );
+    expect(fetchAppointment).toHaveBeenCalledWith('a1');
+    // A reload must not fill the composer again.
+    await waitFor(() =>
+      expect(screen.getByLabelText('url search')).toBeEmptyDOMElement(),
+    );
+  });
+
+  it('leaves the composer empty when the template is missing', async () => {
+    fetchConversation.mockResolvedValue(detail());
+    listTemplates.mockResolvedValue({
+      items: [{...confirmation, active: false}],
+    });
+    renderWithProviders(
+      <>
+        <ConversationThread conversationId="v1" />
+        <Search />
+      </>,
+      {route: '/inbox/v1?template=appointment-confirmation'},
+    );
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('url search')).toBeEmptyDOMElement(),
+    );
+    expect(screen.getByLabelText('Message')).toHaveValue('');
   });
 });

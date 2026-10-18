@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {daysBetween, formatRelative} from './dates';
+import {daysBetween, formatAppointmentTime, formatRelative} from './dates';
 import {formatCents, formatMileage} from './money';
 import {formatPhone} from './phone';
 
@@ -8,6 +8,15 @@ describe('formatting', () => {
     const now = new Date('2026-10-18T20:00:00Z');
     expect(formatRelative('2026-10-18T19:55:00Z', now)).toBe('5 min. ago');
     expect(formatRelative('2026-10-15T15:00:00Z', now)).toBe('Oct 15, 2026');
+  });
+
+  it('writes an appointment time short, in the dealership timezone', () => {
+    expect(formatAppointmentTime('2026-10-20T19:30:00Z')).toBe(
+      'Tue, Oct 20 at 3:30 PM',
+    );
+    expect(
+      formatAppointmentTime('2026-10-20T19:30:00Z', 'America/Chicago'),
+    ).toBe('Tue, Oct 20 at 2:30 PM');
   });
 
   it('counts whole days in a stage', () => {
