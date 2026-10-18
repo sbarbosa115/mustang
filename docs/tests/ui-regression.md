@@ -405,6 +405,56 @@ own deal (Other1 Customer).
 
 <!-- APP-01 – 06: item "appointments". -->
 
+**APP-01 · The calendar shows a week or a day at the dealership time**
+Smoke: `e2e/appointments.spec.ts`.
+Book an appointment for a customer (API or APP-02). Open Appointments with `?date=` on that day. **Expected:** seven
+days, Monday to Sunday, each headed by its date and its count ("Today" on today's), the appointment under its day with
+the time at the dealership (Tampa), its status, the kind, "with <rep>" and the note. "Day" shows only that day; the
+arrows step by a day or a week and "Today" returns; "Mine" keeps the signed-in rep's, "Everyone" brings the rest back.
+The view, date and scope live in the URL and survive a reload. A day with nothing says "Nothing booked"; a period with
+nothing says "No appointments in this period" (with "Mine": "None of your appointments are in this period" and "Show
+all"). Cancelled appointments are not on the calendar; the customer's Appointments tab lists them. By hand: a booking
+late in the evening (11:30 PM) stays on its own day, not the next; at 390 px the days stack, the cards are full width and
+every button is 44 px tall.
+
+**APP-02 · Book an appointment, and the refusals**
+Smoke: `e2e/appointments.spec.ts`.
+Create customers `APP-02 Test` and `APP-02b Test`. Appointments › Book appointment › search `APP-02` › choose
+`APP-02 Test`. A time in the past says "That time has already passed." and Book stays disabled. Pick a time well ahead,
+a note, Book. **Expected:** "Booked APP-02 Test for <date and time>." and the card on that day. Book `APP-02b Test`
+for the same time and rep: "That rep already has an appointment at that time." under the time, the dialog stays. By
+hand: choose another rep, length and kind; book half an hour into another appointment of the same rep (refused) and
+back to back (accepted); a customer with an open deal in New: the deal moves to Appointment.
+
+**APP-03 · Confirm, then mark the customer as shown**
+Smoke: `e2e/appointments.spec.ts`.
+For a customer with an open deal, book an appointment. On its card: Confirm. **Expected:** "Marked APP-03 Test's
+appointment as confirmed.", the status says Confirmed and Confirm is gone. Showed: "APP-03 Test showed. Nice.", the
+status says Showed, the card has no buttons, and the deal moved to Visit. "Send confirmation" (on a scheduled
+appointment) opens the customer's conversation in the inbox with the confirmation template.
+
+**APP-04 · A no-show frees the rep for that time**
+Smoke: `e2e/appointments.spec.ts`.
+On a card: No-show. **Expected:** "Marked APP-04 Test as a no-show.", the status says No-show and the card has no
+buttons. The rep can be booked at that time again. The deal stays where it was.
+
+**APP-05 · Reschedule, then cancel**
+Smoke: `e2e/appointments.spec.ts`.
+Confirm an appointment, then ⋯ › Reschedule › a time in the past: "That time has already passed."; a later day › Reschedule.
+**Expected:** "Moved APP-05 Test to <date and time>.", it leaves this day and, on the new day, is Scheduled again (the
+customer has to confirm the new time). ⋯ › Cancel appointment asks "Cancel the appointment with APP-05 Test?"; "Keep
+it" leaves it; "Cancel appointment" says "Cancelled the appointment with APP-05 Test." and it leaves the calendar; the
+customer's Appointments tab shows it Cancelled. By hand: hand it to another rep in the same dialog.
+
+**APP-06 · The rep is reminded an hour before; another dealership sees nothing**
+Smoke (part): `e2e/appointments.spec.ts` covers the other dealership; by hand: the reminder email and the worker.
+Signed in as sales, book an appointment 62 minutes from now for any customer, with the worker running. **Expected:** one
+to two minutes later Mailpit has an email to sales@mustang.test "Appointment at <time> with <customer>" saying it starts
+in about an hour, with the time at the dealership. Cancel an appointment booked 63 minutes ahead before the reminder
+is due: no email arrives. Move one to a later time: one email arrives, for the new time. An appointment booked less than
+an hour ahead sends none. Signed in as other@mustang.test, the other dealership's calendar never shows these, and
+their URLs and actions answer 404.
+
 ## 10. Inventory
 
 **INV-01 · A rep browses and searches the inventory**
