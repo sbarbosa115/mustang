@@ -12,4 +12,6 @@ interface MessageTemplateRepository
     public function get(string $id): MessageTemplate;
 
     public function add(MessageTemplate $messageTemplate): void;
+
+    public function remove(MessageTemplate $messageTemplate): void;
 }

@@ -132,11 +132,11 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/dev/inbound` | Simulate a customer reply from a customer's phone or email (dev and test only; also `bin/console mustang:messaging:simulate-inbound <phone or email> "<text>" [--channel=email]`) | 201, 422 | Built |
 | `POST /api/v1/conversations/{id}/messages` | Send a text (fake transport, sent at once) or an email (queued, then sent by the worker); refused with 409 `consent_missing` or `opted_out`, the attempt kept with its consent snapshot | 201, 404, 409, 422 | Built |
 | `GET /api/v1/messages/{id}/provenance` | Who sent a message, under which consent and through which transport | 200, 404 | Built |
-| `GET /api/v1/templates` | Message templates | 200 | 501 until "templates" |
-| `POST /api/v1/templates` | Create a template (manager) | 201, 422 | 501 until "templates" |
-| `GET /api/v1/templates/{id}` | One template | 200, 404 | 501 until "templates" |
-| `DELETE /api/v1/templates/{id}` | Delete a template (manager) | 204, 404 | 501 until "templates" |
-| `PATCH /api/v1/templates/{id}` | Change a template (manager) | 200, 404, 422 | 501 until "templates" |
+| `GET /api/v1/templates` | Message templates by name; filters `channel` (text, email), `active`; any signed-in user | 200 | Built |
+| `POST /api/v1/templates` | Create a template (manager): name, channel (text or email), body, `subject` (required for email, dropped for text), `active`; 422 `unknown_placeholder` (detail `field`, `placeholders`) for a `{tag}` that is not one of first_name, last_name, rep_name, dealership, vehicle, appointment_time; 422 `subject_required` | 201, 403, 422 | Built |
+| `GET /api/v1/templates/{id}` | One template | 200, 404 | Built |
+| `DELETE /api/v1/templates/{id}` | Delete a template (manager); sent messages keep their `template_id` | 204, 403, 404 | Built |
+| `PATCH /api/v1/templates/{id}` | Change name, subject, body or `active` (manager); the channel is fixed; same placeholder and subject rules | 200, 403, 404, 422 | Built |
 | `GET /api/v1/reports/kpis` | KPIs for a period and the one before (manager) | 200, 422 | 501 until "dashboard" |
 | `GET /api/v1/health` | Is the app up and its database reachable. The smoke suite also reads which SMS transport is active | 200 | Built |
 | `GET /api/v1/customers/{id}/timeline` | Everything that happened with a customer, newest first | 200, 404 | 501 until "timeline" |
