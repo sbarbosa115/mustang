@@ -4545,16 +4545,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"templates\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -4591,16 +4581,6 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"templates\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
                                 }
                             }
                         }
@@ -4645,16 +4625,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"templates\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -4680,16 +4650,6 @@
                     },
                     "404": {
                         "description": "Not found, or another dealership's record",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"templates\")",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -4753,16 +4713,6 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"templates\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
                                 }
                             }
                         }

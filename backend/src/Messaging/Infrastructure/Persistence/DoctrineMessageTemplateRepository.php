@@ -30,4 +30,9 @@ final class DoctrineMessageTemplateRepository extends TenantScopedRepository imp
     {
         $this->persist($messageTemplate);
     }
+
+    public function remove(MessageTemplate $messageTemplate): void
+    {
+        $this->em->remove($messageTemplate);
+    }
 }
