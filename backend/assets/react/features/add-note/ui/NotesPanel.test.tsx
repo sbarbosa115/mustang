@@ -60,6 +60,28 @@ describe('NotesPanel', () => {
     );
   });
 
+  it('keeps what was typed for the next note while the previous one is still being saved', async () => {
+    listNotes.mockResolvedValue([]);
+    let saved: (value: ReturnType<typeof note>) => void = () => undefined;
+    addNote.mockReturnValue(
+      new Promise((resolve) => {
+        saved = resolve;
+      }),
+    );
+    renderWithProviders(<NotesPanel customerId="c1" />);
+    await screen.findByText('No notes yet.');
+    const box = screen.getByLabelText('New note');
+
+    await userEvent.type(box, 'First.');
+    await userEvent.click(screen.getByRole('button', {name: 'Add note'}));
+    await userEvent.clear(box);
+    await userEvent.type(box, 'Second.');
+    saved(note('n1', 'First.'));
+
+    await waitFor(() => expect(listNotes).toHaveBeenCalledTimes(2));
+    expect(box).toHaveValue('Second.');
+  });
+
   it('offers a retry when the notes cannot be loaded', async () => {
     listNotes.mockImplementationOnce(() => Promise.reject(new Error('down')));
     listNotes.mockResolvedValue([note('n1', 'Back again.')]);
