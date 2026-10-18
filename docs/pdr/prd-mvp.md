@@ -363,8 +363,14 @@ coordinator writes `docs/security/policies.md` content at finish and the user co
     (`getInDealership`), never through `TenantContext`.
   - A message queued for the worker arrives on the event bus, which has no transaction: its handler dispatches a
     command, which runs in one. Restart the worker after changing code it runs (`e2e/prepare.sh` does).
-  - Messaging refuses an inbound message from an unknown contact with 422 `unknown_contact` for now. Once leads is
-    merged, the coordinator wires it to capture a lead (source `other`) as the "Messaging" decision says.
+  - An inbound message from a contact no customer of the dealership has is a first contact: `ReceiveInboundMessage`
+    dispatches the Lead context's `CaptureLead` (source `other`, the phone or email, first name "Unknown" and the
+    contact as last name, channel note "First contact by text" or "by email") through Messaging's `LeadIntake` port,
+    which creates the customer through the Customer context and routes the lead round robin; Deals opens the deal on
+    `LeadCaptured`; the message then goes to the new customer's conversation and raises `InboundMessageReceived`.
+    Another dealership's customers are never matched. The console command has nobody signed in, so it runs as the
+    dealership's first active admin (Messaging's `ActingUser` port, the previous token restored afterwards) and needs
+    `--dealership` for an unknown contact.
   - Messaging's send refusal is 409 `consent_missing` or `opted_out` with `detail {message_id, consent}`; the blocked
     message is kept for provenance. Email sends need a subject; the fake SMS number is +18135550100.
   - Customers: create needs a phone or an email at the API; the `CreateCustomer` command does not, for lead capture

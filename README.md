@@ -129,7 +129,7 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `GET /api/v1/conversations/{id}` | A conversation, its messages oldest first (refused attempts included) and the customer's phone and email | 200, 404 | Built |
 | `POST /api/v1/conversations/{id}/read` | Mark a conversation read | 200, 404 | Built |
 | `GET /api/v1/customers/{id}/conversation` | The customer's conversation, created if there is none | 200, 404 | Built |
-| `POST /api/v1/dev/inbound` | Simulate a customer reply from a customer's phone or email (dev and test only; also `bin/console mustang:messaging:simulate-inbound <phone or email> "<text>" [--channel=email]`) | 201, 422 | Built |
+| `POST /api/v1/dev/inbound` | Simulate a customer reply from a phone or email (dev and test only); a contact no customer of the dealership has becomes a new customer (source `other`) with a lead and a deal. Also `bin/console mustang:messaging:simulate-inbound <phone or email> "<text>" [--channel=email] [--dealership=<id>]`, which acts as the dealership's first active admin and needs `--dealership` for an unknown contact | 201, 422 | Built |
 | `POST /api/v1/conversations/{id}/messages` | Send a text (fake transport, sent at once) or an email (queued, then sent by the worker); refused with 409 `consent_missing` or `opted_out`, the attempt kept with its consent snapshot | 201, 404, 409, 422 | Built |
 | `GET /api/v1/messages/{id}/provenance` | Who sent a message, under which consent and through which transport | 200, 404 | Built |
 | `GET /api/v1/templates` | Message templates by name; filters `channel` (text, email), `active`; any signed-in user | 200 | Built |
