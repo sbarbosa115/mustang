@@ -317,6 +317,14 @@ class Deal
         return null === $this->tradeInJson ? null : TradeIn::fromArray($this->tradeInJson);
     }
 
+    /**
+     * The lead that brought the customer in; a deal keeps the first one.
+     */
+    public function linkLead(string $leadId): void
+    {
+        $this->leadId ??= $leadId;
+    }
+
     public function assignTo(string $userId): void
     {
         $this->assignedUserId = $userId;

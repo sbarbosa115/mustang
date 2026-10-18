@@ -4351,15 +4351,6 @@ export interface operations {
                     "application/json": components["schemas"]["DealPageOutput"];
                 };
             };
-            /** @description Not built yet (item "deals") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_deals_create: {
@@ -4411,15 +4402,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "deals") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_deals_get: {
@@ -4444,15 +4426,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "deals") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4513,15 +4486,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "deals") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     patch_api_deals_vehicle: {
@@ -4564,15 +4528,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Not built yet (item "deals") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };
@@ -4619,15 +4574,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "deals") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     patch_api_deals_assign: {
@@ -4670,15 +4616,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Not built yet (item "deals") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };
