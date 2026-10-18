@@ -2,6 +2,8 @@
 
 namespace App\Deal\Domain\Model;
 
+use App\Shared\Domain\Error\Conflict;
+use App\Shared\Domain\Error\InvalidValue;
 use App\Shared\Domain\Id;
 use App\Shared\Domain\Model\Timestamps;
 use Doctrine\ORM\Mapping as ORM;
@@ -208,5 +210,145 @@ class Deal
     public function lastActivityAt(): ?\DateTimeImmutable
     {
         return $this->lastActivityAt;
+    }
+
+    /**
+     * A new deal in stage "new"; opening it is its first activity.
+     */
+    public static function open(
+        string $dealershipId,
+        string $customerId,
+        \DateTimeImmutable $at,
+        ?string $leadId = null,
+        ?string $assignedUserId = null,
+        ?string $vehicleId = null,
+        ?string $vehicleText = null,
+        ?int $expectedGrossCents = null,
+    ): self {
+        $deal = new self($dealershipId, $customerId, $at, DealStage::New, $leadId, $assignedUserId, lastActivityAt: $at, expectedGrossCents: $expectedGrossCents);
+        $deal->attachVehicle($vehicleId, $vehicleText);
+
+        return $deal;
+    }
+
+    public function isOpen(): bool
+    {
+        return $this->stage->isOpen();
+    }
+
+    /**
+     * A move a person makes: forward or back to any stage; lost needs a reason; a lost deal reopens to engaged.
+     *
+     * @return DealStage the stage the deal left
+     *
+     * @throws Conflict     stage_unchanged, reopen_to_engaged
+     * @throws InvalidValue lost_reason_required
+     */
+    public function moveTo(DealStage $to, ?string $lostReason, \DateTimeImmutable $at): DealStage
+    {
+        $from = $this->stage;
+        if ($from === $to) {
+            throw new Conflict('stage_unchanged', 'The deal is already in this stage.', ['stage' => $to->value]);
+        }
+        if (DealStage::Lost === $from && DealStage::Engaged !== $to) {
+            throw new Conflict('reopen_to_engaged', 'A lost deal is reopened to engaged.', ['stage' => $to->value]);
+        }
+        $reason = null === $lostReason ? '' : trim($lostReason);
+        if (DealStage::Lost === $to && '' === $reason) {
+            throw new InvalidValue('lost_reason_required', 'Say why the deal was lost.');
+        }
+
+        if (DealStage::Lost === $to) {
+            $this->lostReason = $reason;
+        } else {
+            // The timestamps describe the path the deal is on now: stages beyond the new one were not reached.
+            $this->lostReason = null;
+            $this->lostAt = null;
+            foreach (DealStage::cases() as $stage) {
+                if ($stage->order() > $to->order()) {
+                    $this->stamp($stage, null);
+                }
+            }
+        }
+        $this->enter($to, $at);
+
+        return $from;
+    }
+
+    /**
+     * A move an event makes (a message, a booked or shown appointment): only forward, never on a closed deal.
+     *
+     * @return bool whether the deal moved
+     */
+    public function advanceTo(DealStage $to, \DateTimeImmutable $at): bool
+    {
+        if (!$this->isOpen() || !$to->isOpen() || $to->order() <= $this->stage->order()) {
+            return false;
+        }
+        $this->enter($to, $at);
+
+        return true;
+    }
+
+    public function recordActivity(\DateTimeImmutable $at): void
+    {
+        if (null === $this->lastActivityAt || $at > $this->lastActivityAt) {
+            $this->lastActivityAt = $at;
+        }
+    }
+
+    /**
+     * The vehicle of interest: an inventory vehicle, a description, both or neither. Blank text is no text.
+     */
+    public function attachVehicle(?string $vehicleId, ?string $vehicleText): void
+    {
+        $text = null === $vehicleText ? null : trim($vehicleText);
+        $this->vehicleId = '' === $vehicleId ? null : $vehicleId;
+        $this->vehicleText = '' === $text ? null : $text;
+    }
+
+    public function setTradeIn(?TradeIn $tradeIn): void
+    {
+        $this->tradeInJson = null === $tradeIn || $tradeIn->isEmpty() ? null : $tradeIn->toArray();
+    }
+
+    public function tradeIn(): ?TradeIn
+    {
+        return null === $this->tradeInJson ? null : TradeIn::fromArray($this->tradeInJson);
+    }
+
+    public function assignTo(string $userId): void
+    {
+        $this->assignedUserId = $userId;
+    }
+
+    /**
+     * Whole days since the deal entered its stage (never negative).
+     */
+    public function daysInStage(\DateTimeImmutable $now): int
+    {
+        return max(0, intdiv($now->getTimestamp() - $this->stageEnteredAt->getTimestamp(), 86400));
+    }
+
+    private function enter(DealStage $stage, \DateTimeImmutable $at): void
+    {
+        $this->stage = $stage;
+        $this->stageEnteredAt = $at;
+        $this->stamp($stage, $at);
+        $this->recordActivity($at);
+    }
+
+    private function stamp(DealStage $stage, ?\DateTimeImmutable $at): void
+    {
+        match ($stage) {
+            DealStage::New => null,
+            DealStage::Engaged => $this->engagedAt = $at,
+            DealStage::Appointment => $this->appointmentAt = $at,
+            DealStage::Visit => $this->visitedAt = $at,
+            DealStage::Proposal => $this->proposalAt = $at,
+            DealStage::Sold => $this->soldAt = $at,
+            DealStage::Delivered => $this->deliveredAt = $at,
+            DealStage::Lost => $this->lostAt = $at,
+        };
     }
 }
