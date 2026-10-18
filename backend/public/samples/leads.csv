@@ -1,0 +1,4 @@
+first_name,last_name,phone,email,source,vehicle_interest,received_at,sales_rep_email,notes
+Daniel,Reyes,(813) 555-7201,daniel.reyes@example.com,website,2025 Ford Bronco Sport,2026-01-15 10:30,sales@mustang.test,Asked about financing
+Priya,Shah,813-555-7202,,phone,Used F-150 under $35k,2026-01-16,,
+Tom,Becker,,tom.becker@example.com,walk-in,Mustang GT,,,

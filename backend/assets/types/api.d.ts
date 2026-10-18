@@ -584,7 +584,7 @@ export interface paths {
         /** Spreadsheet imports, newest first. */
         get: operations["get_api_imports_list"];
         put?: never;
-        /** Upload customers or leads from a CSV (manager). */
+        /** Upload customers or leads from a CSV (manager; processed by the worker). */
         post: operations["post_api_imports_start"];
         delete?: never;
         options?: never;
@@ -4171,8 +4171,8 @@ export interface operations {
                     "application/json": components["schemas"]["ImportJobPageOutput"];
                 };
             };
-            /** @description Not built yet (item "data-import") */
-            501: {
+            /** @description Managers and admins only */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4192,20 +4192,30 @@ export interface operations {
         requestBody: {
             content: {
                 "multipart/form-data": {
-                    type: string;
+                    /** @enum {string} */
+                    type: "customers" | "leads";
                     /** Format: binary */
                     file: string;
                 };
             };
         };
         responses: {
-            /** @description Upload customers or leads from a CSV (manager) */
+            /** @description Upload customers or leads from a CSV (manager; processed by the worker) */
             201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["ImportJobOutput"];
+                };
+            };
+            /** @description Managers and admins only */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
                 };
             };
             /** @description The file is too large */
@@ -4219,15 +4229,6 @@ export interface operations {
             };
             /** @description Invalid input */
             422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Not built yet (item "data-import") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4257,8 +4258,8 @@ export interface operations {
                     "application/json": components["schemas"]["ImportJobOutput"];
                 };
             };
-            /** @description Not found, or another dealership's record */
-            404: {
+            /** @description Managers and admins only */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4266,8 +4267,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "data-import") */
-            501: {
+            /** @description Not found, or another dealership's record */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4282,7 +4283,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                type: "customers" | "leads";
+                type: string;
             };
             cookie?: never;
         };
@@ -4297,8 +4298,8 @@ export interface operations {
                     "text/csv": unknown;
                 };
             };
-            /** @description Not found, or another dealership's record */
-            404: {
+            /** @description Managers and admins only */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4306,8 +4307,8 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "data-import") */
-            501: {
+            /** @description No sample for this type */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

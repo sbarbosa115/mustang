@@ -2367,8 +2367,8 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"data-import\")",
+                    "403": {
+                        "description": "Managers and admins only",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2383,7 +2383,7 @@
                 "tags": [
                     "Imports"
                 ],
-                "summary": "Upload customers or leads from a CSV (manager).",
+                "summary": "Upload customers or leads from a CSV (manager; processed by the worker).",
                 "operationId": "post_api_imports_start",
                 "requestBody": {
                     "required": true,
@@ -2396,7 +2396,11 @@
                                 ],
                                 "properties": {
                                     "type": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "enum": [
+                                            "customers",
+                                            "leads"
+                                        ]
                                     },
                                     "file": {
                                         "type": "string",
@@ -2410,11 +2414,21 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Upload customers or leads from a CSV (manager)",
+                        "description": "Upload customers or leads from a CSV (manager; processed by the worker)",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ImportJobOutput"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Managers and admins only",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
                                 }
                             }
                         }
@@ -2431,16 +2445,6 @@
                     },
                     "422": {
                         "description": "Invalid input",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"data-import\")",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2480,8 +2484,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "Not found, or another dealership's record",
+                    "403": {
+                        "description": "Managers and admins only",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2490,8 +2494,8 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"data-import\")",
+                    "404": {
+                        "description": "Not found, or another dealership's record",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2517,11 +2521,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-                            "pattern": "customers|leads",
-                            "enum": [
-                                "customers",
-                                "leads"
-                            ]
+                            "pattern": "[a-z_]+"
                         }
                     }
                 ],
@@ -2532,8 +2532,8 @@
                             "text/csv": {}
                         }
                     },
-                    "404": {
-                        "description": "Not found, or another dealership's record",
+                    "403": {
+                        "description": "Managers and admins only",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2542,8 +2542,8 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"data-import\")",
+                    "404": {
+                        "description": "No sample for this type",
                         "content": {
                             "application/json": {
                                 "schema": {

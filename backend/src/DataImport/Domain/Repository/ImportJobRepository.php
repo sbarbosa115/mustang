@@ -12,4 +12,11 @@ interface ImportJobRepository
     public function get(string $id): ImportJob;
 
     public function add(ImportJob $importJob): void;
+
+    /**
+     * For the worker, where nobody is signed in: the job carries its dealership.
+     *
+     * @throws \App\Shared\Domain\Error\NotFound
+     */
+    public function getForWorker(string $id): ImportJob;
 }

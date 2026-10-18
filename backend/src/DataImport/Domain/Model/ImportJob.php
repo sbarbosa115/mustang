@@ -153,4 +153,46 @@ class ImportJob
     {
         return $this->finishedAt;
     }
+
+    public function isFinished(): bool
+    {
+        return ImportStatus::Done === $this->status || ImportStatus::Failed === $this->status;
+    }
+
+    /**
+     * The worker has picked the file up.
+     */
+    public function begin(): void
+    {
+        $this->status = ImportStatus::Processing;
+    }
+
+    /**
+     * Every row was read: each one created, updated, skipped (it brought nothing new) or failed (and is in $errors).
+     *
+     * @param list<array{row: int, message: string, field: ?string}> $errors
+     */
+    public function finish(int $rowsTotal, int $rowsCreated, int $rowsUpdated, int $rowsSkipped, int $rowsFailed, array $errors, \DateTimeImmutable $at): void
+    {
+        $this->status = ImportStatus::Done;
+        $this->rowsTotal = $rowsTotal;
+        $this->rowsCreated = $rowsCreated;
+        $this->rowsUpdated = $rowsUpdated;
+        $this->rowsSkipped = $rowsSkipped;
+        $this->rowsFailed = $rowsFailed;
+        $this->errorsJson = $errors;
+        $this->finishedAt = $at;
+    }
+
+    /**
+     * The file could not be imported at all (not text, no header, a missing column, the uploader gone).
+     *
+     * @param list<array{row: int, message: string, field: ?string}> $errors
+     */
+    public function fail(array $errors, \DateTimeImmutable $at): void
+    {
+        $this->status = ImportStatus::Failed;
+        $this->errorsJson = $errors;
+        $this->finishedAt = $at;
+    }
 }
