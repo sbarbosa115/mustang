@@ -1,7 +1,7 @@
 import {screen, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {ApiError} from '@/shared/api';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {api, ApiError} from '@/shared/api';
 import {renderWithProviders} from '@/shared/test/render';
 import {SimulateInbound} from './SimulateInbound';
 
@@ -11,38 +11,31 @@ vi.mock('@/entities/conversation', async (importOriginal) => ({
   simulateInbound,
 }));
 
-/** The probe is an empty POST: 422 means the dev endpoint is there, 404 that it is not. */
-function endpoint(exposed: boolean) {
-  simulateInbound.mockImplementation((body: {from?: string}) =>
-    body.from
-      ? Promise.resolve({
-          customer_id: 'c1',
-          conversation_id: 'v1',
-          message_id: 'm1',
-        })
-      : Promise.reject(
-          exposed
-            ? new ApiError(422, 'validation', 'Invalid', [
-                {field: 'from', code: 'blank', message: 'Required.'},
-              ])
-            : new ApiError(404, 'not_found', 'No route'),
-        ),
-  );
+/** The health check says which environment the API runs in; the dev endpoint exists in dev and test. */
+function environment(name: string) {
+  vi.spyOn(api, 'GET').mockResolvedValue({
+    data: {status: 'ok', environment: name, sms_transport: 'fake'},
+    response: new Response('{}', {status: 200}),
+  } as never);
+  simulateInbound.mockResolvedValue({
+    customer_id: 'c1',
+    conversation_id: 'v1',
+    message_id: 'm1',
+  });
 }
 
 describe('SimulateInbound', () => {
   beforeEach(() => {
     simulateInbound.mockReset();
   });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   it('is not shown when the API does not expose the dev endpoint', async () => {
-    endpoint(false);
+    environment('prod');
     renderWithProviders(<SimulateInbound />);
-    await waitFor(() =>
-      expect(simulateInbound).toHaveBeenCalledWith(
-        expect.objectContaining({from: null, body: null}),
-      ),
-    );
+    await waitFor(() => expect(api.GET).toHaveBeenCalledWith('/api/v1/health'));
     expect(
       screen.queryByRole('button', {name: 'Simulate a reply'}),
       'production never shows the simulator',
@@ -52,7 +45,7 @@ describe('SimulateInbound', () => {
   it('adds a text reply from the customer phone it was opened for', async () => {
     const user = userEvent.setup();
     const onDone = vi.fn();
-    endpoint(true);
+    environment('dev');
     renderWithProviders(
       <SimulateInbound
         contacts={{phone: '+18135551005', email: 'ashley@example.com'}}
@@ -84,7 +77,7 @@ describe('SimulateInbound', () => {
 
   it('switches to email with the customer address and a subject', async () => {
     const user = userEvent.setup();
-    endpoint(true);
+    environment('dev');
     renderWithProviders(
       <SimulateInbound
         contacts={{phone: '+18135551005', email: 'ashley@example.com'}}
@@ -110,7 +103,7 @@ describe('SimulateInbound', () => {
 
   it('says when no customer has that contact', async () => {
     const user = userEvent.setup();
-    endpoint(true);
+    environment('dev');
     renderWithProviders(<SimulateInbound />);
     await user.click(
       await screen.findByRole('button', {name: 'Simulate a reply'}),

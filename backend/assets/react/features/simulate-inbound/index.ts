@@ -1,2 +1,5 @@
 export {SimulateInbound} from './ui/SimulateInbound';
-export {useDevInboundAvailable} from './model/available';
+export {
+  useDevInboundAvailable,
+  fetchDevInboundAvailable,
+} from './model/available';

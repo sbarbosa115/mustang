@@ -1,27 +1,30 @@
 import {useQuery} from '@tanstack/react-query';
-import {simulateInbound} from '@/entities/conversation';
-import {ApiError} from '@/shared/api';
+import {api, unwrap, type Schema} from '@/shared/api';
+
+/** The environments where the API exposes POST /api/v1/dev/inbound (its route condition). */
+const DEV_ENVIRONMENTS = ['dev', 'test'];
 
 /**
- * Whether the API exposes POST /dev/inbound (dev and test only). An empty body is refused by validation (422) when
- * the route exists and is 404 when it does not, so the probe never adds a message.
+ * Whether the API exposes the dev inbound endpoint, read from the health check's environment. A probe of the
+ * endpoint itself would log a refused request in the browser console on every visit.
+ * (The health call has no function in entities/ yet: reported to the coordinator as a contract addition.)
  */
-const EMPTY = {from: null, channel: null, body: null, subject: null};
-
-async function probe(): Promise<boolean> {
+export async function fetchDevInboundAvailable(): Promise<boolean> {
   try {
-    await simulateInbound(EMPTY);
-    return true;
-  } catch (error) {
-    return error instanceof ApiError && error.status === 422;
+    const health = unwrap(
+      await api.GET('/api/v1/health'),
+    ) as Schema<'HealthOutput'>;
+    return DEV_ENVIRONMENTS.includes(health.environment);
+  } catch {
+    return false;
   }
 }
 
 export function useDevInboundAvailable(): boolean {
   const {data} = useQuery({
-    // Not under the conversations key: invalidating conversations must not probe again.
+    // Not under the conversations key: invalidating conversations must not ask again.
     queryKey: ['dev-inbound', 'available'],
-    queryFn: probe,
+    queryFn: fetchDevInboundAvailable,
     staleTime: Infinity,
     gcTime: Infinity,
     refetchOnWindowFocus: false,

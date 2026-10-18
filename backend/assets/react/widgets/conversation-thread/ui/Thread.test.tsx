@@ -1,20 +1,18 @@
 import {screen, waitFor, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
-import {ApiError} from '@/shared/api';
+import {api, ApiError} from '@/shared/api';
 import {renderWithProviders} from '@/shared/test/render';
 import {ConversationThread} from './ConversationThread';
 
 const fetchConversation = vi.hoisted(() => vi.fn());
 const markConversationRead = vi.hoisted(() => vi.fn());
-const simulateInbound = vi.hoisted(() => vi.fn());
 const fetchCustomer = vi.hoisted(() => vi.fn());
 const listTemplates = vi.hoisted(() => vi.fn());
 vi.mock('@/entities/conversation', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/entities/conversation')>()),
   fetchConversation,
   markConversationRead,
-  simulateInbound,
 }));
 vi.mock('@/entities/customer', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/entities/customer')>()),
@@ -127,15 +125,19 @@ describe('ConversationThread', () => {
     vi.setSystemTime(NOW);
     fetchConversation.mockReset();
     markConversationRead.mockReset();
-    simulateInbound.mockReset();
     fetchCustomer.mockReset();
     listTemplates.mockReset();
-    simulateInbound.mockRejectedValue(new ApiError(404, 'not_found', 'No'));
+    // Production: the dev reply simulator is not offered.
+    vi.spyOn(api, 'GET').mockResolvedValue({
+      data: {status: 'ok', environment: 'prod', sms_transport: 'fake'},
+      response: new Response('{}', {status: 200}),
+    } as never);
     fetchCustomer.mockResolvedValue(customer);
     markConversationRead.mockResolvedValue({});
   });
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('shows a skeleton while the conversation loads', () => {
