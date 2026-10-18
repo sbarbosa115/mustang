@@ -49,7 +49,8 @@ final class CustomerReadApiTest extends ApiTestCase
         self::assertSame('+18135551001', $body['contacts'][0]['value']);
         self::assertNotNull($body['assignments']['sales1']);
         self::assertSame(['text' => 'missing', 'email' => 'missing', 'call' => 'missing'], $body['consent'], 'No consent row means missing.');
-        self::assertNull($body['open_deal']);
+        // Customers 11-20 have no seeded deal.
+        self::assertNull($this->request('GET', '/api/v1/customers/'.$this->customerId(15))['open_deal']);
     }
 
     public function testConsentAndSuppressionShowInTheDetail(): void
