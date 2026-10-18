@@ -19,6 +19,9 @@ docker compose exec php php bin/console mustang:seed-demo
 
 - App: http://localhost:8080 (sign in as `admin@mustang.test`, `manager@mustang.test`, `bdc@mustang.test`,
   `sales@mustang.test` or `sales2@mustang.test`; password `Mustang-dev-1`, dev only).
+- Two-step sign-in is on (TOTP secret `MUSTANGDEVTOTPSECRET234567ABCDEF` for every seed user). To skip the code step on
+  your machine, put `MUSTANG_MFA_REQUIRED=0` in `backend/.env.local`; production ignores it, and the smoke suite turns
+  it back on for its run.
 - Mailpit: http://localhost:8025. Texts never leave the stack (`MESSAGING_SMS_TRANSPORT=fake`).
 - The `node` service rebuilds the UI on every save (`docker compose logs node`); `UI_WATCH=0` builds once.
 

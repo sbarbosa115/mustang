@@ -60,4 +60,15 @@ final class LoginApiTest extends ApiTestCase
         $this->request('GET', '/api/v1/me');
         $this->assertStatus(401, 'After sign-out the API answers as signed out.');
     }
+
+    public function testWithTwoStepSignInSwitchedOffTheSessionIsReadyAtOnce(): void
+    {
+        static::getContainer()->set(\App\Access\UI\Http\Security\MfaPolicy::class, new \App\Access\UI\Http\Security\MfaPolicy(false, 'test'));
+        $body = $this->request('POST', '/api/v1/auth/login', ['email' => 'sales@mustang.test', 'password' => 'Mustang-dev-1']);
+
+        $this->assertStatus(200);
+        self::assertSame('ok', $body['next']);
+        $this->request('GET', '/api/v1/customers');
+        $this->assertStatus(200, 'No code step: the API answers at once.');
+    }
 }

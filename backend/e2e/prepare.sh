@@ -6,15 +6,16 @@ cd "$(git rev-parse --show-toplevel)"
 
 console() { docker compose exec -T php php bin/console "$@"; }
 
-# What a smoke run needs from the app, in a file of its own (gitignored): the fake SMS transport, and X-Forwarded-For
-# trusted so every test is its own visitor for the sign-in rate limit. Development only.
+# What a smoke run needs from the app, in a file of its own (gitignored): the fake SMS transport, X-Forwarded-For
+# trusted so every test is its own visitor for the sign-in rate limit, and two-step sign-in on whatever
+# backend/.env.local says (the suite tests it). Development only; smoke.sh removes the file when the run ends.
 ENV_FILE=backend/.env.dev.local
 MARK='# Written by e2e/prepare.sh for smoke runs.'
 if [ -f "$ENV_FILE" ] && ! grep -qF "$MARK" "$ENV_FILE"; then
     echo "$ENV_FILE exists and was not written by this script: move its settings to backend/.env.local first." >&2
     exit 1
 fi
-printf '%s\nMESSAGING_SMS_TRANSPORT=fake\nTRUSTED_PROXIES=REMOTE_ADDR\n' "$MARK" > "$ENV_FILE"
+printf '%s\nMESSAGING_SMS_TRANSPORT=fake\nTRUSTED_PROXIES=REMOTE_ADDR\nMUSTANG_MFA_REQUIRED=1\n' "$MARK" > "$ENV_FILE"
 
 echo "· database: drop, create, migrate"
 console doctrine:database:drop --force --if-exists -q

@@ -26,6 +26,8 @@ final readonly class LoginSuccessHandler implements AuthenticationSuccessHandler
         private UserQueries $users,
         private SerializerInterface $serializer,
         private TenantContext $tenant,
+        private MfaPolicy $mfaPolicy,
+        private MfaSession $mfaSession,
     ) {
     }
 
@@ -36,9 +38,15 @@ final readonly class LoginSuccessHandler implements AuthenticationSuccessHandler
         $this->commands->dispatch(new RecordSignIn($userId));
         $user = $this->users->byId($userId);
         $enrolled = $this->users->mfaEnrolled([$user->id()])[$user->id()] ?? false;
+        $next = $enrolled ? 'mfa' : 'enroll';
+        if (!$this->mfaPolicy->isRequired()) {
+            // Switched off on a developer's machine: the session is ready without the code step.
+            $this->mfaSession->markVerified();
+            $next = 'ok';
+        }
 
         return new JsonResponse(
-            $this->serializer->serialize(new LoginOutput($enrolled ? 'mfa' : 'enroll', UserOutput::from($user, $enrolled)), 'json'),
+            $this->serializer->serialize(new LoginOutput($next, UserOutput::from($user, $enrolled)), 'json'),
             Response::HTTP_OK,
             [],
             true,

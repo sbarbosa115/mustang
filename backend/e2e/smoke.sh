@@ -14,4 +14,13 @@ cd "$(git rev-parse --show-toplevel)"
 if [ -z "${SMOKE_KEEP_DATA:-}" ]; then
     backend/e2e/prepare.sh
 fi
+# When the run ends, drop the smoke-only settings so the stack goes back to the developer's own (backend/.env.local).
+cleanup() {
+    if grep -qF '# Written by e2e/prepare.sh for smoke runs.' backend/.env.dev.local 2>/dev/null; then
+        rm -f backend/.env.dev.local
+        docker compose exec -T php php bin/console cache:clear -q >/dev/null 2>&1 || true
+        docker compose restart worker >/dev/null 2>&1 || true
+    fi
+}
+trap cleanup EXIT
 docker compose --profile e2e run --rm e2e npx playwright test "$@"
