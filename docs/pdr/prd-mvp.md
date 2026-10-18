@@ -370,6 +370,11 @@ coordinator writes `docs/security/policies.md` content at finish and the user co
   - Customers: create needs a phone or an email at the API; the `CreateCustomer` command does not, for lead capture
     and import. A duplicate contact is 409 `duplicate_contact` with `detail.customer_id`. There is no unarchive yet.
 
+  - Compliance: a customer's state per channel follows the primary contact of that kind (the one a send goes to);
+    `ConsentStates::forContact()` returns the state and the consent row id, so provenance carries `consent_id`.
+    The opt-out screen lists only suppressions of the current dealership's customers (a STOP still blocks every
+    dealership): listing every rooftop's numbers would leak other dealers' customers. Recording consent on a suppressed
+    contact is allowed but the channel stays opted out until the customer sends START.
 ## Left out on purpose (README "Known gaps")
 
 - Everything in the baseline's backlog: built-in calling and call recording with AI notes (FR-05), AI suggested
