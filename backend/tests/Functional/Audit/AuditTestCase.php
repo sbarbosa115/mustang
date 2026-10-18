@@ -10,7 +10,11 @@ use App\Tests\Support\ApiTestCase;
 abstract class AuditTestCase extends ApiTestCase
 {
     /**
-     * @return list<array{action: string, entity_type: string, entity_id: string, dealership_id: string, actor_user_id: ?string, customer_id: ?string, changes: ?array<string, array{old: mixed, new: mixed}>, request_id: ?string, ip: ?string}>
+     * The entries of a record, oldest first; `changes` is empty for a read.
+     *
+     * @return list<array{action: string, entity_type: string, entity_id: string, dealership_id: string, actor_user_id: ?string, customer_id: ?string, changes: array<string, array{old: mixed, new: mixed}>, request_id: ?string, ip: ?string, has_changes: bool}>
+     *
+     * @phpstan-impure
      */
     protected function entries(string $entityType, ?string $entityId = null, ?string $action = null): array
     {
@@ -28,11 +32,12 @@ abstract class AuditTestCase extends ApiTestCase
         $rows = $this->db()->fetchAllAssociative($sql.' ORDER BY occurred_at, id', $params);
 
         return array_map(static function (array $row): array {
-            $changes = null === $row['changes_json'] ? null : json_decode((string) $row['changes_json'], true, flags: \JSON_THROW_ON_ERROR);
+            $hasChanges = null !== $row['changes_json'];
+            $changes = $hasChanges ? json_decode((string) $row['changes_json'], true, flags: \JSON_THROW_ON_ERROR) : [];
             unset($row['changes_json']);
 
-            /** @var array{action: string, entity_type: string, entity_id: string, dealership_id: string, actor_user_id: ?string, customer_id: ?string, changes: ?array<string, array{old: mixed, new: mixed}>, request_id: ?string, ip: ?string} */
-            return $row + ['changes' => $changes];
+            /* @var array{action: string, entity_type: string, entity_id: string, dealership_id: string, actor_user_id: ?string, customer_id: ?string, changes: array<string, array{old: mixed, new: mixed}>, request_id: ?string, ip: ?string, has_changes: bool} */
+            return $row + ['changes' => $changes, 'has_changes' => $hasChanges];
         }, $rows);
     }
 

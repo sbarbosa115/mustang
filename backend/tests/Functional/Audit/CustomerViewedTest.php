@@ -22,7 +22,7 @@ final class CustomerViewedTest extends AuditTestCase
         self::assertSame($this->dealershipId(), $reads[0]['dealership_id']);
         self::assertSame('req-aud-read-1', $reads[0]['request_id']);
         self::assertNotNull($reads[0]['ip'], 'From where.');
-        self::assertNull($reads[0]['changes'], 'A read changes nothing.');
+        self::assertFalse($reads[0]['has_changes'], 'A read changes nothing.');
     }
 
     public function testAReadWithoutARequestIdGetsTheOneTheResponseNames(): void

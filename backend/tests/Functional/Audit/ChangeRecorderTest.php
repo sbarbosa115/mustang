@@ -32,8 +32,8 @@ final class ChangeRecorderTest extends AuditTestCase
         self::assertCount(1, $entries, 'One change of one customer is one entry.');
         $entry = $entries[0];
         self::assertSame(['old' => $before, 'new' => 'Renamed'], $entry['changes']['first_name'] ?? null, 'The diff names the column with its old and new value.');
-        self::assertArrayNotHasKey('updated_at', $entry['changes'] ?? [], 'Bookkeeping columns are not a change worth reading.');
-        self::assertArrayNotHasKey('last_name', $entry['changes'] ?? [], 'Only what changed is in the diff.');
+        self::assertArrayNotHasKey('updated_at', $entry['changes'], 'Bookkeeping columns are not a change worth reading.');
+        self::assertArrayNotHasKey('last_name', $entry['changes'], 'Only what changed is in the diff.');
         self::assertSame($this->userId('sales'), $entry['actor_user_id'], 'The signed-in user is the actor.');
         self::assertSame($this->dealershipId(), $entry['dealership_id'], 'The dealership is the changed record\'s.');
         self::assertSame($id, $entry['customer_id'], 'A customer\'s own entry points at the customer.');
@@ -52,7 +52,7 @@ final class ChangeRecorderTest extends AuditTestCase
         $customer = $this->entries('Customer', $id, 'create');
         self::assertCount(1, $customer);
         self::assertSame(['old' => null, 'new' => 'Audit'], $customer[0]['changes']['first_name'] ?? null);
-        self::assertArrayNotHasKey('id', $customer[0]['changes'] ?? [], 'The id is the entry\'s entity_id, not a change.');
+        self::assertArrayNotHasKey('id', $customer[0]['changes'], 'The id is the entry\'s entity_id, not a change.');
 
         $contactId = (string) $this->db()->fetchOne('SELECT id FROM customer_contacts WHERE customer_id = ?', [$id]);
         $contact = $this->entries('CustomerContact', $contactId, 'create');
@@ -132,6 +132,7 @@ final class ChangeRecorderTest extends AuditTestCase
         $before = (string) $this->db()->fetchOne('SELECT first_name FROM customers WHERE id = ?', [$id]);
         $em = static::getContainer()->get(EntityManagerInterface::class);
 
+        $failed = null;
         try {
             $em->wrapInTransaction(static function () use ($em, $id): void {
                 $customer = $em->find(Customer::class, $id);
@@ -140,10 +141,10 @@ final class ChangeRecorderTest extends AuditTestCase
                 $em->flush();
                 throw new \RuntimeException('the command fails after its flush');
             });
-            self::fail('The transaction must throw.');
         } catch (\RuntimeException $e) {
-            self::assertSame('the command fails after its flush', $e->getMessage());
+            $failed = $e->getMessage();
         }
+        self::assertSame('the command fails after its flush', $failed);
 
         self::assertSame($before, $this->db()->fetchOne('SELECT first_name FROM customers WHERE id = ?', [$id]), 'The change was rolled back.');
         self::assertSame([], $this->entries('Customer', $id), 'So was its audit entry: a change and its entry commit or roll back together.');

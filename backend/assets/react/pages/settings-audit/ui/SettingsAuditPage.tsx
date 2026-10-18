@@ -1,8 +1,23 @@
+import {ScrollText} from 'lucide-react';
 import {useTranslation} from 'react-i18next';
-import {PagePlaceholder} from '@/shared/ui/page';
+import {PageHeader} from '@/shared/ui/page';
+import {AuditTable} from '@/widgets/audit-table';
+import {SettingsTabs} from '@/widgets/settings-nav';
 
-/** Placeholder until item "audit-log" builds this page (docs/pdr/prd-mvp.md). */
+/** /settings/audit: every change and customer record access of the dealership (admin, NFR-04). */
 export function SettingsAuditPage() {
-  const {t} = useTranslation('settings');
-  return <PagePlaceholder title={t('tabs.audit')} item="audit-log" />;
+  const {t} = useTranslation('audit');
+  return (
+    <>
+      <PageHeader title={t('settings:title')} />
+      <SettingsTabs />
+      <div className="mb-4 space-y-1">
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <ScrollText aria-hidden className="size-5" /> {t('title')}
+        </h2>
+        <p className="text-sm text-muted-foreground">{t('description')}</p>
+      </div>
+      <AuditTable />
+    </>
+  );
 }
