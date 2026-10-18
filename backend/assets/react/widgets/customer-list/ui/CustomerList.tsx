@@ -64,6 +64,8 @@ export function CustomerList({emptyAction}: Props) {
   // Keep the URL (and so the query) in step with what was typed, once typing pauses.
   useEffect(() => {
     if (debounced === urlQuery) return;
+    // The debounced text still lags what is typed (or was just cleared): writing it would undo "Show all".
+    if (debounced !== text.trim()) return;
     setParams(
       (prev) => {
         const next = new URLSearchParams(prev);
@@ -74,7 +76,7 @@ export function CustomerList({emptyAction}: Props) {
       },
       {replace: true},
     );
-  }, [debounced, urlQuery, setParams]);
+  }, [debounced, text, urlQuery, setParams]);
 
   const query = {
     page,
