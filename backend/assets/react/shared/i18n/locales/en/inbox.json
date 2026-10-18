@@ -40,7 +40,7 @@
     "title": "Pick a conversation to read it and reply."
   },
   "thread": {
-    "back": "Inbox",
+    "back": "Back to inbox",
     "loading": "Loading conversation",
     "not_found": "This conversation does not exist or is not in your dealership.",
     "error": "This conversation could not be loaded.",
