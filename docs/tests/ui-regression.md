@@ -125,6 +125,61 @@ tablet: the menu button opens the sidebar; desktop: the dark sidebar and the top
 
 <!-- CUS-01 – 08: item "customers". TL-01 – 04: item "timeline". CONS-01 – 06: item "compliance". -->
 
+**CUS-01 · Create a customer from the list**
+Smoke (part): `e2e/customers.spec.ts` covers the create and the new record; by hand: at 390 px the form and its
+buttons are comfortable to use, and the dialog scrolls when the keyboard is open.
+Signed in as sales@mustang.test, open Customers, tap "Add customer", enter Dana as first name, Test as last name and the phone
+`(813) 555-0201`, and add. **Expected:** the new customer's record opens, shows the phone as `(813) 555-0201`, and
+lists the creator as Sales 1; "Dana Test was added." appears; the customer is on top of the list.
+
+**CUS-02 · The top bar opens the form, which explains what is missing**
+Smoke: `e2e/customers.spec.ts`.
+At desktop width, signed in as bdc@mustang.test, click "Add customer" in the top bar. **Expected:** `/customers?new=1`
+opens the form. "Add customer" stays disabled with only a name; clearing the phone shows "Enter a phone number or an
+email."; `not-an-email` shows "Enter a valid email address."; with a valid email it saves and opens the record.
+
+**CUS-03 · A contact already on file is refused and the existing customer is offered**
+Smoke: `e2e/customers.spec.ts`.
+Add a customer with the phone `813-555-1001` (Sarah Johnson's number written another way). **Expected:** nothing is
+created; the form says a customer with this phone number already exists and offers "Open that customer", which opens
+Sarah Johnson. The same holds for an email already on another record, in the form and when adding a contact.
+
+**CUS-04 · Search the list and clear a search that finds nothing**
+Smoke: `e2e/customers.spec.ts`.
+Search `813-555-1002`, then `zzz-nobody`, then "Show all". **Expected:** Michael Williams only; then "Nothing matches
+these filters." with a "Show all" button that empties the search and brings the list back. By hand: "My customers"
+lists only customers where the signed-in user is on the team; "Archived" lists archived ones; the filters survive a
+reload and Back; the page numbers work with more than 25 customers (import some or add them).
+
+**CUS-05 · Edit a customer, add and remove an email**
+Smoke: `e2e/customers.spec.ts`.
+On a customer you created: Customer actions, "Edit details", change the first name and save. Then "Manage contacts",
+add an email typed as `Cus05@Example.com`, then remove it (the confirmation names it). **Expected:** the heading
+shows the new name; the email is stored in lowercase and marked Primary; after removal it is gone. By hand: making a
+second phone primary demotes the first; removing the primary promotes the other; editing a contact to a number
+another customer has says "Another customer already has this contact."
+
+**CUS-06 · Assign the team and record a vehicle the customer owns**
+Smoke: `e2e/customers.spec.ts`.
+As manager, on a customer you created: "Change team", choose Jordan Reyes as Sales 2 and Brianna Diaz as BDC; then on
+Overview add a vehicle (2018 Toyota Camry) and remove it. **Expected:** the panel shows both names; the vehicle is
+listed and removing it asks first. By hand: the Sales 1 and Sales 2 lists offer only sales people (and managers), the
+BDC list only BDC agents, and a deactivated user is not offered.
+
+**CUS-07 · Notes are listed newest first with their author**
+Smoke: `e2e/customers.spec.ts`.
+On a customer you created, "Add note" is disabled until you type; add two notes. **Expected:** both show, the newest
+first, with the author's name and a relative time (full timestamp on hover); the box empties after each add.
+
+**CUS-08 · Archive a customer; another dealership cannot open the record**
+Smoke (part): `e2e/customers.spec.ts` covers the archive and the other dealership; by hand: the tabs of the record.
+As manager, on a customer you created: Customer actions, "Archive customer", confirm (the dialog names the
+customer). **Expected:** the record shows an "Archived" badge and the menu no longer offers archiving; the customer
+is gone from the default list and present under "Archived". Signed in as other@mustang.test, opening Sarah Johnson's
+URL says "This customer does not exist or is not in your dealership." By hand: Overview, Timeline, Deals and
+Appointments tabs open and keep the choice in the URL (`?tab=deals`); Deals and Appointments list the customer's own
+records, or say there are none; the Timeline tab says what will appear until the timeline ships.
+
 ## 7. Leads
 
 <!-- LEAD-01 – 06: item "leads". -->
