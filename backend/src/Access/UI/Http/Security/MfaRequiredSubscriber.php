@@ -14,7 +14,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 #[AsEventListener(event: KernelEvents::REQUEST, priority: 7)]
 final readonly class MfaRequiredSubscriber
 {
-    private const array OPEN_PREFIXES = ['/api/v1/auth/', '/api/v1/health'];
+    private const string OPEN_PREFIX = '/api/v1/auth/';
+    private const string HEALTH = '/api/v1/health';
 
     public function __construct(private MfaSession $mfa)
     {
@@ -26,10 +27,8 @@ final readonly class MfaRequiredSubscriber
         if (!$event->isMainRequest() || !str_starts_with($path, '/api/')) {
             return;
         }
-        foreach (self::OPEN_PREFIXES as $prefix) {
-            if (str_starts_with($path, $prefix)) {
-                return;
-            }
+        if (str_starts_with($path, self::OPEN_PREFIX) || self::HEALTH === $path) {
+            return;
         }
         if (!$this->mfa->isSignedIn() || $this->mfa->isVerified()) {
             return;
