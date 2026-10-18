@@ -344,7 +344,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Changes and customer record access (admin). */
+        /**
+         * Changes and customer record access, newest first (admin). `entity_type` (Customer, CustomerContact, Deal, User…)
+         *     and `entity_id` narrow it to a record, `user_id` to what one person did; `from` (inclusive) and `to` (exclusive)
+         *     are an ISO instant or a date meaning midnight at the dealership; 422 `invalid_period`. Passwords, MFA secrets and
+         *     recovery codes appear as "[masked]".
+         */
         get: operations["get_api_audit_list"];
         put?: never;
         post?: never;
@@ -3377,8 +3382,17 @@ export interface operations {
                     "application/json": components["schemas"]["AuditPageOutput"];
                 };
             };
-            /** @description Not built yet (item "audit-log") */
-            501: {
+            /** @description Not an admin */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description A period that is not a date or a time */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };

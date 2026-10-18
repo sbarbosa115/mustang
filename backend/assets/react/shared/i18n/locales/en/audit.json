@@ -1,3 +1,68 @@
 {
-  "_owner": "item 16"
+  "_owner": "item 16",
+  "title": "Audit log",
+  "description": "Every change to the dealership's records and every time a customer record was opened. Passwords and two-step sign-in secrets are never shown.",
+  "list": {
+    "empty": "Nothing has been recorded yet.",
+    "column": {
+      "when": "When",
+      "who": "Who",
+      "action": "Action",
+      "record": "Record",
+      "changes": "Changes"
+    },
+    "system": "System",
+    "former_user": "Former user",
+    "ip": "From {{ip}}",
+    "open_customer": "Open the customer",
+    "history": "Show this record's history",
+    "history_of": "History of {{type}} {{id}}"
+  },
+  "action": {
+    "create": "Created",
+    "update": "Changed",
+    "delete": "Deleted",
+    "read": "Viewed"
+  },
+  "changes": {
+    "none": "No fields",
+    "masked": "hidden",
+    "empty": "empty",
+    "show_more_one": "Show {{count}} more field",
+    "show_more_other": "Show {{count}} more fields",
+    "show_less": "Show fewer"
+  },
+  "filters": {
+    "label": "Filter the audit log",
+    "entity_type": "Record type",
+    "any_type": "Any record",
+    "user": "Who",
+    "anyone": "Anyone",
+    "from": "From",
+    "to": "To",
+    "clear": "Clear filters",
+    "remove_record": "Show every record"
+  },
+  "entity": {
+    "Activity": "Timeline entry",
+    "Appointment": "Appointment",
+    "Consent": "Consent",
+    "Conversation": "Conversation",
+    "Customer": "Customer",
+    "CustomerContact": "Customer contact",
+    "CustomerNote": "Customer note",
+    "CustomerOwnedVehicle": "Owned vehicle",
+    "Deal": "Deal",
+    "Dealership": "Dealership",
+    "ImportJob": "Spreadsheet import",
+    "Lead": "Lead",
+    "Message": "Message",
+    "MessageTemplate": "Template",
+    "MfaCredential": "Two-step sign-in",
+    "RoutingRotation": "Lead routing",
+    "Suppression": "Opt-out",
+    "User": "User",
+    "Vehicle": "Vehicle",
+    "VehicleImport": "Vehicle upload"
+  }
 }

@@ -737,6 +737,37 @@ to `GET /api/v1/imports`, to an upload and to the sample files. As admin the scr
 as other@mustang.test, the address of a Mustang Motors import (`/api/v1/imports/{id}`) is 404 and their list does not
 show it.
 
+**AUD-01 · An admin sees a change with its old and new value and who made it**
+Smoke: `e2e/audit.spec.ts`.
+As sales, add a customer `AUD01 Test` and change the last name to `Renamed`. As admin, Settings, Audit log: the newest
+rows are that customer's. **Expected:** a "Changed" row by Sam Patel with `last_name` Test → Renamed, a "Created" row
+with the new fields, and a "Customer contact" row for the phone; each shows "From <ip>" and a relative time with the
+full timestamp in its tooltip. The row's history button narrows the list to that record ("History of Customer …");
+"Clear filters" brings every row back. By hand: Record type "Deal", Who "Sam Patel" and a From/To period of today
+narrow the list and survive a reload (they are in the URL); a period with nothing shows "Nothing matches these
+filters." with "Show all"; at 390 px the rows are cards with the same fields.
+
+**AUD-02 · Opening a customer record is recorded as a view by that person**
+Smoke: `e2e/audit.spec.ts`.
+As BDC, open a customer you added. As admin, open that customer's history in the Audit log. **Expected:** a "Viewed"
+row by Brianna Diaz with no fields and "Open the customer" linking to the record. Listing or searching customers adds
+no "Viewed" row. By hand: opening the record as other@mustang.test (404) adds nothing.
+
+**AUD-03 · Secrets are recorded as changed, never shown**
+Smoke: `e2e/audit.spec.ts`.
+As admin add a user with a password, then open that user's history (Record type "User"). **Expected:** the "Created"
+row lists `password_hash` as "hidden", never a hash; `GET /api/v1/audit` answers `[masked]` for it. By hand: reset a
+user's two-step sign-in (Users, row menu): a "Deleted" row of "Two-step sign-in" shows `secret_encrypted` and
+`recovery_codes_json` as hidden; signing in and setting it up again shows the same.
+
+**AUD-04 · Only admins read the log; another dealership sees none of it; who acts outside a request**
+Smoke (part): `e2e/audit.spec.ts` covers the roles and the other dealership; by hand: the worker and console rows.
+As manager (and sales, bdc), Settings has no "Audit log" tab, `/settings/audit` lands on Today and the API answers 403.
+As other@mustang.test, the log has none of Mustang Motors' rows, even asked for by a record id. By hand: after a
+spreadsheet import (Settings, Import), its customers' "Created" rows name the uploader; a rep's appointment reminder
+sent by the worker, or a change made by `bin/console mustang:messaging:simulate-inbound`, shows "System" as who.
+After `mustang:seed-demo` the log is empty: demo data is not recorded.
+
 ## Emails
 
 **MAIL-01 · Every email is readable and links to a real screen**
