@@ -356,6 +356,20 @@ coordinator writes `docs/security/policies.md` content at finish and the user co
 - *Smoke suite:* the Symfony debug toolbar is off in dev (it covered the phone tab bar); `consoleErrors()` ignores the
   expected 401 of `/api/v1/me` for a visitor.
 
+- *Learned while building (wave 1):*
+  - `vehicles.condition` is a reserved word in MariaDB; its mapping quotes the column name (no schema change).
+  - Event and worker handlers run without a signed-in user (console commands, the worker): they read the dealership
+    from the event and load records through repository methods that take the dealership explicitly
+    (`getInDealership`), never through `TenantContext`.
+  - A message queued for the worker arrives on the event bus, which has no transaction: its handler dispatches a
+    command, which runs in one. Restart the worker after changing code it runs (`e2e/prepare.sh` does).
+  - Messaging refuses an inbound message from an unknown contact with 422 `unknown_contact` for now. Once leads is
+    merged, the coordinator wires it to capture a lead (source `other`) as the "Messaging" decision says.
+  - Messaging's send refusal is 409 `consent_missing` or `opted_out` with `detail {message_id, consent}`; the blocked
+    message is kept for provenance. Email sends need a subject; the fake SMS number is +18135550100.
+  - Customers: create needs a phone or an email at the API; the `CreateCustomer` command does not, for lead capture
+    and import. A duplicate contact is 409 `duplicate_contact` with `detail.customer_id`. There is no unarchive yet.
+
 ## Left out on purpose (README "Known gaps")
 
 - Everything in the baseline's backlog: built-in calling and call recording with AI notes (FR-05), AI suggested
