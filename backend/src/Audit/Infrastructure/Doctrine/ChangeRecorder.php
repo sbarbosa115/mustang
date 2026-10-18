@@ -26,6 +26,9 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 #[AsDoctrineListener(event: Events::onFlush)]
 final class ChangeRecorder
 {
+    /** Named, not imported: Audit may not depend on the Timeline context (deptrac.contexts.yaml). */
+    private const string TIMELINE_ACTIVITY = 'App\\Timeline\\Domain\\Model\\Activity';
+
     public const string MASK = '[masked]';
 
     /** Columns whose values never enter the log: that they changed is recorded, not what they hold. */
@@ -81,7 +84,8 @@ final class ChangeRecorder
         $context = null;
         $entryMetadata = $em->getClassMetadata(AuditEntry::class);
         foreach ($pending as [$action, $entity, $changeSet]) {
-            if ($entity instanceof AuditEntry) {
+            // Timeline entries are projections of changes already recorded at their source.
+            if ($entity instanceof AuditEntry || self::TIMELINE_ACTIVITY === $entity::class) {
                 continue;
             }
             $metadata = $em->getClassMetadata($entity::class);

@@ -249,4 +249,16 @@ final class ChangeRecorderTest extends AuditTestCase
         $em->flush();
         self::assertCount(1, $this->entries('Customer', $id), 'Recording resumes when the seeding ends.');
     }
+
+    public function testTimelineEntriesAreNotRecordedTheirSourceChangesAre(): void
+    {
+        $this->signInAs('sales');
+        $customerId = $this->customerId(18);
+        $this->request('POST', '/api/v1/customers/'.$customerId.'/notes', ['body' => 'Audit sees the note, not its timeline copy.']);
+        $this->assertStatus(201);
+
+        $types = $this->db()->fetchFirstColumn('SELECT entity_type FROM audit_entries WHERE customer_id = ?', [$customerId]);
+        self::assertContains('CustomerNote', $types, 'The note itself is audited.');
+        self::assertNotContains('Activity', $types, 'A timeline entry is derived from an audited change; recording it again is noise.');
+    }
 }
