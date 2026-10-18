@@ -116,4 +116,32 @@ class VehicleImport
     {
         return $this->errorsJson;
     }
+
+    public function begin(): void
+    {
+        $this->status = VehicleImportStatus::Processing;
+    }
+
+    /**
+     * @param list<array{row: int, message: string, field: ?string}> $errors
+     */
+    public function finish(int $rowsTotal, int $rowsOk, int $rowsFailed, array $errors): void
+    {
+        $this->status = VehicleImportStatus::Done;
+        $this->rowsTotal = $rowsTotal;
+        $this->rowsOk = $rowsOk;
+        $this->rowsFailed = $rowsFailed;
+        $this->errorsJson = $errors;
+    }
+
+    /**
+     * The file could not be read at all (no header, a missing required column, not text).
+     *
+     * @param list<array{row: int, message: string, field: ?string}> $errors
+     */
+    public function fail(array $errors): void
+    {
+        $this->status = VehicleImportStatus::Failed;
+        $this->errorsJson = $errors;
+    }
 }

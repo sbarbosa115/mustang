@@ -30,4 +30,12 @@ final class DoctrineVehicleRepository extends TenantScopedRepository implements 
     {
         $this->persist($vehicle);
     }
+
+    public function findByStockNumber(string $dealershipId, string $stockNumber): ?Vehicle
+    {
+        return $this->em->getRepository(Vehicle::class)->findOneBy([
+            'dealershipId' => $dealershipId,
+            'stockNumber' => $stockNumber,
+        ]);
+    }
 }
