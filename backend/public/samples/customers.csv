@@ -1,4 +1,4 @@
 first_name,last_name,phone,email,address,sales_rep_email,sms_consent,email_consent,consent_source,notes
-Maria,Gonzalez,(813) 555-7101,maria.gonzalez@example.com,"1200 Bayshore Blvd, Tampa, FL 33606",sales@mustang.test,yes,yes,Signed showroom form,Prefers texts after 5 pm
+Elena,Vargas,(813) 555-7101,elena.vargas@example.com,"1200 Bayshore Blvd, Tampa, FL 33606",sales@mustang.test,yes,yes,Signed showroom form,Prefers texts after 5 pm
 James,Whitfield,813.555.7102,,,,no,no,,
 Aisha,Khan,,aisha.khan@example.com,,sales2@mustang.test,no,yes,Website newsletter,Interested in hybrids

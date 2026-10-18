@@ -14,17 +14,17 @@ final class ImportCustomersTest extends ImportTestCase
         self::assertSame('done', $job['status']);
         self::assertSame([3, 3, 0, 0, 0], [$job['rows_total'], $job['rows_created'], $job['rows_updated'], $job['rows_skipped'], $job['rows_failed']], 'The sample file we ship must import cleanly.');
         self::assertNotNull($job['finished_at']);
-        $maria = $this->customerIdByPhone('+18135557101');
-        self::assertNotFalse($maria, '"(813) 555-7101" is stored as E.164.');
+        $elena = $this->customerIdByPhone('+18135557101');
+        self::assertNotFalse($elena, '"(813) 555-7101" is stored as E.164.');
         self::assertNotFalse($this->customerIdByPhone('+18135557102'), '"813.555.7102" is stored as E.164.');
-        $customer = $this->db()->fetchAssociative('SELECT * FROM customers WHERE id = ?', [$maria]);
+        $customer = $this->db()->fetchAssociative('SELECT * FROM customers WHERE id = ?', [$elena]);
         self::assertIsArray($customer);
-        self::assertSame(['Maria', 'Gonzalez', 'import', $this->dealershipId()], [$customer['first_name'], $customer['last_name'], $customer['source'], $customer['dealership_id']]);
+        self::assertSame(['Elena', 'Vargas', 'import', $this->dealershipId()], [$customer['first_name'], $customer['last_name'], $customer['source'], $customer['dealership_id']]);
         self::assertSame($this->userId('sales'), $customer['sales1_user_id'], 'sales_rep_email names the Sales 1.');
-        $note = (string) $this->db()->fetchOne('SELECT body FROM customer_notes WHERE customer_id = ?', [$maria]);
+        $note = (string) $this->db()->fetchOne('SELECT body FROM customer_notes WHERE customer_id = ?', [$elena]);
         self::assertStringContainsString('Prefers texts after 5 pm', $note);
         self::assertStringContainsString('1200 Bayshore Blvd', $note, 'There is no address field: the address is kept in the note.');
-        self::assertSame($this->userId('manager'), $this->db()->fetchOne('SELECT author_user_id FROM customer_notes WHERE customer_id = ?', [$maria]), 'Notes are written by the uploader.');
+        self::assertSame($this->userId('manager'), $this->db()->fetchOne('SELECT author_user_id FROM customer_notes WHERE customer_id = ?', [$elena]), 'Notes are written by the uploader.');
     }
 
     public function testConsentIsRecordedWithSourceImportWhenTheColumnSaysYes(): void
@@ -103,7 +103,7 @@ final class ImportCustomersTest extends ImportTestCase
 
     public function testAContactThatBelongsToAnotherCustomerFailsTheRow(): void
     {
-        $job = $this->importAndRun('customers', self::HEADER."Mixed,Up,813-555-1001,".$this->email(2).",,,,,,\n");
+        $job = $this->importAndRun('customers', self::HEADER.'Mixed,Up,813-555-1001,'.$this->email(2).",,,,,,\n");
 
         self::assertSame(1, $job['rows_failed']);
         self::assertSame('email', $job['errors'][0]['field'], 'The phone is customer 1\'s and the email customer 2\'s: neither is changed.');

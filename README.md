@@ -98,10 +98,10 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `GET /api/v1/customers/{id}/notes` | The notes on a customer, newest first | 200, 404 | Built |
 | `POST /api/v1/customers/{id}/notes` | Add a note (raises NoteAdded) | 201, 404, 422 | Built |
 | `POST /api/v1/customers/{id}/archive` | Archive a customer; archiving twice changes nothing | 200, 404 | Built |
-| `GET /api/v1/imports` | Spreadsheet imports, newest first | 200 | 501 until "data-import" |
-| `POST /api/v1/imports` | Upload customers or leads from a CSV (manager) | 201, 413, 422 | 501 until "data-import" |
-| `GET /api/v1/imports/{id}` | Progress and errors of an import | 200, 404 | 501 until "data-import" |
-| `GET /api/v1/imports/template/{type}.csv` | A sample CSV with the expected columns | 200, 404 | 501 until "data-import" |
+| `GET /api/v1/imports` | Spreadsheet imports, newest first (manager) | 200, 403 | Built |
+| `POST /api/v1/imports` | Upload customers or leads from a CSV (manager; `type` customers or leads, 10 MB at most; processed by the worker as the uploader; duplicates by phone, then email, are updated; `yes` consent columns record consent with source import; a leads row opens a lead, and so a deal, unless the customer has an open lead) | 201, 403, 413, 422 | Built |
+| `GET /api/v1/imports/{id}` | Progress, counts (created, updated, skipped, failed) and row errors of an import (manager) | 200, 403, 404 | Built |
+| `GET /api/v1/imports/template/{type}.csv` | A sample customers.csv or leads.csv with the expected columns (manager) | 200, 403, 404 | Built |
 | `GET /api/v1/deals` | Deals | 200 | 501 until "deals" |
 | `POST /api/v1/deals` | Open a deal for a customer | 201, 404, 409, 422 | 501 until "deals" |
 | `GET /api/v1/deals/{id}` | One deal | 200, 404 | 501 until "deals" |

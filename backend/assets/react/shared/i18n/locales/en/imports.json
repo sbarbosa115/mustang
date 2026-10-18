@@ -1,3 +1,61 @@
 {
-  "_owner": "item 12"
+  "_owner": "item 12",
+  "page": {
+    "title": "Import customers and leads",
+    "description": "Bring your customers and open leads over from a spreadsheet. Duplicates (same phone, then same email) are updated, never added twice."
+  },
+  "upload": {
+    "type_label": "What the file holds",
+    "type": {
+      "customers": "Customers",
+      "leads": "Open leads"
+    },
+    "type_help": {
+      "customers": "Columns: first_name, last_name, phone, email, address, sales_rep_email, sms_consent, email_consent, consent_source, notes. A yes in sms_consent or email_consent records consent with source import.",
+      "leads": "Columns: first_name, last_name, phone, email, source, vehicle_interest, received_at, sales_rep_email, notes. Each row opens a lead and its deal; without a known rep it goes to round robin."
+    },
+    "file": "CSV file",
+    "hint": "UTF-8 with a header row, 10 MB at most.",
+    "sample": {
+      "customers": "Download the sample customers.csv",
+      "leads": "Download the sample leads.csv"
+    },
+    "submit": "Upload and import",
+    "submitting": "Uploading…",
+    "queued": "{{name}} is queued: the results appear below.",
+    "error": {
+      "file_too_large": "The file is too large (10 MB at most).",
+      "file_not_csv": "The file must be a .csv file.",
+      "file_required": "Choose a CSV file to upload.",
+      "invalid_import_type": "Choose what the file holds.",
+      "forbidden": "Only managers and admins can import.",
+      "generic": "The file could not be uploaded. Try again."
+    }
+  },
+  "status": {
+    "title": "Recent imports",
+    "empty": "No imports yet. Download a sample file to see the columns, then upload your own.",
+    "column": {
+      "file": "File",
+      "type": "Type",
+      "status": "Status",
+      "result": "Result",
+      "uploaded": "Uploaded"
+    },
+    "state": {
+      "pending": "Queued",
+      "processing": "Importing",
+      "done": "Done",
+      "failed": "Failed"
+    },
+    "result": "{{created}} created, {{updated}} updated, {{skipped}} unchanged, {{failed}} failed",
+    "result_failed": "Nothing was imported",
+    "waiting": "Waiting for the worker…",
+    "by": "by {{name}}",
+    "show_errors_one": "Show the problem",
+    "show_errors_other": "Show {{count}} problems",
+    "hide_errors": "Hide problems",
+    "row": "Row {{row}}:",
+    "column_hint": "column {{field}}"
+  }
 }
