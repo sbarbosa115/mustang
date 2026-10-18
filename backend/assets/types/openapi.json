@@ -1099,7 +1099,7 @@
                 "tags": [
                     "Audit"
                 ],
-                "summary": "Changes and customer record access (admin).",
+                "summary": "Changes and customer record access, newest first (admin). `entity_type` (Customer, CustomerContact, Deal, User\u2026)\nand `entity_id` narrow it to a record, `user_id` to what one person did; `from` (inclusive) and `to` (exclusive)\nare an ISO instant or a date meaning midnight at the dealership; 422 `invalid_period`. Passwords, MFA secrets and\nrecovery codes appear as \"[masked]\".",
                 "operationId": "get_api_audit_list",
                 "parameters": [
                     {
@@ -1190,8 +1190,18 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"audit-log\")",
+                    "403": {
+                        "description": "Not an admin",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "A period that is not a date or a time",
                         "content": {
                             "application/json": {
                                 "schema": {
