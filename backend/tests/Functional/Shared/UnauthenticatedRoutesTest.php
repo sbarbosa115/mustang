@@ -7,7 +7,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 final class UnauthenticatedRoutesTest extends ApiTestCase
 {
-    private const array PUBLIC_ROUTES = ['api_health', 'api_auth_login', 'api_auth_logout'];
+    private const array PUBLIC_ROUTES = ['api_health', 'api_auth_login', 'api_auth_logout', '_logout_main'];
 
     public function testEveryApiRouteButTheSignInAndHealthAnswers401WhenSignedOut(): void
     {
