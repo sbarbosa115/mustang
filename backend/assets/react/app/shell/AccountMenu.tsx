@@ -1,6 +1,6 @@
 import {LogOut, Settings} from 'lucide-react';
 import {useTranslation} from 'react-i18next';
-import {Link, useNavigate} from 'react-router';
+import {Link} from 'react-router';
 import {ThemeSwitch} from '@/features/switch-theme';
 import {Avatar, AvatarFallback} from '@/shared/ui/avatar';
 import {Button} from '@/shared/ui/button';
@@ -20,7 +20,6 @@ function initials(name: string): string {
 export function AccountMenuItems({onDone}: {onDone?: () => void}) {
   const {t} = useTranslation('shell');
   const {me, signOut} = useAuth();
-  const navigate = useNavigate();
   return (
     <div className="space-y-3">
       {me && (
@@ -46,9 +45,10 @@ export function AccountMenuItems({onDone}: {onDone?: () => void}) {
           variant="ghost"
           className="justify-start"
           onClick={async () => {
-            onDone?.();
+            // Signing out clears the session; the auth guard then sends the app to /login. (This menu may unmount
+            // when its sheet closes, so it must not navigate itself.)
             await signOut();
-            navigate('/login');
+            onDone?.();
           }}
         >
           <LogOut aria-hidden />

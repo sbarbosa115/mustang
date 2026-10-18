@@ -7,13 +7,7 @@ import {z} from 'zod';
 import {useAuth} from '@/entities/user';
 import {ApiError} from '@/shared/api';
 import {Button} from '@/shared/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/shared/ui/card';
+import {Card, CardContent, CardDescription, CardHeader} from '@/shared/ui/card';
 import {Input} from '@/shared/ui/input';
 import {Label} from '@/shared/ui/label';
 
@@ -58,7 +52,9 @@ export function LoginPage() {
     <div className="flex min-h-dvh items-center justify-center bg-canvas p-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">{t('login.title')}</CardTitle>
+          <h1 className="text-2xl leading-none font-semibold">
+            {t('login.title')}
+          </h1>
           <CardDescription>{t('login.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>

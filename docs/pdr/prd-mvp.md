@@ -176,7 +176,7 @@ beyond `inbox.transport.*` placeholders it leaves for item 10.
 |---|---|
 | 1. Public | PUB-01 (0) |
 | 2. Authentication | AUTH-01 – 03 (0), AUTH-04 – 08 (1) |
-| 3. App shell and theme | SHELL-01 – 05 (0) |
+| 3. App shell and theme | SHELL-01 – 06 (0) |
 | 4. Today: contact now | TODAY-01 – 05 (14) |
 | 5. Inbox | MSG-01 – 04 (3, console and dev endpoint), INB-01 – 08 (10) |
 | 6. Customers | CUS-01 – 08 (2), TL-01 – 04 (13), CONS-01 – 06 (7) |
@@ -195,7 +195,7 @@ runs on the `phone` project (390×844); manager specs set a 1280×800 viewport w
 
 | # | Slug | Item | Owns (context / slice, files) | Tests first | Browser cases | Depends on | Model |
 |---|---|---|---|---|---|---|---|
-| 0 | contract | Stack, skeletons, design system, shell, auth and tenancy, all entities and the migration, ports, DTOs, stubs, types, i18n namespaces, suite sections | docker-compose.yml, docker/, backend/ skeleton and tool configs, Shared, Access (login, session, roles, voters, users read), Customer reads, every Domain/Model and Domain/Event, migrations/Version*Mvp.php, every Repository port and Doctrine adapter, every Query interface, every Input and Output DTO and 501 controller, openapi.json and api.d.ts, app/, shared/, entities/*, pages/login, pages/settings, placeholder pages, locales skeleton, docs/tests/ui-regression.md sections, e2e/support, README, CLAUDE.md, docs/security, ci.yml | PhoneNumberTest, EmailTest, MoneyTest, LoginApiTest, MeApiTest, UnauthenticatedRoutesTest, CustomerReadApiTest (other dealership 404, q escaping, pagination), UserReadApiTest, StubShapesTest, mustang components render tests, shell tabs per role, theme switch | PUB-01, AUTH-01 – 03, SHELL-01 – 05, MAIL-01 | — | — |
+| 0 | contract | Stack, skeletons, design system, shell, auth and tenancy, all entities and the migration, ports, DTOs, stubs, types, i18n namespaces, suite sections | docker-compose.yml, docker/, backend/ skeleton and tool configs, Shared, Access (login, session, roles, voters, users read), Customer reads, every Domain/Model and Domain/Event, migrations/Version*Mvp.php, every Repository port and Doctrine adapter, every Query interface, every Input and Output DTO and 501 controller, openapi.json and api.d.ts, app/, shared/, entities/*, pages/login, pages/settings, placeholder pages, locales skeleton, docs/tests/ui-regression.md sections, e2e/support, README, CLAUDE.md, docs/security, ci.yml | PhoneNumberTest, EmailTest, MoneyTest, LoginApiTest, MeApiTest, UnauthenticatedRoutesTest, CustomerReadApiTest (other dealership 404, q escaping, pagination), UserReadApiTest, StubShapesTest, mustang components render tests, shell tabs per role, theme switch | PUB-01, AUTH-01 – 03, SHELL-01 – 06, MAIL-01 | — | — |
 | 1 | mfa | TOTP enrollment and verification on login, recovery codes, admin reset | Access: Application/Mfa (EnrollMfa, ConfirmMfa, VerifyMfa, ResetMfa), Infrastructure/Totp, UI/Http/Controller/MfaController, security step (MfaRequiredSubscriber: a session without a verified factor reaches only /auth/*); pages/login step 2 and enroll screen, features/mfa-enroll, features/mfa-verify, pages/settings Security tab, e2e/support/test.ts TOTP step, locales auth.mfa.* | MfaEnrollmentTest (secret encrypted at rest, confirm with a valid code, wrong code 422, replay refused), MfaLoginTest (login answers enroll then mfa, protected route 403 until verified, recovery code once), MfaResetApiTest (admin only, other dealership 404), MfaVerifyForm.test.tsx | AUTH-04 – 08 | 0 | opus |
 | 2 | customers | Customer records: list, create, edit, contacts, owned vehicles, assignments, notes, archive | Customer: Application/Command (CreateCustomer, UpdateCustomer, AddContact, UpdateContact, RemoveContact, AddOwnedVehicle, RemoveOwnedVehicle, AssignTeam, AddNote, ArchiveCustomer), UI/Http/Controller/CustomerWriteController; features/create-customer, features/edit-customer, features/manage-contacts, features/assign-team, features/add-note, widgets/customer-list, pages/customers, pages/customer-detail (tabs: Overview, Timeline slot filled by item 13, Deals, Appointments), locales customers, e2e/customers.spec.ts, CustomerSeeder additions | CustomerWriteApiTest (create with phone normalised, duplicate contact 409, update, contacts CRUD, assignments by role, note, archive, other dealership 404, 422 messages), CustomerForm.test.tsx, CustomerList.test.tsx (loading, empty, filtered to nothing) | CUS-01 – 08 | 0 | sonnet |
 | 3 | messaging-api | Conversations and the send pipeline: consent check, transports, provenance, inbound simulation, unreplied and fumbled flags | Messaging: Application/Command (SendMessage, ReceiveInboundMessage, MarkConversationRead), Application/Query/DoctrineConversationQueries, Application/EventHandler (none), Infrastructure/Transport (MailerEmailTransport queued on the mail bus, FakeSmsTransport), Infrastructure/Persistence, UI/Http/Controller/ConversationController, MessageController, DevInboundController (dev and test only), UI/Cli/SimulateInboundCommand (mustang:messaging:simulate-inbound), MessagingSeeder, README rows | SendMessageTest (text sent through the fake transport with provenance, email queued then sent and lands in Mailpit, blocked 409 consent_missing and 409 opted_out with the consent snapshot, template_id recorded), InboundMessageTest (finds or creates the conversation by contact, raises InboundMessageReceived, unread count), ConversationQueriesTest (folders, per-rep counts, fumbled after 30 min, other dealership sees nothing), ProvenanceApiTest | MSG-01 – 04 | 0 | opus |
@@ -326,6 +326,35 @@ inbox-ui, users-admin, data-import. 4: timeline, worklist, dashboard, audit-log.
 **Process notes.** `.env.dev.local` is written by `e2e/prepare.sh` only. Items add their own seeder (tagged
 `mustang.seeder`), never edit another's. `openapi.json` and `api.d.ts` are regenerated, never merged by hand. The
 coordinator writes `docs/security/policies.md` content at finish and the user confirms it before the PR.
+
+**Contract as built (item 0).** Where the build differs from the text above, this wins:
+
+- *Versions:* `symfony/framework-bundle` is pinned to 8.1.7; the other `symfony/*` components take the latest 8.1
+  patch (not every component has an 8.1.7 release). UI tooling: Vite 8, ESLint 9, TypeScript 5.9 and zod 3, the newest
+  versions whose peer dependencies agree.
+- *Paths:* design tokens are `backend/assets/styles/tokens.css` (the UI build cannot read outside `backend/`); the test
+  database init is `docker/mariadb/init/10-test-database.sql`; the UI is built by `vite build --watch` in `node`.
+- *Sign-in:* email is unique across Mustang (not per dealership), so sign-in needs no dealership picker.
+- *API errors:* `{error, message, detail}`; validation is 422 `{error: "validation", message, violations: [{field,
+  code, message}]}`. OpenAPI comes from Nelmio's own attributes (`#[OA\Response(..., new Model(...))]`) on each
+  controller; there is no custom `ApiResponse` attribute.
+- *Cross-context reads:* `Shared/Application/Port/{UserDirectory, CustomerDirectory, ConsentStates}` give any context
+  user names, customer names and the consent state per channel without depending on Access, Customer or Compliance.
+  `ConsentStates` is implemented now (`Compliance/Infrastructure/Persistence/DbalConsentStates`) with the rules under
+  "Consent"; item 7 keeps it in step with the ledger.
+- *Events:* published with `EventBus::publish()`, delivered after the command's transaction commits. A message that
+  implements `Shared\Application\Bus\AsyncMessage` runs on the worker. Handlers implement `CommandHandler` /
+  `EventHandler` (no framework attribute in Application). `GET /customers/{id}` already publishes `CustomerViewed`.
+- *No database foreign keys between aggregates:* the Doctrine mapping owns the schema, and `doctrine:migrations:diff`
+  would drop keys it does not map. Integrity is the repositories' job (load through the dealership, 404 otherwise).
+- *Frontend:* page slices are flat (`pages/settings-users`, `pages/settings-routing`, `pages/inbox-thread`,
+  `pages/customer-consent`, …); the settings tabs are `widgets/settings-nav`; the session (`AuthProvider`, `useAuth`)
+  lives in `entities/user`. Each namespace file carries an `_owner` key naming its item; items add keys to their own
+  file only. Every route already renders a placeholder page that names its item: an item replaces its page's
+  component and keeps the export name.
+- *Regression suite:* item 0 owns SHELL-01 – 06 (06 is the by-hand layout and theme check).
+- *Smoke suite:* the Symfony debug toolbar is off in dev (it covered the phone tab bar); `consoleErrors()` ignores the
+  expected 401 of `/api/v1/me` for a visitor.
 
 ## Left out on purpose (README "Known gaps")
 

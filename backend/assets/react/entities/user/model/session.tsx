@@ -72,8 +72,12 @@ export function AuthProvider({children}: {children: ReactNode}) {
 
   const signOut = useCallback(async () => {
     await api.POST('/api/v1/auth/logout');
-    queryClient.clear();
+    // Set the session to "nobody" on the query the app observes, then drop every other cached record so the next
+    // user never sees the previous one's data. (clear() would detach the observed session query.)
     queryClient.setQueryData(ME_KEY, null);
+    queryClient.removeQueries({
+      predicate: (query) => query.queryKey[1] !== 'me',
+    });
   }, [queryClient]);
 
   const value = useMemo(

@@ -79,6 +79,7 @@ export function QuickSearch() {
         </kbd>
       </Button>
       <CommandDialog
+        shouldFilter={false}
         open={open}
         onOpenChange={setOpen}
         title={t('search.open')}
