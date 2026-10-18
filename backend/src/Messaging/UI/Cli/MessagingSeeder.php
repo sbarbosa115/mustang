@@ -2,11 +2,11 @@
 
 namespace App\Messaging\UI\Cli;
 
+use App\Messaging\Application\Port\MessageTransport;
 use App\Messaging\Domain\Model\Conversation;
 use App\Messaging\Domain\Model\Message;
 use App\Messaging\Domain\Model\MessageDirection;
 use App\Messaging\Domain\Model\MessageStatus;
-use App\Messaging\Infrastructure\Transport\FakeSmsTransport;
 use App\Shared\Domain\Channel;
 use App\Shared\Domain\Id;
 use App\Shared\UI\Cli\DemoSeeder;
@@ -20,9 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 final readonly class MessagingSeeder implements DemoSeeder
 {
-    private const string MAIL_FROM = 'no-reply@mustang.test';
-
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em, private MessageTransport $transport)
     {
     }
 
@@ -56,7 +54,6 @@ final readonly class MessagingSeeder implements DemoSeeder
         $this->thread($context, 24, $sales, [
             ['out', Channel::Email, 'sofia.sanchez@example.com', "Hi Sofia,\n\nThanks for visiting. The quote we discussed is attached to your file.\n\nSam", $ago('2 days'), $sales],
         ], 'Your quote from Mustang Motors');
-
     }
 
     /**
@@ -69,7 +66,7 @@ final readonly class MessagingSeeder implements DemoSeeder
         $this->em->persist($conversation);
 
         foreach ($messages as [$direction, $channel, $contact, $body, $at, $sender]) {
-            $dealer = Channel::Email === $channel ? self::MAIL_FROM : FakeSmsTransport::NUMBER;
+            $dealer = $this->transport->senderFor($channel);
             if ('in' === $direction) {
                 $message = new Message($dealership, $conversation->id(), MessageDirection::In, $channel, $dealer, $contact, $body, MessageStatus::Received, receivedAt: $at);
                 $conversation->recordInbound($at);
@@ -86,7 +83,7 @@ final readonly class MessagingSeeder implements DemoSeeder
                     subject: Channel::Email === $channel ? $subject : null,
                     sentByUserId: $sender,
                     consentStateSnapshot: ['state' => 'granted', 'channel' => $channel->value, 'contact_value' => $contact, 'checked_at' => $at->format(\DATE_ATOM), 'consent_id' => null, 'source' => 'demo_seed'],
-                    transport: Channel::Email === $channel ? 'mailer' : FakeSmsTransport::NAME,
+                    transport: Channel::Email === $channel ? 'mailer' : 'fake_sms',
                     transportMessageId: Channel::Email === $channel ? Id::new().'@mustang.test' : 'fake-'.Id::new(),
                     sentAt: $at,
                 );

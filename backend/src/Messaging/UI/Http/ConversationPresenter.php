@@ -52,7 +52,7 @@ final readonly class ConversationPresenter
         $now = $this->clock->now();
         $minutes = $this->queries->fumbledAfterMinutes();
 
-        return array_map(function (Conversation $c) use ($last, $customerNames, $consent, $userNames, $now, $minutes): ConversationOutput {
+        return array_map(static function (Conversation $c) use ($last, $customerNames, $consent, $userNames, $now, $minutes): ConversationOutput {
             $state = $consent[$c->customerId()] ?? ['text' => 'missing', 'email' => 'missing', 'call' => 'missing'];
             $lastMessage = $last[$c->id()] ?? null;
 

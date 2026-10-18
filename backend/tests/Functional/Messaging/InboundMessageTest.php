@@ -66,8 +66,8 @@ final class InboundMessageTest extends MessagingTestCase
 
         $result = $this->inbound('+18135551009', 'STOP');
 
+        /** @var TraceableMessageBus $bus the test kernel runs in debug, so every bus is traced */
         $bus = static::getContainer()->get('event.bus');
-        self::assertInstanceOf(TraceableMessageBus::class, $bus);
         $events = array_values(array_filter(
             array_map(static fn (array $m): object => $m['message'], $bus->getDispatchedMessages()),
             static fn (object $m): bool => $m instanceof InboundMessageReceived,

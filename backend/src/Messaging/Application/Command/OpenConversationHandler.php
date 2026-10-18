@@ -5,8 +5,8 @@ namespace App\Messaging\Application\Command;
 use App\Messaging\Application\Port\CustomerContacts;
 use App\Messaging\Domain\Model\Conversation;
 use App\Messaging\Domain\Repository\ConversationRepository;
-use App\Shared\Domain\Error\NotFound;
 use App\Shared\Application\Bus\CommandHandler;
+use App\Shared\Domain\Error\NotFound;
 
 final readonly class OpenConversationHandler implements CommandHandler
 {
