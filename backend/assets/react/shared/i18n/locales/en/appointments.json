@@ -1,10 +1,121 @@
 {
   "_owner": "item 9",
+  "title": "Appointments",
+  "description": "Visits, test drives and deliveries booked for the team.",
+  "book": "Book appointment",
   "status": {
     "scheduled": "Scheduled",
     "confirmed": "Confirmed",
     "shown": "Showed",
     "no_show": "No-show",
     "cancelled": "Cancelled"
+  },
+  "kind": {
+    "visit": "Visit",
+    "test_drive": "Test drive",
+    "delivery": "Delivery"
+  },
+  "calendar": {
+    "label": "Appointments calendar",
+    "view": {
+      "label": "View",
+      "day": "Day",
+      "week": "Week"
+    },
+    "scope": {
+      "label": "Whose appointments",
+      "all": "Everyone",
+      "mine": "Mine"
+    },
+    "today": "Today",
+    "previous_day": "Previous day",
+    "next_day": "Next day",
+    "previous_week": "Previous week",
+    "next_week": "Next week",
+    "range": "{{from}} – {{to}}",
+    "loading": "Loading appointments",
+    "error": "The appointments could not be loaded.",
+    "day_empty": "Nothing booked",
+    "day_count_one": "{{count}} appointment",
+    "day_count_other": "{{count}} appointments",
+    "empty": "No appointments in this period",
+    "empty_help": "Book one for a customer and it shows here.",
+    "empty_mine": "None of your appointments are in this period",
+    "filtered_empty": "Nothing matches these filters.",
+    "today_marker": "Today"
+  },
+  "card": {
+    "length": "{{count}} min",
+    "with_rep": "with {{name}}",
+    "ends": "until {{time}}",
+    "actions": "More actions for {{name}}",
+    "confirm": "Confirm",
+    "shown": "Showed",
+    "no_show": "No-show",
+    "reschedule": "Reschedule",
+    "cancel": "Cancel appointment",
+    "send_confirmation": "Send confirmation",
+    "confirm_for": "Confirm the appointment with {{name}}",
+    "shown_for": "{{name}} showed",
+    "no_show_for": "{{name}} did not show",
+    "label": "Appointment with {{name}}"
+  },
+  "confirm": {
+    "done": "Marked {{name}}'s appointment as confirmed."
+  },
+  "shown": {
+    "done": "{{name}} showed. Nice."
+  },
+  "no_show": {
+    "done": "Marked {{name}} as a no-show."
+  },
+  "book_dialog": {
+    "title": "Book an appointment",
+    "description": "Pick the customer, the rep and the time at the dealership.",
+    "customer_search": "Customer",
+    "customer_placeholder": "Search by name, phone or email",
+    "customer_required": "Choose the customer.",
+    "chosen": "Appointment for {{name}}",
+    "change_customer": "Change",
+    "pick": "Choose {{name}}",
+    "searching": "Searching customers",
+    "no_customers": "No customer matches. Add the customer first.",
+    "rep": "Rep",
+    "when": "When",
+    "when_help": "In the dealership's time ({{zone}}).",
+    "when_required": "Pick a date and time.",
+    "when_past": "That time has already passed.",
+    "duration": "Length",
+    "duration_option": "{{count}} min",
+    "kind": "Kind",
+    "note": "Note",
+    "note_placeholder": "What the customer wants to see, who is coming along",
+    "submit": "Book",
+    "done": "Booked {{name}} for {{when}}."
+  },
+  "reschedule_dialog": {
+    "title": "Reschedule the appointment for {{name}}",
+    "description": "The customer has to confirm the new time again.",
+    "when": "New time",
+    "rep": "Rep",
+    "submit": "Reschedule",
+    "done": "Moved {{name}} to {{when}}."
+  },
+  "cancel_dialog": {
+    "title": "Cancel the appointment with {{name}}?",
+    "description": "{{when}} will be freed for the rep. The customer is not told.",
+    "keep": "Keep it",
+    "confirm": "Cancel appointment",
+    "done": "Cancelled the appointment with {{name}}."
+  },
+  "error": {
+    "appointment_overlap": "That rep already has an appointment at that time.",
+    "appointment_in_past": "That time has already passed.",
+    "invalid_scheduled_at": "That time is not valid.",
+    "appointment_not_open": "This appointment is already over, so it cannot change.",
+    "appointment_not_found": "This appointment no longer exists.",
+    "user_not_found": "That rep is not active in this dealership.",
+    "customer_not_found": "That customer is not in this dealership.",
+    "deal_not_found": "That deal does not belong to the customer."
   }
 }
