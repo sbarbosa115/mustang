@@ -186,6 +186,69 @@ within a few seconds the email arrives in Mailpit (from no-reply@mustang.test, w
 provenance turns `sent` with the transport `mailer`. By hand: with the worker stopped (`docker compose stop worker`)
 the message stays `queued`; starting it again sends it.
 
+**INB-01 · Folders with counts, and Unreplied narrows the list**
+Smoke: `e2e/inbox.spec.ts`.
+Signed in as sales@mustang.test, a customer INB-01 Test (`(813) 555-9401`) texts "Is the Civic still there?" (Simulate a
+reply, or the console command). Open Inbox. **Expected:** the folders read All, Unreplied and Fumbled, each with its
+count; "Unreplied" is pressed after tapping it and lists INB-01 Test with the words "Unreplied" and "1 unread" (never
+colour alone), the last message and a relative time with the full timestamp on hover. A conversation whose customer
+waited more than 30 minutes says "Fumbled" and is in the Fumbled folder.
+
+**INB-02 · Filter by rep and search; filtered to nothing offers Show all**
+Smoke: `e2e/inbox.spec.ts`.
+In Inbox, search `zzzz-nothing`. **Expected:** "Nothing matches these filters." with "Show all"; Show all empties the
+search box, goes back to All and lists conversations again. The "Assigned rep" menu lists Everyone and each sales,
+BDC and manager user with their unreplied count ("Jordan Reyes · 2 unreplied"), never the admin; choosing one keeps
+the folder and narrows the list to that rep's customers. The filters are in the URL: a reload keeps them.
+
+**INB-03 · On a phone a conversation opens full screen, by day, and is marked read**
+Smoke: `e2e/inbox.spec.ts`.
+At 390 px, open INB-01 Test's conversation from the Unreplied folder. **Expected:** the thread fills the screen with
+the customer's name, phone and the back arrow; messages are grouped under "Today", "Yesterday" or the date; the
+customer's message is on the left in grey with "Text" and its time below; the unread count is gone from the list.
+The back arrow returns to the list with the Unreplied folder still chosen.
+
+**INB-04 · The composer shows consent before anything is sent, and blocks a channel without it**
+Smoke: `e2e/inbox.spec.ts`.
+Open the conversation of a customer with no consent (INB-04 Test, `(813) 555-9404`). **Expected:** above the message
+box "Text: Missing" and "Email: Missing", the reasons "No consent recorded for Text" and "No email address on file",
+the Text and Email buttons and Send disabled, and "Record consent" opens /customers/<id>/consent. By hand: after
+recording text consent there, coming back enables Text at once. A customer whose consent was revoked reads "Consent
+for Text was revoked"; one who replied STOP reads "This contact opted out of Text".
+
+**INB-05 · Send a text to a consenting customer**
+Smoke: `e2e/inbox.spec.ts`.
+For INB-05 Test with text consent and an inbound message, type "Your car is ready." and Send (or Ctrl+Enter).
+**Expected:** the box empties, the message appears on the right in blue with "Text", the time and "Sam Patel"; the
+conversation leaves the Unreplied folder and its count goes down by one. By hand: if consent is revoked in another tab
+before Send, the composer says "Not sent: the customer opted out of this channel. The attempt is kept in the thread.",
+the attempt shows in the thread with "Not sent: the customer opted out", the draft is kept and Text turns disabled.
+
+**INB-06 · A template fills its placeholders; an email needs a subject**
+Smoke (part): `e2e/inbox.spec.ts` covers the text template and the email; by hand: the email lands in Mailpit.
+For INB-06 Test (text and email consent), "Templates" lists only the active text templates; "First reply" fills "Hi
+INB-06, this is Sam Patel at Mustang Motors Tampa. Thanks for reaching out. …". "Appointment confirmation" leaves
+`{appointment_time}` and says "Fill in {appointment_time} before sending." Switch to Email: a Subject field appears and
+"Vehicle match" fills the subject and body. **Expected:** without a subject Send stays disabled with "An email needs a
+subject."; sent, the email shows "Sending", then the worker sends it and it arrives in Mailpit from
+no-reply@mustang.test with that subject. An inactive template is never offered.
+
+**INB-07 · Send a vehicle from inventory**
+Smoke: `e2e/inbox.spec.ts`.
+In INB-07 Test's conversation (text consent), "Vehicle", search `MM-1001` and choose it. **Expected:** the vehicle card
+shows its photo or placeholder, year, make and model, trim, stock number, mileage and price; "Add to message" puts its
+title, "Trim: …", "Stock #MM-1001", mileage and price into the message box, one per line; Send sends it as a text.
+On Email the subject becomes "The <title> you asked about". Nothing is attached.
+
+**INB-08 · Simulate a customer reply (dev and test only); STOP blocks text at once**
+Smoke (part): `e2e/inbox.spec.ts` covers the simulator and STOP; by hand: the desktop layout and production.
+In INB-08 Test's conversation (text consent), "Simulate a reply" opens a dialog with From set to the customer's
+phone; send "STOP". **Expected:** the reply appears on the left, and within a moment the composer reads "Text: Opted
+out" and "This contact opted out of Text", with Text and Send disabled. By hand: at 1280 px and wider, folders and
+list, the thread and the customer panel (contacts, consent, team, open deal) sit side by side, and picking another
+conversation swaps the thread without leaving the page; at 1024 px the panel folds away behind the customer button.
+Check both themes. With `APP_ENV=prod` the "Simulate a reply" button is not shown.
+
 ## 6. Customers
 
 <!-- CUS-01 – 08: item "customers". TL-01 – 04: item "timeline". CONS-01 – 06: item "compliance". -->
