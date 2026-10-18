@@ -2,6 +2,7 @@
 
 namespace App\Lead\Domain\Model;
 
+use App\Shared\Domain\Error\Conflict;
 use App\Shared\Domain\Id;
 use App\Shared\Domain\Model\Timestamps;
 use Doctrine\ORM\Mapping as ORM;
@@ -62,6 +63,79 @@ class Lead
         $this->assignedUserId = $assignedUserId;
         $this->vehicleInterestText = $vehicleInterestText;
         $this->firstContactedAt = $firstContactedAt;
+    }
+
+    /**
+     * A new lead, routed to $assignedUserId when there is one (status assigned), or waiting as new.
+     */
+    public static function capture(
+        string $dealershipId,
+        string $customerId,
+        LeadSource $source,
+        \DateTimeImmutable $receivedAt,
+        ?string $assignedUserId = null,
+        ?string $channelNote = null,
+        ?string $vehicleInterestText = null,
+    ): self {
+        return new self(
+            $dealershipId,
+            $customerId,
+            $source,
+            $receivedAt,
+            null === $assignedUserId ? LeadStatus::New : LeadStatus::Assigned,
+            self::blankToNull($channelNote),
+            $assignedUserId,
+            self::blankToNull($vehicleInterestText),
+        );
+    }
+
+    /**
+     * Hands the lead to a rep. A new lead becomes assigned; a contacted one stays contacted.
+     *
+     * @return bool false when the rep already had it
+     *
+     * @throws Conflict lead_closed
+     */
+    public function assignTo(string $userId): bool
+    {
+        $this->refuseWhenClosed();
+        if ($this->assignedUserId === $userId) {
+            return false;
+        }
+        $this->assignedUserId = $userId;
+        if (LeadStatus::New === $this->status) {
+            $this->status = LeadStatus::Assigned;
+        }
+
+        return true;
+    }
+
+    /**
+     * @throws Conflict lead_closed when it is closed already
+     */
+    public function close(): void
+    {
+        $this->refuseWhenClosed();
+        $this->status = LeadStatus::Closed;
+    }
+
+    public function isClosed(): bool
+    {
+        return LeadStatus::Closed === $this->status;
+    }
+
+    private function refuseWhenClosed(): void
+    {
+        if ($this->isClosed()) {
+            throw new Conflict('lead_closed', 'This lead is closed.', ['id' => $this->id]);
+        }
+    }
+
+    private static function blankToNull(?string $value): ?string
+    {
+        $value = null === $value ? null : trim($value);
+
+        return '' === $value ? null : $value;
     }
 
     public function id(): string

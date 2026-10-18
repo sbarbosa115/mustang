@@ -5062,15 +5062,6 @@ export interface operations {
                     "application/json": components["schemas"]["LeadPageOutput"];
                 };
             };
-            /** @description Not built yet (item "leads") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_leads_capture: {
@@ -5095,6 +5086,15 @@ export interface operations {
                     "application/json": components["schemas"]["LeadOutput"];
                 };
             };
+            /** @description Refused by a rule (see error) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
             /** @description Invalid input */
             422: {
                 headers: {
@@ -5102,15 +5102,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Not built yet (item "leads") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };
@@ -5137,15 +5128,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "leads") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5188,6 +5170,15 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
+            /** @description Refused by a rule (see error) */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
             /** @description Invalid input */
             422: {
                 headers: {
@@ -5195,15 +5186,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Not built yet (item "leads") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };
@@ -5217,7 +5199,7 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
                 "application/json": components["schemas"]["CloseLeadInput"];
             };
@@ -5250,15 +5232,6 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "leads") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_routing_get: {
@@ -5279,8 +5252,8 @@ export interface operations {
                     "application/json": components["schemas"]["RoutingOutput"];
                 };
             };
-            /** @description Not built yet (item "leads") */
-            501: {
+            /** @description Managers only */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5312,6 +5285,15 @@ export interface operations {
                     "application/json": components["schemas"]["RoutingOutput"];
                 };
             };
+            /** @description Managers only */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiError"];
+                };
+            };
             /** @description Invalid input */
             422: {
                 headers: {
@@ -5319,15 +5301,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Not built yet (item "leads") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };

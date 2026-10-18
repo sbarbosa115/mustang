@@ -12,4 +12,11 @@ interface RoutingRotationRepository
     public function get(string $id): RoutingRotation;
 
     public function add(RoutingRotation $routingRotation): void;
+
+    /**
+     * The current dealership's rotation (there is at most one), or null before it is first used or set.
+     *
+     * @param bool $forUpdate lock the row until the transaction ends, so two leads never take the same turn
+     */
+    public function findCurrent(bool $forUpdate = false): ?RoutingRotation;
 }

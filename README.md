@@ -116,13 +116,13 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/vehicles/{id}/status` | Change a vehicle's status | 200, 404, 422 | 501 until "inventory" |
 | `POST /api/v1/vehicles/import` | Upload vehicles from a CSV (processed by the worker) | 201, 413, 422 | 501 until "inventory" |
 | `GET /api/v1/vehicles/import/{id}` | Progress and errors of a vehicles upload | 200, 404 | 501 until "inventory" |
-| `GET /api/v1/leads` | Leads, newest first | 200 | 501 until "leads" |
-| `POST /api/v1/leads` | Capture a lead: match or create the customer, route it to a rep | 201, 422 | 501 until "leads" |
-| `GET /api/v1/leads/{id}` | One lead | 200, 404 | 501 until "leads" |
-| `PATCH /api/v1/leads/{id}/assignee` | Assign a lead to a rep | 200, 404, 422 | 501 until "leads" |
-| `POST /api/v1/leads/{id}/close` | Close a lead | 200, 404, 409 | 501 until "leads" |
-| `GET /api/v1/settings/routing` | The round-robin order for new leads (manager) | 200 | 501 until "leads" |
-| `PUT /api/v1/settings/routing` | Set the round-robin order (manager) | 200, 422 | 501 until "leads" |
+| `GET /api/v1/leads` | Leads, newest received first; filters `status`, `source`, `assigned_to`; `q` matches the customer's name, phone or email, or the vehicle of interest | 200 | Built |
+| `POST /api/v1/leads` | Capture a lead (source required): the customer by `customer_id`, else matched by phone then email, else created with the lead's source; the rep is `assigned_user_id` or the next in the round robin; raises LeadCaptured | 201, 409, 422 | Built |
+| `GET /api/v1/leads/{id}` | One lead | 200, 404 | Built |
+| `PATCH /api/v1/leads/{id}/assignee` | Hand a lead to an active sales, BDC or manager user (raises LeadAssigned); 409 `lead_closed` | 200, 404, 409, 422 | Built |
+| `POST /api/v1/leads/{id}/close` | Close a lead; closing twice is 409 `lead_closed` (the optional reason is not stored in the MVP) | 200, 404, 409 | Built |
+| `GET /api/v1/settings/routing` | The round-robin order for new leads and whose turn is next; until a manager sets it, the active salespeople by name (manager) | 200, 403 | Built |
+| `PUT /api/v1/settings/routing` | Set the round-robin order: active salespeople, each once; an empty list leaves new leads unassigned (manager) | 200, 403, 422 | Built |
 | `GET /api/v1/conversations` | Conversations, most recent first | 200 | 501 until "messaging-api" |
 | `GET /api/v1/conversations/counts` | Counts per folder and per rep | 200 | 501 until "messaging-api" |
 | `GET /api/v1/conversations/{id}` | A conversation and its messages | 200, 404 | 501 until "messaging-api" |

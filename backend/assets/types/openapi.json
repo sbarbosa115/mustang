@@ -3866,16 +3866,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"leads\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -3906,22 +3896,22 @@
                             }
                         }
                     },
+                    "409": {
+                        "description": "Refused by a rule (see error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Invalid input",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"leads\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
                                 }
                             }
                         }
@@ -3959,16 +3949,6 @@
                     },
                     "404": {
                         "description": "Not found, or another dealership's record",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"leads\")",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -4028,22 +4008,22 @@
                             }
                         }
                     },
+                    "409": {
+                        "description": "Refused by a rule (see error)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Invalid input",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"leads\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
                                 }
                             }
                         }
@@ -4069,7 +4049,7 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true,
+                    "required": false,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -4108,16 +4088,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"leads\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -4140,8 +4110,8 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"leads\")",
+                    "403": {
+                        "description": "Managers only",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -4179,22 +4149,22 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Managers only",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Invalid input",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ValidationError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"leads\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
                                 }
                             }
                         }
