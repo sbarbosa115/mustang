@@ -24,6 +24,8 @@ final readonly class WorklistItemOutput
         public ?WorklistDealOutput $deal = null,
         public ?WorklistAppointmentOutput $appointment = null,
         public ?\DateTimeImmutable $since = null,
+        /** The customer's primary phone, for the call action. */
+        public ?string $phone = null,
     ) {
     }
 }

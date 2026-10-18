@@ -4673,7 +4673,8 @@
                 "tags": [
                     "Worklist"
                 ],
-                "summary": "Who to contact now and why.",
+                "summary": "Who to contact now and why: the signed-in user's customers, one reason each, the most urgent first.",
+                "description": "A row belongs to the customer's Sales 1, else the open deal's assignee, else the BDC agent. A manager may pass\nuser_id to see any rep's list; anyone else gets 403 `worklist_not_yours` for another user's.",
                 "operationId": "get_api_worklist_contact_now",
                 "parameters": [
                     {
@@ -4699,7 +4700,7 @@
                         }
                     },
                     "403": {
-                        "description": "Not allowed",
+                        "description": "Another user's list, and not a manager",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -4708,12 +4709,22 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"worklist\")",
+                    "404": {
+                        "description": "No such user in the dealership",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ApiError"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -4726,7 +4737,7 @@
                 "tags": [
                     "Worklist"
                 ],
-                "summary": "Deals that need a manager today (manager).",
+                "summary": "Deals that need a manager today (manager): the customer unanswered for more than 60 minutes, the deal idle\nbeyond twice its stage threshold, a no-show with no follow-up for 24 hours, or a lead unassigned or uncontacted\nfor 2 hours. at_risk_cents is the deal's expected gross, else the dealership's average gross.",
                 "operationId": "get_api_worklist_interventions",
                 "responses": {
                     "200": {
@@ -4739,8 +4750,8 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"worklist\")",
+                    "403": {
+                        "description": "Not a manager",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -9042,6 +9053,12 @@
                     "since": {
                         "type": "string",
                         "format": "date-time",
+                        "nullable": true,
+                        "default": null
+                    },
+                    "phone": {
+                        "title": "The customer's primary phone, for the call action.",
+                        "type": "string",
                         "nullable": true,
                         "default": null
                     }
