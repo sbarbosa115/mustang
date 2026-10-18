@@ -194,7 +194,51 @@ records, or say there are none; the Timeline tab says what will appear until the
 
 ## 10. Inventory
 
-<!-- INV-01 – 06: item "inventory". -->
+**INV-01 · A rep browses and searches the inventory**
+Smoke: `e2e/inventory.spec.ts`.
+Signed in as sales, open Inventory. **Expected:** the first 25 of the lot with "1–25 of N" and Next page; on a phone
+each vehicle is a card (photo or car icon, condition, stock number, mileage, price), on a desktop a table. Search for
+`MM-1004`: one vehicle, shown as "Call for price" (it has no price). Search `ford mustang`: only Ford Mustangs (every
+word has to match). A stock number, a VIN, a make, a model, a year and a trim all find vehicles.
+
+**INV-02 · Filters narrow the list and clearing them brings it back**
+Smoke (part): `e2e/inventory.spec.ts` covers condition, clearing and the "nothing matches" state; by hand: every other
+filter and the sorts.
+Open Filters and set Condition to New. **Expected:** the URL gains `condition=new`, the Filters button says "1 filter
+applied", and the 14 new vehicles show. Make shows each make with its count ("Ford (12)"); the counts add up. Try
+status, body, drivetrain, fuel, color, a year range, a price range (whole dollars) and a mileage limit, alone and
+together. Sort by price low to high and high to low: vehicles without a price always come last. Reload and use the
+back button: the filters stay. Search for gibberish: "Nothing matches these filters." with "Show all", which restores
+the list. The price and year boxes apply on Enter or when you leave them, not on every digit.
+
+**INV-03 · A rep adds a vehicle, and a stock number cannot be reused**
+Smoke: `e2e/inventory.spec.ts`.
+In Inventory choose Add vehicle. **Expected:** the form opens with Add vehicle disabled until stock number, year
+(1950 to 2100), make and model are filled. Saving opens the new vehicle's page with its title and the price typed in
+dollars (`38500` shows `$38,500`). Adding the same stock number again keeps the form open and says "This stock number
+is already in the inventory." under the stock number. A price like `cheap` or a photo address that is not http(s) is
+refused next to its field. Leaving the price empty shows "Call for price".
+
+**INV-04 · A rep edits a vehicle and changes its status**
+Smoke: `e2e/inventory.spec.ts`.
+Open a vehicle and choose Edit. **Expected:** the stock number is fixed; changing the price and the trim saves and the
+page shows them with a confirmation. Status (Available, On hold, Sold, In transit) saves the moment it is picked and
+survives a reload. In the list, a vehicle that is not available says so in words, not only colour. Clearing the
+description and saving removes it.
+
+**INV-05 · A CSV upload imports the good rows and lists the bad ones**
+Smoke: `e2e/inventory.spec.ts`.
+Choose Upload CSV, download the sample file, and upload it as is. **Expected:** the dialog shows it is processing, then
+"4 of 4 rows imported, 0 skipped", and the four SAMPLE vehicles are in the list. Upload a file with a bad year, an
+empty stock number and an unknown condition: the other rows still import, and each bad row is listed as "Row N:" with
+what is wrong. Upload the same file again: nothing is duplicated, prices and statuses are updated. A file that is not
+a .csv, an empty file, and a file without the year column each fail with a reason; the vehicles page is unchanged.
+
+**INV-06 · Another dealership's vehicle is not found, and quick search finds ours**
+Smoke: `e2e/inventory.spec.ts`.
+Signed in as sales, open the address of a vehicle that belongs to the other dealership. **Expected:** "This vehicle is
+not in your inventory." and a way back; the API answers 404, never 403. Press Ctrl K and type `MM-1002`: the vehicle
+is offered, and choosing it opens its page.
 
 ## 11. Manager: team and dashboard
 

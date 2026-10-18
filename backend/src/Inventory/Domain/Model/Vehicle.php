@@ -34,7 +34,7 @@ class Vehicle
     private string $make;
     #[ORM\Column(type: 'string', length: 60, name: 'model')]
     private string $model;
-    #[ORM\Column(type: 'string', length: 20, enumType: VehicleCondition::class, name: 'condition')]
+    #[ORM\Column(type: 'string', length: 20, enumType: VehicleCondition::class, name: '`condition`')]
     private VehicleCondition $condition;
     #[ORM\Column(type: 'string', length: 20, enumType: VehicleStatus::class, name: 'status')]
     private VehicleStatus $status;
@@ -195,5 +195,57 @@ class Vehicle
     public function description(): ?string
     {
         return $this->description;
+    }
+
+    /**
+     * Changes what the listing says. A null argument leaves the field as it is; an empty string clears an optional text.
+     */
+    public function revise(
+        ?int $year = null,
+        ?string $make = null,
+        ?string $model = null,
+        ?VehicleCondition $condition = null,
+        ?string $vin = null,
+        ?string $trim = null,
+        ?string $body = null,
+        ?string $drivetrain = null,
+        ?string $fuel = null,
+        ?string $exteriorColor = null,
+        ?string $interiorColor = null,
+        ?int $mileage = null,
+        ?int $priceCents = null,
+        ?string $photoUrl = null,
+        ?string $description = null,
+    ): void {
+        $this->year = $year ?? $this->year;
+        $this->make = $make ?? $this->make;
+        $this->model = $model ?? $this->model;
+        $this->condition = $condition ?? $this->condition;
+        $this->vin = self::text($vin, $this->vin);
+        $this->trim = self::text($trim, $this->trim);
+        $this->body = self::text($body, $this->body);
+        $this->drivetrain = self::text($drivetrain, $this->drivetrain);
+        $this->fuel = self::text($fuel, $this->fuel);
+        $this->exteriorColor = self::text($exteriorColor, $this->exteriorColor);
+        $this->interiorColor = self::text($interiorColor, $this->interiorColor);
+        $this->mileage = $mileage ?? $this->mileage;
+        $this->priceCents = $priceCents ?? $this->priceCents;
+        $this->photoUrl = self::text($photoUrl, $this->photoUrl);
+        $this->description = self::text($description, $this->description);
+    }
+
+    public function changeStatus(VehicleStatus $status): void
+    {
+        $this->status = $status;
+    }
+
+    private static function text(?string $new, ?string $current): ?string
+    {
+        if (null === $new) {
+            return $current;
+        }
+        $new = trim($new);
+
+        return '' === $new ? null : $new;
     }
 }
