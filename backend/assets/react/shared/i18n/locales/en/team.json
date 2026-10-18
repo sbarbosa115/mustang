@@ -1,3 +1,50 @@
 {
-  "_owner": "item 14"
+  "_owner": "item 14",
+  "title": "Team",
+  "description": "Deals that need you today.",
+  "summary": {
+    "label": "Summary",
+    "count": "Deals that need you",
+    "at_risk": "Gross at risk",
+    "reps": "Reps with unanswered customers",
+    "reps_none": "Every customer has an answer.",
+    "rep_count_one": "{{count}} waiting",
+    "rep_count_other": "{{count}} waiting",
+    "rep_link": "Open {{name}}'s list"
+  },
+  "queue": {
+    "label": "Deals that need you",
+    "column": "Deal",
+    "empty": "No deal needs you right now."
+  },
+  "wait": {
+    "under_minute": "less than a minute",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "hours_one": "{{count}} hour",
+    "hours_other": "{{count}} hours",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days"
+  },
+  "stage": {
+    "new": "new",
+    "engaged": "engaged",
+    "appointment": "appointment",
+    "visit": "visit",
+    "proposal": "proposal",
+    "sold": "sold",
+    "delivered": "delivered",
+    "lost": "lost"
+  },
+  "reason": {
+    "customer_unanswered": "Customer waiting {{wait}} for an answer",
+    "deal_idle": "No activity for {{wait}} in {{stage}}, more than twice the usual",
+    "no_show_without_follow_up": "No-show {{wait}} ago, nobody followed up",
+    "lead_unattended": "Lead waiting {{wait}}, not contacted yet",
+    "lead_unattended_unassigned": "Lead waiting {{wait}} with nobody assigned"
+  },
+  "assign": {
+    "done": "{{name}}'s deal is assigned to you.",
+    "error": "The deal could not be assigned. Try again."
+  }
 }

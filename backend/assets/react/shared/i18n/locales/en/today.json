@@ -1,3 +1,60 @@
 {
-  "_owner": "item 14"
+  "_owner": "item 14",
+  "title": "Today",
+  "description": "Who to contact now, and why.",
+  "list": {
+    "label": "Contact now",
+    "column": "Customer",
+    "empty": "Nobody needs you right now. New replies, leads and appointments show up here.",
+    "open_inbox": "Open the inbox"
+  },
+  "progress": {
+    "label": "Today's progress",
+    "text_one": "{{done}} of {{count}} done today",
+    "text_other": "{{done}} of {{count}} done today",
+    "remaining_one": "{{count}} customer to contact",
+    "remaining_other": "{{count}} customers to contact",
+    "hot_one": "{{count}} waiting more than 30 min",
+    "hot_other": "{{count}} waiting more than 30 min"
+  },
+  "rep": {
+    "label": "Whose list",
+    "mine": "My list",
+    "option": "{{name}}",
+    "viewing": "{{name}}'s list"
+  },
+  "wait": {
+    "under_minute": "less than a minute",
+    "minutes_one": "{{count}} min",
+    "minutes_other": "{{count}} min",
+    "hours_one": "{{count}} hour",
+    "hours_other": "{{count}} hours",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days"
+  },
+  "kind": {
+    "visit": "visit",
+    "test_drive": "test drive",
+    "delivery": "delivery"
+  },
+  "stage": {
+    "new": "new",
+    "engaged": "engaged",
+    "appointment": "appointment",
+    "visit": "visit",
+    "proposal": "proposal",
+    "sold": "sold",
+    "delivered": "delivered",
+    "lost": "lost"
+  },
+  "reason": {
+    "unanswered_inbound": "Replied {{wait}} ago, nobody answered",
+    "unanswered_inbound_question": "Replied {{wait}} ago, nobody answered; question unanswered",
+    "new_lead_uncontacted": "New lead {{wait}} ago, not contacted yet",
+    "new_lead_uncontacted_vehicle": "New lead for a {{vehicle}} {{wait}} ago, not contacted yet",
+    "appointment_today_unconfirmed": "Today at {{time}}: {{kind}} not confirmed",
+    "no_show_without_follow_up": "Missed the {{kind}} at {{time}}, no follow-up yet",
+    "deal_idle": "No activity for {{wait}} in {{stage}}"
+  },
+  "open_error": "The conversation could not be opened. Try again."
 }

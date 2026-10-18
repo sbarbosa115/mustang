@@ -1179,7 +1179,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Who to contact now and why. */
+        /**
+         * Who to contact now and why: the signed-in user's customers, one reason each, the most urgent first.
+         * @description A row belongs to the customer's Sales 1, else the open deal's assignee, else the BDC agent. A manager may pass
+         *     user_id to see any rep's list; anyone else gets 403 `worklist_not_yours` for another user's.
+         */
         get: operations["get_api_worklist_contact_now"];
         put?: never;
         post?: never;
@@ -1196,7 +1200,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Deals that need a manager today (manager). */
+        /**
+         * Deals that need a manager today (manager): the customer unanswered for more than 60 minutes, the deal idle
+         *     beyond twice its stage threshold, a no-show with no follow-up for 24 hours, or a lead unassigned or uncontacted
+         *     for 2 hours. at_risk_cents is the deal's expected gross, else the dealership's average gross.
+         */
         get: operations["get_api_worklist_interventions"];
         put?: never;
         post?: never;
@@ -2472,6 +2480,11 @@ export interface components {
              * @default null
              */
             since: string | null;
+            /**
+             * The customer's primary phone, for the call action.
+             * @default null
+             */
+            phone: string | null;
         };
         WorklistOutput: {
             user: components["schemas"]["UserRefOutput"];
@@ -5653,7 +5666,7 @@ export interface operations {
                     "application/json": components["schemas"]["WorklistOutput"];
                 };
             };
-            /** @description Not allowed */
+            /** @description Another user's list, and not a manager */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -5662,13 +5675,22 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "worklist") */
-            501: {
+            /** @description No such user in the dealership */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
                     "application/json": components["schemas"]["ApiError"];
+                };
+            };
+            /** @description Invalid input */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValidationError"];
                 };
             };
         };
@@ -5691,8 +5713,8 @@ export interface operations {
                     "application/json": components["schemas"]["InterventionListOutput"];
                 };
             };
-            /** @description Not built yet (item "worklist") */
-            501: {
+            /** @description Not a manager */
+            403: {
                 headers: {
                     [name: string]: unknown;
                 };
