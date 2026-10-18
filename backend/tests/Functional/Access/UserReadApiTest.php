@@ -20,4 +20,12 @@ final class UserReadApiTest extends ApiTestCase
     {
         $this->assertNotFoundForOtherDealership('GET', '/api/v1/users/'.$this->userId('sales'));
     }
+
+    public function testSearchMatchesAFullName(): void
+    {
+        $this->signInAs('admin');
+        $body = $this->request('GET', '/api/v1/users?q=Sam%20Patel');
+
+        self::assertSame(['sales@mustang.test'], array_column($body['items'], 'email'), 'People type the name as they say it.');
+    }
 }

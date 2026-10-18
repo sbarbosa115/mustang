@@ -29,7 +29,7 @@ final readonly class DoctrineUserQueries implements UserQueries
             ->where('u.dealershipId = :dealership')
             ->setParameter('dealership', $this->tenant->dealershipId());
         if (null !== $term) {
-            $qb->andWhere('u.firstName LIKE :term OR u.lastName LIKE :term OR u.email LIKE :term')
+            $qb->andWhere("CONCAT(u.firstName, ' ', u.lastName) LIKE :term OR u.email LIKE :term")
                 ->setParameter('term', Like::contains($term));
         }
         $total = (int) (clone $qb)->select('COUNT(u.id)')->getQuery()->getSingleScalarResult();
