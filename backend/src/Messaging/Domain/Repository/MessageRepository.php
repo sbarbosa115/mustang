@@ -12,4 +12,11 @@ interface MessageRepository
     public function get(string $id): Message;
 
     public function add(Message $message): void;
+
+    /**
+     * For work without a signed-in user (the mail worker): the dealership is named explicitly.
+     *
+     * @throws \App\Shared\Domain\Error\NotFound
+     */
+    public function getInDealership(string $id, string $dealershipId): Message;
 }

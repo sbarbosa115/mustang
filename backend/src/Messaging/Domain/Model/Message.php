@@ -198,4 +198,40 @@ class Message
     {
         return $this->receivedAt;
     }
+
+    /**
+     * The transport took the message: a text is sent at once, an email waits on the mail queue.
+     */
+    public function handedToTransport(string $transport, MessageStatus $status, ?string $transportMessageId, ?string $failedReason, \DateTimeImmutable $at): void
+    {
+        $this->transport = $transport;
+        $this->status = $status;
+        $this->transportMessageId = $transportMessageId;
+        $this->failedReason = $failedReason;
+        if (MessageStatus::Sent === $status) {
+            $this->sentAt = $at;
+        }
+    }
+
+    /**
+     * The mail worker delivered the queued email.
+     */
+    public function markSent(?string $transportMessageId, \DateTimeImmutable $at): void
+    {
+        $this->status = MessageStatus::Sent;
+        $this->transportMessageId = $transportMessageId ?? $this->transportMessageId;
+        $this->failedReason = null;
+        $this->sentAt = $at;
+    }
+
+    public function markFailed(string $reason): void
+    {
+        $this->status = MessageStatus::Failed;
+        $this->failedReason = mb_substr($reason, 0, 255);
+    }
+
+    public function isOutbound(): bool
+    {
+        return MessageDirection::Out === $this->direction;
+    }
 }
