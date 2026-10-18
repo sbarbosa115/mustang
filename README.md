@@ -30,6 +30,23 @@ docker compose exec php php bin/console mustang:seed-demo
 | The whole gate | `~/.claude/skills/symfony-react-app/scripts/gate.sh` |
 | API types | `docker compose exec php php bin/console nelmio:apidoc:dump --format=json > backend/assets/types/openapi.json && docker compose run --rm --no-deps node npm run -s api:types` |
 
+## Production
+
+There is no production deployment yet. Whoever builds it sets these in the real environment (or `.env.prod.local`,
+or Symfony secrets), never in a committed file: `backend/.env` holds development values only.
+
+| Variable | Production value |
+|---|---|
+| `APP_ENV`, `APP_DEBUG` | `prod` and `0`. Without them `.env` makes the app run as dev (debug pages, profiler, the dev inbound route) |
+| `APP_SECRET` | A random value of its own (`php -r 'echo bin2hex(random_bytes(32));'`); `.env` leaves it empty |
+| `MUSTANG_ENCRYPTION_KEY` | 32 random bytes, base64 (`php -r 'echo base64_encode(random_bytes(32));'`). The app refuses the committed dev key in prod. Changing it later makes the stored MFA secrets unreadable, so it is kept with the database backups |
+| `DATABASE_URL`, `MAILER_DSN`, `MESSENGER_TRANSPORT_DSN` | The real services, with their own credentials |
+| `APP_URL` | The public `https://` origin: the same-origin check on state-changing requests compares `Origin` with it |
+| `TRUSTED_PROXIES` | The TLS-terminating proxy, so client IPs (sign-in throttling, audit log) and HTTPS are seen correctly |
+
+The session cookie is `Secure` in prod whatever the proxy says. The TLS proxy adds HSTS
+(`Strict-Transport-Security: max-age=31536000`); the app sets the other security headers itself.
+
 ## Stack
 
 PHP 8.4.26, Symfony 8.1 (framework 8.1.7), Doctrine ORM 3, MariaDB 10.11.19, Messenger with a worker, Mailpit;
