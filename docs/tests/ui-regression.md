@@ -216,6 +216,57 @@ records, or say there are none; the Timeline tab says what will appear until the
 
 <!-- DEAL-01 – 07: item "deals". -->
 
+**DEAL-01 · A rep sees the open deals by stage**
+Smoke: `e2e/deals.spec.ts`.
+Signed in as sales, open Deals. **Expected:** a column per open stage (New, Engaged, Appointment, Visit, Proposal,
+Sold), each headed by its name and count; the seed puts Chris Miller in Sold and Ashley Garcia in Proposal. Each card
+shows the customer, the vehicle of interest (or "No vehicle chosen"), "N days in stage" and the rep (or
+"Unassigned"). Delivered and lost deals are not on the board: "Lost" shows James Rodriguez with "Lost: Bought
+elsewhere", "Delivered" shows Amanda Davis. "My deals" keeps only Sam Patel's. Searching `zzz` says "No deals match
+these filters." and "Show all" brings every deal back. On a phone the stages stack one under the other; on a desktop
+they are columns side by side.
+
+**DEAL-02 · Open a deal for a customer**
+Smoke: `e2e/deals.spec.ts`.
+Create a customer `DEAL-02 Test` (`(813) 555-9602`). Deals › New deal › search `DEAL-02` › choose it › Vehicle of
+interest `Blue Mustang` › Open deal. **Expected:** "Deal opened for DEAL-02 Test." and the deal page: title
+"DEAL-02 Test", stage New · 0 days, "Blue Mustang", assigned to Sam Patel (whoever opened it). The customer's Deals
+tab lists it. New deal again for the same customer: "This customer already has an open deal." with "Open the
+existing deal", which opens it.
+
+**DEAL-03 · Move a deal forward, back, to lost and reopen it**
+Smoke: `e2e/deals.spec.ts`.
+On a deal in New: Move stage › Proposal › Move. **Expected:** "Moved to Proposal.", the badge says Proposal · 0
+days and Progress shows when Proposal was reached. Move stage › Lost › Move without a reason: "Say why the deal was
+lost." and nothing is sent; type `Price` › Move: the badge says Lost, "Why it was lost: Price". The primary button is
+now Reopen: Reopen to engaged › the deal is Engaged again, the reason is gone and Proposal is "Not yet".
+
+**DEAL-04 · Set the vehicle of interest and the trade-in**
+Smoke: `e2e/deals.spec.ts`.
+On a deal: Change vehicle › search `MM-1005` › choose "2026 Toyota RAV4" › Save. **Expected:** "Vehicle of interest
+saved." and the card links "2026 Toyota RAV4" (MM-1005) to the vehicle. Change trade-in › Year `2017`, Make `Honda`,
+Model `Civic`, Mileage `82000`, Payoff `4500` › Save: "2017 Honda Civic", "82,000 mi", "Payoff $4,500.00". Year
+`1800` says "Enter a year between 1950 and 2100." Remove trade-in: "No trade-in".
+
+**DEAL-05 · A manager takes a deal ("Assign to me")**
+Smoke: `e2e/deals.spec.ts`.
+Signed in as manager, open a deal assigned to Sam Patel › Assigned to › Change › Assign to me. **Expected:**
+"Assigned to Maria Gonzalez." and the board's "My deals" now lists it for the manager.
+
+**DEAL-06 · Deals move by themselves: a lead, a message, an appointment**
+Smoke (part): `e2e/deals.spec.ts` covers a simulated text reply engaging a deal in New; by hand: capture a lead for a
+new customer (Leads › New lead): a deal opens in New, assigned to the lead's rep, with the vehicle interest as its
+description; capture a second lead for the same customer: still one deal. Book an appointment for a customer whose
+deal is Engaged: the deal goes to Appointment; mark it shown: Visit. A deal in Proposal stays in Proposal when an
+appointment is booked; a lost deal stays lost. Run `bin/console mustang:messaging:simulate-inbound "(813) 555-1010"
+"Hi"` (Robert Hernandez, New) and reload his deal: Engaged, with the worker and no browser involved.
+
+**DEAL-07 · Another dealership's deal does not exist**
+Smoke: `e2e/deals.spec.ts`.
+Signed in as other@mustang.test (Other Motors), open `/deals/<id of a Mustang Motors deal>`. **Expected:** "This deal
+does not exist or is not in your dealership." with a way back to Deals, and the board of Other Motors shows only its
+own deal (Other1 Customer).
+
 ## 9. Appointments
 
 <!-- APP-01 – 06: item "appointments". -->
