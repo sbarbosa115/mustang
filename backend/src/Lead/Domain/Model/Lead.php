@@ -119,6 +119,18 @@ class Lead
         $this->status = LeadStatus::Closed;
     }
 
+    /**
+     * The first message to the customer contacts the lead; later ones change nothing, and a closed lead stays closed.
+     */
+    public function markContacted(\DateTimeImmutable $at): void
+    {
+        if ($this->isClosed() || null !== $this->firstContactedAt) {
+            return;
+        }
+        $this->firstContactedAt = $at;
+        $this->status = LeadStatus::Contacted;
+    }
+
     public function isClosed(): bool
     {
         return LeadStatus::Closed === $this->status;

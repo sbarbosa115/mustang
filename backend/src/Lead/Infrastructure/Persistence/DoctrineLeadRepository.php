@@ -30,4 +30,19 @@ final class DoctrineLeadRepository extends TenantScopedRepository implements Lea
     {
         $this->persist($lead);
     }
+
+    public function openForCustomer(string $dealershipId, string $customerId): array
+    {
+        /** @var list<Lead> $leads */
+        $leads = $this->em->createQueryBuilder()
+            ->select('l')
+            ->from(Lead::class, 'l')
+            ->where('l.dealershipId = :dealership AND l.customerId = :customer AND l.status != :closed')
+            ->setParameter('dealership', $dealershipId)
+            ->setParameter('customer', $customerId)
+            ->setParameter('closed', \App\Lead\Domain\Model\LeadStatus::Closed)
+            ->getQuery()->getResult();
+
+        return $leads;
+    }
 }

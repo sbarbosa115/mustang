@@ -12,4 +12,11 @@ interface LeadRepository
     public function get(string $id): Lead;
 
     public function add(Lead $lead): void;
+
+    /**
+     * The customer's leads that are not closed, in a dealership named explicitly (event handlers have no tenant).
+     *
+     * @return list<Lead>
+     */
+    public function openForCustomer(string $dealershipId, string $customerId): array;
 }
