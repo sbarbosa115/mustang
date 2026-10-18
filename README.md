@@ -102,13 +102,13 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/imports` | Upload customers or leads from a CSV (manager) | 201, 413, 422 | 501 until "data-import" |
 | `GET /api/v1/imports/{id}` | Progress and errors of an import | 200, 404 | 501 until "data-import" |
 | `GET /api/v1/imports/template/{type}.csv` | A sample CSV with the expected columns | 200, 404 | 501 until "data-import" |
-| `GET /api/v1/deals` | Deals | 200 | 501 until "deals" |
-| `POST /api/v1/deals` | Open a deal for a customer | 201, 404, 409, 422 | 501 until "deals" |
-| `GET /api/v1/deals/{id}` | One deal | 200, 404 | 501 until "deals" |
-| `POST /api/v1/deals/{id}/stage` | Move a deal to another stage | 200, 404, 409, 422 | 501 until "deals" |
-| `PATCH /api/v1/deals/{id}/vehicle` | Set the vehicle of interest | 200, 404, 422 | 501 until "deals" |
-| `PATCH /api/v1/deals/{id}/trade-in` | Set the trade-in | 200, 404, 422 | 501 until "deals" |
-| `PATCH /api/v1/deals/{id}/assignee` | Assign a deal to a rep ("Assign to me") | 200, 404, 422 | 501 until "deals" |
+| `GET /api/v1/deals` | Deals, newest first; `customer_id`, `stage`, `assigned_to`, `open` (neither delivered nor lost) and `q` (customer name or vehicle description) narrow it; paged | 200 | Built |
+| `POST /api/v1/deals` | Open a deal for a customer in stage new (assigned to the caller unless `assigned_user_id` names an active user); 409 `open_deal_exists` names the customer's open deal; a captured lead opens one by itself | 201, 404, 409, 422 | Built |
+| `GET /api/v1/deals/{id}` | One deal with days in stage, vehicle of interest, trade-in and the time each stage was reached | 200, 404 | Built |
+| `POST /api/v1/deals/{id}/stage` | Move a deal forward or back (every role); lost needs `lost_reason` (422 `lost_reason_required`); a lost deal reopens to engaged only (409 `reopen_to_engaged`). Messages engage a deal in new, a booked appointment moves it to appointment, a shown one to visit | 200, 404, 409, 422 | Built |
+| `PATCH /api/v1/deals/{id}/vehicle` | Set the vehicle of interest: an inventory `vehicle_id`, a `vehicle_text`, or both; neither clears it (422 `vehicle_not_found`) | 200, 404, 422 | Built |
+| `PATCH /api/v1/deals/{id}/trade-in` | Set the trade-in (year, make, model, mileage, payoff in cents); an empty body removes it | 200, 404, 422 | Built |
+| `PATCH /api/v1/deals/{id}/assignee` | Assign a deal to an active user of the dealership ("Assign to me"; 422 `assignee_not_found`) | 200, 404, 422 | Built |
 | `GET /api/v1/vehicles` | Search inventory by q (stock number, VIN, make, model, year words), status, condition, make, model, year, price (whole dollars), mileage, color, body, drivetrain, fuel and sort; paged | 200 | Built |
 | `POST /api/v1/vehicles` | Add a vehicle | 201, 409, 422 | Built |
 | `GET /api/v1/vehicles/facets` | Filter values with counts | 200 | Built |
