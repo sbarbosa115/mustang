@@ -202,6 +202,9 @@ test('INV-06 · another dealership’s vehicle is not found, and quick search fi
   expect(api.status()).toBe(404);
 
   await page.goto('/today');
+  await expect(
+    page.getByRole('heading', {level: 1, name: 'Today'}),
+  ).toBeVisible();
   await page.keyboard.press('Control+k');
   await page
     .getByPlaceholder('Search by name, phone, email or stock number')
