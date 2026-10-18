@@ -16,4 +16,9 @@ final readonly class DoctrineActivityLog implements ActivityLog
     {
         $this->em->persist($entry);
     }
+
+    public function has(string $eventKey): bool
+    {
+        return null !== $this->em->getRepository(Activity::class)->findOneBy(['eventId' => $eventKey]);
+    }
 }

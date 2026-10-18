@@ -311,6 +311,31 @@ URL says "This customer does not exist or is not in your dealership." By hand: O
 Appointments tabs open and keep the choice in the URL (`?tab=deals`); Deals and Appointments list the customer's own
 records, or say there are none; the Timeline tab says what will appear until the timeline ships.
 
+**TL-01 · A customer's history is listed by day, newest first**
+Smoke: `e2e/timeline.spec.ts`.
+Signed in as sales@mustang.test, open Sarah Johnson (a seeded history) and the Timeline tab. **Expected:** the entries
+sit under day headings (a date, or "Today" and "Yesterday"), newest first; "Lead received", "Text sent" and "Deal
+moved to Engaged" are there, texts and emails with their channel icon and the word, and each time reads relative with
+the full date in a tooltip.
+
+**TL-02 · A new action lands on top of the timeline under Today**
+Smoke: `e2e/timeline.spec.ts`.
+Add a customer: the Timeline tab says "Nothing has happened with this customer yet." Add a note on Overview.
+**Expected:** the Timeline tab shows "Note added by Sam Patel" under Today. Sending a text or email, booking an
+appointment or moving the deal does the same ("Text sent", "Appointment booked", "Deal moved to Proposal"), and an
+inbound reply shows "Text received".
+
+**TL-03 · Another dealership cannot read a timeline**
+Smoke: `e2e/timeline.spec.ts`.
+Signed in as other@mustang.test, request `/api/v1/customers/<a Mustang customer id>/timeline`. **Expected:** 404.
+
+**TL-04 · The timeline on a phone, in both themes, and past one page**
+By hand.
+At 390 px open a customer with more than 25 entries (add notes, or import). **Expected:** icons, headline and time
+stay on one row without horizontal scroll, long names wrap; "1-25 of N" with Previous and Next works, and the list
+keeps showing the previous page while the next loads. Check light and dark: channel icons keep their colour and
+every entry carries words, never colour alone.
+
 **CONS-01 · Record text consent from the consent page**
 Smoke (part): `e2e/consent.spec.ts` covers the record and the summary; by hand: at 390 px the history is a list of
 cards and the dialog scrolls with the keyboard open; "When" is typed in the dealership's timezone.
