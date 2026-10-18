@@ -139,7 +139,7 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `PATCH /api/v1/templates/{id}` | Change name, subject, body or `active` (manager); the channel is fixed; same placeholder and subject rules | 200, 403, 404, 422 | Built |
 | `GET /api/v1/reports/kpis` | KPIs for a period and the one before (manager) | 200, 422 | 501 until "dashboard" |
 | `GET /api/v1/health` | Is the app up and its database reachable. The smoke suite also reads which SMS transport is active | 200 | Built |
-| `GET /api/v1/customers/{id}/timeline` | Everything that happened with a customer, newest first | 200, 404 | 501 until "timeline" |
+| `GET /api/v1/customers/{id}/timeline` | Everything that happened with a customer, newest first, paged (`page`, `per_page`); each entry has a `kind`, a stable `code` (e.g. `message_sent_email`, `stage_changed_engaged`) the UI words through i18n, a short English `summary`, the record it refers to and its actor. Fed by the events of Lead, Messaging, Deal, Appointment, Customer notes and Compliance, once per event | 200, 404, 422 | Built |
 | `GET /api/v1/worklist/contact-now` | Who to contact now and why | 200, 403 | 501 until "worklist" |
 | `GET /api/v1/worklist/interventions` | Deals that need a manager today (manager) | 200 | 501 until "worklist" |
 

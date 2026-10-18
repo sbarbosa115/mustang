@@ -10,4 +10,9 @@ use App\Timeline\Domain\Model\Activity;
 interface ActivityLog
 {
     public function append(Activity $entry): void;
+
+    /**
+     * Whether the entry of this source event is already there.
+     */
+    public function has(string $eventKey): bool;
 }

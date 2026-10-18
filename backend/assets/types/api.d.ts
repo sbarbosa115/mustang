@@ -2418,6 +2418,8 @@ export interface components {
             ref_id: string | null;
             /** @default null */
             actor: components["schemas"]["UserRefOutput"] | (never | null);
+            /** @default null */
+            code: string | null;
         };
         ActivityPageOutput: {
             items: components["schemas"]["ActivityOutput"][];
@@ -5602,13 +5604,13 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "timeline") */
-            501: {
+            /** @description Invalid input */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiError"];
+                    "application/json": components["schemas"]["ValidationError"];
                 };
             };
         };

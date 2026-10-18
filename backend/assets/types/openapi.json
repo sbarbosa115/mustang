@@ -4655,12 +4655,12 @@
                             }
                         }
                     },
-                    "501": {
-                        "description": "Not built yet (item \"timeline\")",
+                    "422": {
+                        "description": "Invalid input",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
+                                    "$ref": "#/components/schemas/ValidationError"
                                 }
                             }
                         }
@@ -8866,6 +8866,11 @@
                                 ]
                             }
                         ],
+                        "default": null
+                    },
+                    "code": {
+                        "type": "string",
+                        "nullable": true,
                         "default": null
                     }
                 },
