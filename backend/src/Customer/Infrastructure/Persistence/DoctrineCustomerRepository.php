@@ -2,6 +2,7 @@
 
 namespace App\Customer\Infrastructure\Persistence;
 
+use App\Customer\Domain\Model\ContactKind;
 use App\Customer\Domain\Model\Customer;
 use App\Customer\Domain\Repository\CustomerRepository;
 use App\Shared\Infrastructure\Persistence\TenantScopedRepository;
@@ -29,5 +30,25 @@ final class DoctrineCustomerRepository extends TenantScopedRepository implements
     public function add(Customer $customer): void
     {
         $this->persist($customer);
+    }
+
+    public function findByContact(ContactKind $kind, string $value, ?string $exceptCustomerId = null): ?Customer
+    {
+        $qb = $this->em->createQueryBuilder()
+            ->select('c')
+            ->from(Customer::class, 'c')
+            ->join('c.contacts', 'cc')
+            ->where('c.dealershipId = :dealership')
+            ->andWhere('cc.kind = :kind')
+            ->andWhere('cc.value = :value')
+            ->setParameter('dealership', $this->tenant->dealershipId())
+            ->setParameter('kind', $kind)
+            ->setParameter('value', $value)
+            ->setMaxResults(1);
+        if (null !== $exceptCustomerId) {
+            $qb->andWhere('c.id != :except')->setParameter('except', $exceptCustomerId);
+        }
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

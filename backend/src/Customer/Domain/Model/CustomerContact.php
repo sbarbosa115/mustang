@@ -86,4 +86,15 @@ class CustomerContact
     {
         return $this->isPrimary;
     }
+
+    public function change(string $value, ?string $label): void
+    {
+        $this->value = $value;
+        $this->label = $label;
+    }
+
+    public function markPrimary(bool $primary): void
+    {
+        $this->isPrimary = $primary;
+    }
 }

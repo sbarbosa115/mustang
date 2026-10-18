@@ -1682,16 +1682,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1837,16 +1827,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1918,16 +1898,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1970,16 +1940,6 @@
                     },
                     "404": {
                         "description": "Not found, or another dealership's record",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2064,16 +2024,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -2135,16 +2085,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -2194,16 +2134,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -2213,7 +2143,7 @@
                 "tags": [
                     "Customers"
                 ],
-                "summary": "Assign Sales 1, Sales 2 and BDC.",
+                "summary": "Assign Sales 1, Sales 2 and BDC; the three slots are set together and a null empties its slot.",
                 "operationId": "patch_api_customers_assign",
                 "parameters": [
                     {
@@ -2265,16 +2195,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -2312,16 +2232,6 @@
                     },
                     "404": {
                         "description": "Not found, or another dealership's record",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2388,16 +2298,6 @@
                                 }
                             }
                         }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -2407,7 +2307,7 @@
                 "tags": [
                     "Customers"
                 ],
-                "summary": "Archive a customer.",
+                "summary": "Archive a customer; archiving twice changes nothing.",
                 "operationId": "post_api_customers_archive",
                 "parameters": [
                     {
@@ -2432,16 +2332,6 @@
                     },
                     "404": {
                         "description": "Not found, or another dealership's record",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ApiError"
-                                }
-                            }
-                        }
-                    },
-                    "501": {
-                        "description": "Not built yet (item \"customers\")",
                         "content": {
                             "application/json": {
                                 "schema": {

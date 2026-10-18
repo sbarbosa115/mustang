@@ -5,6 +5,7 @@ namespace App\Customer\UI\Cli;
 use App\Customer\Domain\Model\ContactKind;
 use App\Customer\Domain\Model\Customer;
 use App\Customer\Domain\Model\CustomerContact;
+use App\Customer\Domain\Model\CustomerNote;
 use App\Customer\Domain\Model\CustomerOwnedVehicle;
 use App\Shared\Domain\Channel;
 use App\Shared\UI\Cli\DemoSeeder;
@@ -24,6 +25,12 @@ final readonly class CustomerSeeder implements DemoSeeder
         'Lopez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez',
         'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young'];
     private const array OWNED = [[2019, 'Toyota', 'Camry'], [2017, 'Honda', 'Civic'], [2020, 'Ford', 'F-150'], [2018, 'Nissan', 'Rogue'], [2021, 'Chevrolet', 'Equinox']];
+
+    private const array NOTES = [
+        'Came in on a Saturday, wants a three-row SUV, budget around 45k.',
+        'Prefers texts after 5 pm. Trading in a 2017 Civic.',
+        'Asked about financing; credit union pre-approval in hand.',
+    ];
 
     public function __construct(private EntityManagerInterface $em)
     {
@@ -60,6 +67,9 @@ final readonly class CustomerSeeder implements DemoSeeder
             }
             $this->em->persist($customer);
             $context->set('customer.'.$i, $customer->id());
+            if ($i <= 3) {
+                $this->em->persist(new CustomerNote($dealership, $customer->id(), $i % 2 ? $reps[0] : $bdc, self::NOTES[$i - 1]));
+            }
         }
 
         $other = $context->id('dealership.other');

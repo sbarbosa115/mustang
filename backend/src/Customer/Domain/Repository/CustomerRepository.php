@@ -2,6 +2,7 @@
 
 namespace App\Customer\Domain\Repository;
 
+use App\Customer\Domain\Model\ContactKind;
 use App\Customer\Domain\Model\Customer;
 
 interface CustomerRepository
@@ -12,4 +13,9 @@ interface CustomerRepository
     public function get(string $id): Customer;
 
     public function add(Customer $customer): void;
+
+    /**
+     * The customer of this dealership that has this contact (value already normalised), other than $exceptCustomerId.
+     */
+    public function findByContact(ContactKind $kind, string $value, ?string $exceptCustomerId = null): ?Customer;
 }
