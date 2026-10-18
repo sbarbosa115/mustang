@@ -87,6 +87,8 @@ const ChartStyle = ({id, config}: {id: string; config: ChartConfig}) => {
     return null;
   }
 
+  // Raw CSS from the chart config: keys and colours are written in code (FunnelChart's static config), never taken
+  // from user data, which would be CSS injection (security audit 2026-10-18).
   return (
     <style
       dangerouslySetInnerHTML={{
