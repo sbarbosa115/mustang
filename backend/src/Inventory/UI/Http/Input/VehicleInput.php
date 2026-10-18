@@ -41,6 +41,8 @@ final class VehicleInput
         #[Assert\GreaterThanOrEqual(0)]
         public ?int $priceCents = null,
         #[Assert\Length(max: 500)]
+        // Only http(s): the URL is shown as an image and must never carry javascript: or data: (security audit 2026-10-18).
+        #[Assert\Regex(pattern: '#^https?://\S+$#i', message: 'The photo must be an http or https address.')]
         public ?string $photoUrl = null,
         #[Assert\Length(max: 5000)]
         public ?string $description = null,

@@ -76,6 +76,23 @@ final class VehicleApiTest extends ApiTestCase
         }
     }
 
+    public function testAPhotoMustBeAnHttpAddress(): void
+    {
+        // Security audit 2026-10-18, finding 4: the JSON API stored javascript: and data: photo URLs (the CSV refused them).
+        $this->signInAs('sales');
+        foreach (['javascript:alert(document.cookie)', 'data:text/html;base64,PHNjcmlwdD4=', '//evil.example/x.png', 'JaVaScRiPt:alert(1)'] as $i => $url) {
+            $body = $this->request('POST', '/api/v1/vehicles', self::body('PH-'.$i, ['photo_url' => $url]));
+            $this->assertStatus(422, $url.' must be refused on create.');
+            self::assertContains('photo_url', array_column($body['violations'], 'field'));
+
+            $body = $this->request('PATCH', '/api/v1/vehicles/'.$this->vehicleId('MM-1001'), ['photo_url' => $url]);
+            $this->assertStatus(422, $url.' must be refused on edit.');
+        }
+
+        $this->request('POST', '/api/v1/vehicles', self::body('PH-ok', ['photo_url' => 'https://images.example.com/bronco.jpg']));
+        $this->assertStatus(201);
+    }
+
     public function testAnEditChangesOnlyWhatWasSent(): void
     {
         $this->signInAs('sales');
