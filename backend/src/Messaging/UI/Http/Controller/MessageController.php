@@ -32,10 +32,11 @@ final class MessageController extends ApiController
     }
 
     /**
-     * Send a text or email; refused without consent. A text is sent at once; an email is queued for the mail
-     * worker. A refusal (409 consent_missing or opted_out) is stored with its consent snapshot; its detail carries
-     * message_id and consent. 409 contact_missing: the customer has no phone or email for the channel.
-     * 422 subject_required, channel_not_sendable (call).
+     * Send a text or email; refused without consent.
+     *
+     * A text is sent at once; an email is queued for the mail worker. A refusal (409 consent_missing or opted_out) is
+     * stored with its consent snapshot, and its detail carries message_id and consent. 409 contact_missing: the
+     * customer has no phone or email for the channel. 422 subject_required, channel_not_sendable (call).
      */
     #[Route('/api/v1/conversations/{id}/messages', name: 'api_messages_send', methods: ['POST'])]
     #[OA\Response(response: 201, description: 'Send a text or email; refused without consent', content: new Model(type: MessageOutput::class))]

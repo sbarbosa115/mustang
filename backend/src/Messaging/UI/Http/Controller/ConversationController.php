@@ -38,8 +38,10 @@ final class ConversationController extends ApiController
     }
 
     /**
-     * Conversations, most recent first. folder: all, unreplied (the customer wrote last) or fumbled (unreplied for
-     * more than 30 minutes); user_id: the assigned rep; q: the customer's name, phone or email.
+     * Conversations, most recent first.
+     *
+     * folder: all, unreplied (the customer wrote last) or fumbled (unreplied for more than 30 minutes); user_id: the
+     * assigned rep; q: the customer's name, phone or email.
      */
     #[Route('/api/v1/conversations', name: 'api_conversations_list', methods: ['GET'])]
     #[OA\Response(response: 200, description: 'Conversations, most recent first', content: new Model(type: ConversationPageOutput::class))]

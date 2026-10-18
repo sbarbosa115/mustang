@@ -123,14 +123,14 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/leads/{id}/close` | Close a lead | 200, 404, 409 | 501 until "leads" |
 | `GET /api/v1/settings/routing` | The round-robin order for new leads (manager) | 200 | 501 until "leads" |
 | `PUT /api/v1/settings/routing` | Set the round-robin order (manager) | 200, 422 | 501 until "leads" |
-| `GET /api/v1/conversations` | Conversations, most recent first | 200 | 501 until "messaging-api" |
-| `GET /api/v1/conversations/counts` | Counts per folder and per rep | 200 | 501 until "messaging-api" |
-| `GET /api/v1/conversations/{id}` | A conversation and its messages | 200, 404 | 501 until "messaging-api" |
-| `POST /api/v1/conversations/{id}/read` | Mark a conversation read | 200, 404 | 501 until "messaging-api" |
-| `GET /api/v1/customers/{id}/conversation` | The customer's conversation, created if there is none | 200, 404 | 501 until "messaging-api" |
-| `POST /api/v1/dev/inbound` | Simulate a customer reply (dev and test only) | 201, 422 | 501 until "messaging-api" |
-| `POST /api/v1/conversations/{id}/messages` | Send a text or email; refused without consent | 201, 404, 409, 422 | 501 until "messaging-api" |
-| `GET /api/v1/messages/{id}/provenance` | Who sent a message, under which consent and transport | 200, 404 | 501 until "messaging-api" |
+| `GET /api/v1/conversations` | Conversations, most recent first; `folder` all, unreplied (the customer wrote last) or fumbled (unreplied for more than `WORKLIST_FUMBLED_MINUTES`, 30), `user_id` the assigned rep, `q` a name, phone or email | 200, 422 | Built |
+| `GET /api/v1/conversations/counts` | Counts per folder, and unreplied conversations per assigned rep | 200 | Built |
+| `GET /api/v1/conversations/{id}` | A conversation, its messages oldest first (refused attempts included) and the customer's phone and email | 200, 404 | Built |
+| `POST /api/v1/conversations/{id}/read` | Mark a conversation read | 200, 404 | Built |
+| `GET /api/v1/customers/{id}/conversation` | The customer's conversation, created if there is none | 200, 404 | Built |
+| `POST /api/v1/dev/inbound` | Simulate a customer reply from a customer's phone or email (dev and test only; also `bin/console mustang:messaging:simulate-inbound <phone or email> "<text>" [--channel=email]`) | 201, 422 | Built |
+| `POST /api/v1/conversations/{id}/messages` | Send a text (fake transport, sent at once) or an email (queued, then sent by the worker); refused with 409 `consent_missing` or `opted_out`, the attempt kept with its consent snapshot | 201, 404, 409, 422 | Built |
+| `GET /api/v1/messages/{id}/provenance` | Who sent a message, under which consent and through which transport | 200, 404 | Built |
 | `GET /api/v1/templates` | Message templates | 200 | 501 until "templates" |
 | `POST /api/v1/templates` | Create a template (manager) | 201, 422 | 501 until "templates" |
 | `GET /api/v1/templates/{id}` | One template | 200, 404 | 501 until "templates" |

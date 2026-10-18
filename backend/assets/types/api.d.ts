@@ -910,7 +910,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Conversations, most recent first. */
+        /**
+         * Conversations, most recent first.
+         * @description folder: all, unreplied (the customer wrote last) or fumbled (unreplied for more than 30 minutes); user_id: the
+         *     assigned rep; q: the customer's name, phone or email.
+         */
         get: operations["get_api_conversations_list"];
         put?: never;
         post?: never;
@@ -927,7 +931,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Counts per folder and per rep. */
+        /** Counts per folder, and unreplied conversations per assigned rep. */
         get: operations["get_api_conversations_counts"];
         put?: never;
         post?: never;
@@ -944,7 +948,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** A conversation and its messages. */
+        /** A conversation and its messages, oldest first. */
         get: operations["get_api_conversations_get"];
         put?: never;
         post?: never;
@@ -997,7 +1001,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Simulate a customer reply (dev and test only). */
+        /**
+         * Simulate a customer reply (dev and test only).
+         * @description from is a phone (channel text, the default) or an email of a customer of the signed-in user's dealership.
+         *     422 unknown_contact, invalid_phone, invalid_email.
+         */
         post: operations["post_api_dev_inbound"];
         delete?: never;
         options?: never;
@@ -1014,7 +1022,12 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Send a text or email; refused without consent. */
+        /**
+         * Send a text or email; refused without consent.
+         * @description A text is sent at once; an email is queued for the mail worker. A refusal (409 consent_missing or opted_out) is
+         *     stored with its consent snapshot, and its detail carries message_id and consent. 409 contact_missing: the
+         *     customer has no phone or email for the channel. 422 subject_required, channel_not_sendable (call).
+         */
         post: operations["post_api_messages_send"];
         delete?: never;
         options?: never;
@@ -1029,7 +1042,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Who sent a message, under which consent and transport. */
+        /** Who sent a message, under which consent and through which transport. */
         get: operations["get_api_messages_provenance"];
         put?: never;
         post?: never;
@@ -5455,13 +5468,13 @@ export interface operations {
                     "application/json": components["schemas"]["ConversationPageOutput"];
                 };
             };
-            /** @description Not built yet (item "messaging-api") */
-            501: {
+            /** @description Invalid input */
+            422: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ApiError"];
+                    "application/json": components["schemas"]["ValidationError"];
                 };
             };
         };
@@ -5482,15 +5495,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConversationCountsOutput"];
-                };
-            };
-            /** @description Not built yet (item "messaging-api") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };
@@ -5517,15 +5521,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "messaging-api") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5564,15 +5559,6 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "messaging-api") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_customers_conversation: {
@@ -5597,15 +5583,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "messaging-api") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5644,15 +5621,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ValidationError"];
-                };
-            };
-            /** @description Not built yet (item "messaging-api") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
                 };
             };
         };
@@ -5708,15 +5676,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "messaging-api") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_messages_provenance: {
@@ -5741,15 +5700,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "messaging-api") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
