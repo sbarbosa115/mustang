@@ -8,6 +8,7 @@ const num = (value: unknown): number =>
 
 /** "45 min", "2 hours", "3 days": the largest whole unit of a wait. */
 export function waitText(t: TFunction<'team'>, minutes: number): string {
+  if (minutes < 1) return t('wait.under_minute');
   if (minutes < 60) return t('wait.minutes', {count: minutes});
   if (minutes < 24 * 60)
     return t('wait.hours', {count: Math.floor(minutes / 60)});

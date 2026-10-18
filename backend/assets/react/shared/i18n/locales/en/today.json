@@ -24,6 +24,7 @@
     "viewing": "{{name}}'s list"
   },
   "wait": {
+    "under_minute": "less than a minute",
     "minutes_one": "{{count}} min",
     "minutes_other": "{{count}} min",
     "hours_one": "{{count}} hour",

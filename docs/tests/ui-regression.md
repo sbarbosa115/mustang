@@ -154,6 +154,45 @@ tablet: the menu button opens the sidebar; desktop: the dark sidebar and the top
 
 <!-- TODAY-01 – 05: item "worklist". -->
 
+**TODAY-01 · A customer's unanswered question is on the rep's Contact now list, worded with its reason**
+Smoke: `e2e/today.spec.ts`.
+Signed in as sales@mustang.test, add a customer TODAY-01 Test (`(813) 555-9801`) with Sales 1 = you and text consent,
+then the customer texts "Is the Civic still there?" (Simulate a reply). Open Today. **Expected:** a row "TODAY-01 Test"
+reads "Replied less than a minute ago, nobody answered; question unanswered", with a relative time (full timestamp on
+hover) and the call, text and email buttons; email is disabled and its tooltip says "No consent recorded for Email".
+The row is not marked "Contact now" yet. By hand: 31 minutes later (or after
+`UPDATE conversations SET last_inbound_at = last_inbound_at - INTERVAL 31 MINUTE` for that customer) the row is at the
+top with the orange "Contact now" pill and its word, and its time reads "31 min ago".
+
+**TODAY-02 · Tapping text opens the customer's thread, and an answered customer leaves the list as done**
+Smoke: `e2e/today.spec.ts`.
+With a customer TODAY-02 Test (`(813) 555-9802`) waiting on Today as in TODAY-01, tap the text button on their row.
+**Expected:** the inbox opens on TODAY-02 Test's thread (`/inbox/…`). Reply "Yes, it is" from the composer and go back to
+Today: TODAY-02 Test is gone, and the progress line says "1 of N done today" (at least one done) with its bar.
+
+**TODAY-03 · A new lead nobody has contacted is on the list with its vehicle**
+Smoke: `e2e/today.spec.ts`.
+Capture a lead (Leads, "Capture lead") for TODAY-03 Test, `(813) 555-9803`, source Website, vehicle of interest
+"2024 Camry", assigned to you. Open Today. **Expected:** a row "TODAY-03 Test" reads "New lead for a 2024 Camry less
+than a minute ago, not contacted yet", with the "New" stage badge; text and email are disabled (no consent yet) and the
+call button is the suggestion only once call consent exists. Texting the customer from the inbox (after recording text
+consent) removes the row.
+
+**TODAY-04 · Today's unconfirmed appointment, a missed one, and an idle deal**
+By hand only (it depends on the time of day). Book an appointment for a customer of yours later today (Appointments,
+"Book appointment", a test drive). **Expected:** Today shows their row "Today at 4:30 PM: test drive not confirmed" with
+the appointment chip (time and "Scheduled"); "Confirm" on the appointment removes the row. Mark a past appointment of
+today "No-show": the row reads "Missed the test drive at …, no follow-up yet"; booking a new appointment or sending a
+message removes it. A seeded deal of yours in Proposal with no activity for more than a day reads "No activity for N
+days in proposal", with the stage badge and its days.
+
+**TODAY-05 · Only a manager can open another rep's list**
+Smoke: `e2e/today.spec.ts`.
+As sales@mustang.test, request `/api/v1/worklist/contact-now?user_id=<sales2's id>`. **Expected:** 403
+`worklist_not_yours`. As manager@mustang.test, open Today: a "Whose list" menu shows "My list" and each rep; choosing
+a rep shows "<name>'s list" under the title and their rows, and the address carries `?user_id=`. By hand: the
+other dealership's admin asking for a Mustang Motors rep's list gets 404.
+
 ## 5. Inbox
 
 <!-- MSG-01 – 04: item "messaging-api" (console command and dev endpoint). INB-01 – 08: item "inbox-ui". -->
@@ -569,6 +608,40 @@ is offered, and choosing it opens its page.
 ## 11. Manager: team and dashboard
 
 <!-- MGR-01 – 05: item "worklist". KPI-01 – 04: item "dashboard". -->
+
+**MGR-01 · The team page sums up the deals at risk**
+Smoke: `e2e/team.spec.ts`.
+As manager@mustang.test at desktop width, open Team. **Expected:** three tiles: "Deals that need you" (a number),
+"Gross at risk" (dollars) and "Reps with unanswered customers"; under "Deals that need you" one row per deal with its
+reason in words, "Assigned to …" or "Unassigned", "$… at risk" and "Assign to me" (never on a deal already yours).
+With nothing at risk the list says "No deal needs you right now."
+
+**MGR-02 · A lead left uncontacted for two hours is in the queue, and "Assign to me" takes it**
+Smoke: `e2e/team.spec.ts`.
+Capture a lead for MGR-02 Test (`(813) 555-9812`) received three hours ago (`received_at`) and assigned to
+sales@mustang.test. As manager, open Team. **Expected:** the row "MGR-02 Test" reads "Lead waiting 3 hours, not
+contacted yet", "Assigned to Sam Patel" and "$3,000 at risk" (the dealership's average gross, the deal has none of its own).
+"Assign to me": a toast says "MGR-02 Test's deal is assigned to you.", and the row now says "Assigned to" the manager
+(Maria Gonzalez) without the button. The deal page shows her as its rep.
+
+**MGR-03 · A rep's unanswered customers are counted, and the count opens their list**
+Smoke: `e2e/team.spec.ts`.
+A customer MGR-03 Test (`(813) 555-9813`) with Sales 1 = sales2@mustang.test texts "Hello". As manager, open Team.
+**Expected:** "Reps with unanswered customers" lists sales2's name with "N waiting" (the word, not only the colour).
+Clicking the name opens Today with "<name>'s list", showing MGR-03 Test.
+
+**MGR-04 · Reps are kept out of the team queue**
+Smoke: `e2e/team.spec.ts`.
+As sales@mustang.test, open `/team`. **Expected:** the app goes to Today; `/api/v1/worklist/interventions` answers 403.
+The Team entry is not in the menu.
+
+**MGR-05 · Deals waiting on the customer, idle deals and missed visits, with the gross at stake**
+By hand only (it needs time to pass). As manager, after the seed: a customer whose text has waited more than an hour
+reads "Customer waiting N hours for an answer"; a deal idle more than twice its stage's days (engaged 3, appointment 2,
+visit 2, proposal 1) reads "No activity for N days in <stage>, more than twice the usual"; a no-show nobody followed
+up for a day reads "No-show 1 day ago, nobody followed up". A deal with an expected gross shows that amount at risk,
+and "Gross at risk" is the sum of the rows. Signed in as other@mustang.test, Team lists none of Mustang Motors'
+customers or reps.
 
 ## 12. Settings
 
