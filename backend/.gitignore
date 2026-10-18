@@ -31,3 +31,4 @@
 /e2e/.results/
 /var/
 /.env.dev.local
+/.deptrac.cache
