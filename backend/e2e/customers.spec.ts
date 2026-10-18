@@ -112,26 +112,29 @@ test('CUS-04 · search the list, and clear a search that finds nothing', async (
   const page = await signedInAs('bdc');
   const errors = consoleErrors(page);
   await page.goto('/customers');
-  const search = page.getByLabel('Search customers');
-  await expect(
-    page.getByRole('link', {name: 'Sarah Johnson'}).last(),
-  ).toBeVisible();
+  const search = page.getByRole('searchbox', {name: 'Search customers'});
+  // The list is ordered by last update, so no seeded customer is promised on page 1: count rows instead.
+  const rows = page.locator('a[href^="/customers/"]');
+  await expect(rows.first()).toBeVisible();
+  const all = await rows.count();
+  expect(all).toBeGreaterThan(1);
 
   await search.fill('813-555-1002');
   await expect(
     page.getByRole('link', {name: 'Michael Williams'}).last(),
   ).toBeVisible();
+  await expect(rows.filter({visible: true})).toHaveCount(1);
   await expect(page.getByRole('link', {name: 'Sarah Johnson'})).toHaveCount(0);
 
   await search.fill('zzz-nobody');
   await expect(page.getByText('Nothing matches these filters.')).toBeVisible();
   await page.getByRole('button', {name: 'Show all'}).click();
   await expect(search).toHaveValue('');
-  await expect(
-    page.getByRole('link', {name: 'Sarah Johnson'}).last(),
-  ).toBeVisible();
+  await expect(rows.first()).toBeVisible();
+  await expect(page.getByText('Nothing matches these filters.')).toHaveCount(0);
 
   // A customer opens from the list.
+  await search.fill('Sarah Johnson');
   await page.getByRole('link', {name: 'Sarah Johnson'}).last().click();
   await expect(
     page.getByRole('heading', {level: 1, name: 'Sarah Johnson'}),
@@ -188,8 +191,13 @@ test('CUS-06 · assign the team and record a vehicle the customer owns', async (
   await team.getByLabel('BDC').click();
   await page.getByRole('option', {name: 'Brianna Diaz'}).click();
   await team.getByRole('button', {name: 'Save'}).click();
-  await expect(page.getByText('Jordan Reyes')).toBeVisible();
-  await expect(page.getByText('Brianna Diaz')).toBeVisible();
+  // The team shows as definitions; the dialog's own (native) options also carry these names.
+  await expect(
+    page.getByRole('definition').filter({hasText: 'Jordan Reyes'}),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('definition').filter({hasText: 'Brianna Diaz'}),
+  ).toBeVisible();
 
   await page.getByRole('button', {name: 'Add vehicle'}).click();
   const vehicle = page.getByRole('dialog', {name: 'Add a vehicle'});
@@ -219,7 +227,11 @@ test('CUS-07 · notes are listed newest first with their author', async ({
   await expect(add).toBeDisabled();
   await page.getByLabel('New note').fill('First note: wants a third row.');
   await add.click();
-  await expect(page.getByText('First note: wants a third row.')).toBeVisible();
+  // The saved note in the list (the text in the box matches getByText too, so wait for the box to empty).
+  await expect(page.getByLabel('New note')).toHaveValue('');
+  await expect(
+    page.locator('li', {hasText: 'First note: wants a third row.'}),
+  ).toBeVisible();
   await page.getByLabel('New note').fill('Second note: call after 5 pm.');
   await add.click();
 

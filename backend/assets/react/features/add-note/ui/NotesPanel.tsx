@@ -24,8 +24,9 @@ export function NotesPanel({customerId}: {customerId: string}) {
   });
   const add = useMutation({
     mutationFn: (text: string) => addNote(customerId, {body: text}),
-    onSuccess: () => {
-      setBody('');
+    onSuccess: (_note, text) => {
+      // Only the text that was saved is cleared: what was typed meanwhile for the next note stays.
+      setBody((current) => (current.trim() === text ? '' : current));
       void queryClient.invalidateQueries({queryKey: notesKey(customerId)});
     },
   });

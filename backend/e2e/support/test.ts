@@ -156,15 +156,16 @@ export const test = base.extend<Fixtures>({
 
 /**
  * A page's console errors, collected from now on: `expect(errors).toEqual([])` at the end of a view's test.
- * The browser's own "Failed to load resource … 401" is left out: the app asks /api/v1/me on load to learn whether
- * someone is signed in, and a visitor's answer is 401 by design.
+ * The browser's own "Failed to load resource … 4xx" lines are left out: they report an answer the app handles and
+ * shows (a visitor's 401 from /api/v1/me on load, a wrong code's 422). A 5xx, a JavaScript error logged to the
+ * console and an uncaught page error are still collected.
  */
 export function consoleErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on('console', (message) => {
     if (
       message.type() === 'error' &&
-      !/Failed to load resource: .* 401/.test(message.text())
+      !/Failed to load resource: .*status of 4\d\d\b/.test(message.text())
     ) {
       errors.push(message.text());
     }

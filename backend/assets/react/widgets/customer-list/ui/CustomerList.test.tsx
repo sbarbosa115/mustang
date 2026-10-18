@@ -99,6 +99,31 @@ describe('CustomerList', () => {
     expect(screen.getByLabelText('Search customers')).toHaveValue('');
   });
 
+  it('keeps Show all cleared when the page opened with a search in the URL', async () => {
+    listCustomers.mockImplementation(({q}: {q?: string}) =>
+      Promise.resolve(q ? page([]) : page([row('c1', 'Sarah Johnson')])),
+    );
+    renderWithProviders(<CustomerList />, {route: '/customers?q=zzz'});
+    const showAll = await screen.findByRole('button', {name: 'Show all'});
+    const before = listCustomers.mock.calls.length;
+    await userEvent.click(showAll);
+    expect(
+      (await screen.findAllByRole('link', {name: 'Sarah Johnson'})).length,
+    ).toBeGreaterThan(0);
+
+    // Past the debounce: the stale text must not write the search back.
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    expect(screen.getByLabelText('Search customers')).toHaveValue('');
+    // No request after Show all asks for the old search again, not even for a moment.
+    const after = listCustomers.mock.calls.slice(before) as Array<
+      [{q?: string}]
+    >;
+    expect(after.filter(([query]) => query.q !== undefined)).toEqual([]);
+    expect(
+      screen.queryByText('Nothing matches these filters.'),
+    ).not.toBeInTheDocument();
+  });
+
   it('offers a retry when the list cannot be loaded', async () => {
     listCustomers.mockImplementationOnce(() =>
       Promise.reject(new Error('down')),
