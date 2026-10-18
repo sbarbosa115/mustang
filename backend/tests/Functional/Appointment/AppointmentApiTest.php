@@ -2,7 +2,6 @@
 
 namespace App\Tests\Functional\Appointment;
 
-use App\Appointment\Domain\Event\AppointmentBooked;
 use App\Appointment\Domain\Event\AppointmentCancelled;
 use App\Appointment\Domain\Event\AppointmentConfirmed;
 use App\Appointment\Domain\Event\AppointmentNoShow;
