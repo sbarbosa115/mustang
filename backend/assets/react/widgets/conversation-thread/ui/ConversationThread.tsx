@@ -1,8 +1,9 @@
-import {useQueryClient} from '@tanstack/react-query';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
 import {AlertTriangle, ArrowLeft, UserRound} from 'lucide-react';
 import {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Link} from 'react-router';
+import {Link, useSearchParams} from 'react-router';
+import {appointmentsKeys, fetchAppointment} from '@/entities/appointment';
 import {conversationsKeys, markConversationRead} from '@/entities/conversation';
 import {useAuth} from '@/entities/user';
 import {PickTemplateButton} from '@/features/pick-template';
@@ -10,12 +11,14 @@ import {Composer} from '@/features/send-message';
 import {SendVehicleButton} from '@/features/send-vehicle';
 import {SimulateInbound} from '@/features/simulate-inbound';
 import {ApiError} from '@/shared/api';
+import {formatAppointmentTime} from '@/shared/lib/dates';
 import {formatPhone} from '@/shared/lib/phone';
 import {Button} from '@/shared/ui/button';
 import {Card} from '@/shared/ui/card';
 import {ChannelActions, EmptyState} from '@/shared/ui/mustang';
 import {Skeleton} from '@/shared/ui/skeleton';
 import {useConversationDetail, useCustomer} from '../model/queries';
+import {ApplyTemplateFromUrl} from './ApplyTemplateFromUrl';
 import {MessageList} from './MessageList';
 
 interface Props {
@@ -39,6 +42,15 @@ export function ConversationThread({
   const customer = useCustomer(conversation?.customer.id);
   const unread = conversation?.unread_count ?? 0;
   const timeZone = me?.dealership.timezone ?? DEFAULT_TIMEZONE;
+
+  // ?appointment=<id> (from "Send confirmation"): its time fills {appointment_time}.
+  const [urlParams] = useSearchParams();
+  const appointmentId = urlParams.get('appointment');
+  const appointment = useQuery({
+    queryKey: appointmentsKeys.detail(appointmentId ?? ''),
+    queryFn: () => fetchAppointment(appointmentId ?? ''),
+    enabled: appointmentId !== null,
+  });
 
   useEffect(() => {
     if (unread === 0) return;
@@ -98,7 +110,12 @@ export function ConversationThread({
     rep_name: me?.user.name,
     dealership: me?.dealership.name,
     vehicle: c?.open_deal?.vehicle_text,
+    appointment_time: appointment.data
+      ? formatAppointmentTime(appointment.data.scheduled_at, timeZone)
+      : undefined,
   };
+  const valuesReady =
+    !customer.isPending && (appointmentId === null || !appointment.isPending);
 
   return (
     <Card className="flex h-full min-h-0 flex-col gap-0 overflow-hidden py-0">
@@ -146,6 +163,12 @@ export function ConversationThread({
         values={values}
         tools={({channel, disabled, insert}) => (
           <>
+            <ApplyTemplateFromUrl
+              channel={channel}
+              disabled={disabled}
+              ready={valuesReady}
+              insert={insert}
+            />
             <PickTemplateButton
               channel={channel}
               disabled={disabled}

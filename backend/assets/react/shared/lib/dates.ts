@@ -35,6 +35,14 @@ export function formatDateTime(
   return formatInTimeZone(new Date(iso), timeZone, 'MMM d, yyyy, h:mm a zzz');
 }
 
+/** A short appointment time for a message to the customer, e.g. "Tue, Oct 20 at 3:30 PM". */
+export function formatAppointmentTime(
+  iso: string,
+  timeZone = 'America/New_York',
+): string {
+  return formatInTimeZone(new Date(iso), timeZone, "EEE, MMM d 'at' h:mm a");
+}
+
 /** Only the time in the dealership's timezone, e.g. "3:30 PM". */
 export function formatTime(iso: string, timeZone = 'America/New_York'): string {
   return formatInTimeZone(new Date(iso), timeZone, 'h:mm a');
