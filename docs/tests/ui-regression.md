@@ -570,6 +570,36 @@ is offered, and choosing it opens its page.
 
 <!-- MGR-01 – 05: item "worklist". KPI-01 – 04: item "dashboard". -->
 
+**KPI-01 · A manager sees seven KPIs with their change and the funnel**
+Smoke: `e2e/dashboard.spec.ts`.
+As manager, open Dashboard. **Expected:** the last 30 days are selected; seven tiles (First response time, Leads followed up
+in 24 hours, Lead to contact, Contact to appointment, Appointment to show, Show to sale, Units per salesperson) each with a
+value and, under it, how it changed against the period before (an arrow and words, "+5 pts, was 40%"), or "No previous
+data". A line names both periods. "From lead to sale" shows five bars (Leads, Contacted, Appointment booked, Showed, Sold)
+in one colour with their counts; each is no longer than the one above. "Show as table" lists the same counts with the share
+of the step before. First response time going down is shown as good (green), going up as bad.
+
+**KPI-02 · Picking a period reloads the figures; a backwards range is refused**
+Smoke (part): `e2e/dashboard.spec.ts`.
+Choose "Last 7 days". **Expected:** the address gains `?from=…&to=…`, the button shows as pressed, the tiles and funnel
+change to the last seven days and the "compared with" line shows the seven days before. By hand: reload the page, the same
+period stays; set From later than To, a message says to pick a start that is not after the end and nothing reloads; set To to
+a date before today's and back, the figures follow; around a daylight saving change (first Sunday of November, second of
+March) a range that includes it still starts and ends at the dealership's midnight, so a lead received just after midnight
+belongs to the new day.
+
+**KPI-03 · A period with no leads says "No data", not 0**
+Smoke: `e2e/dashboard.spec.ts`.
+Open `/dashboard?from=2000-01-01&to=2000-01-31`. **Expected:** the funnel says "No leads in this period."; the six rates show
+"No data"; Units per salesperson shows a number (0, as the team is there but delivered nothing) or "No data" if the dealership
+has no salespeople.
+
+**KPI-04 · Reps cannot open the dashboard or read the KPIs**
+Smoke: `e2e/dashboard.spec.ts`.
+Signed in as sales (and as BDC), open `/dashboard`. **Expected:** you land on Today and the sidebar has no Dashboard link; the
+API answers 403 for `/api/v1/reports/kpis`. By hand: signed in as `other@mustang.test` (admin of Other Motors), the dashboard
+shows Other Motors' own figures, none of Mustang Motors Tampa's.
+
 ## 12. Settings
 
 <!-- USR-01 – 05: item "users-admin". TPL-01 – 04: item "templates". IMP-01 – 05: item "data-import".

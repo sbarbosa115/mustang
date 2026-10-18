@@ -1,3 +1,71 @@
 {
-  "_owner": "item 15"
+  "_owner": "item 15",
+  "title": "Dashboard",
+  "description": "How the team is doing against the period before.",
+  "period": {
+    "label": "Period",
+    "presets": "Quick ranges",
+    "last7": "Last 7 days",
+    "last30": "Last 30 days",
+    "last90": "Last 90 days",
+    "from": "From",
+    "to": "To",
+    "invalid": "Pick a start that is not after the end.",
+    "range": "{{from}} to {{to}}",
+    "versus": "Compared with {{from}} to {{to}}"
+  },
+  "kpi": {
+    "noData": "No data",
+    "first_response_minutes": "First response time",
+    "leads_followed": "Leads followed up in 24 hours",
+    "lead_to_contact": "Lead to contact",
+    "contact_to_appointment": "Contact to appointment",
+    "appointment_to_show": "Appointment to show",
+    "show_to_sale": "Show to sale",
+    "units_per_salesperson": "Units per salesperson"
+  },
+  "value": {
+    "minutes": "{{value}} min",
+    "percent": "{{value}}%",
+    "units": "{{value}}"
+  },
+  "delta": {
+    "minutes": "{{change}} min, was {{previous}}",
+    "percent": "{{change}} pts, was {{previous}}",
+    "units": "{{change}}, was {{previous}}",
+    "none": "No previous data"
+  },
+  "definitions": {
+    "title": "How these are measured",
+    "first_response_minutes": "The middle wait, in minutes, from a lead arriving or a customer writing to the next text or email sent. Waits nobody has answered yet are left out.",
+    "leads_followed": "Leads received in the period that got a text or email within 24 hours.",
+    "lead_to_contact": "Leads where the customer wrote back after we sent a message.",
+    "contact_to_appointment": "Contacted leads that got an appointment booked afterwards.",
+    "appointment_to_show": "Those leads whose customer came in.",
+    "show_to_sale": "Those leads whose deal reached sold or delivered.",
+    "units_per_salesperson": "Deals delivered in the period divided by the salespeople."
+  },
+  "funnel": {
+    "title": "From lead to sale",
+    "description": "Leads received in the period and how far they got.",
+    "summary": "{{leads}} leads, {{contacted}} contacted, {{appointments}} with an appointment, {{shows}} showed, {{sales}} sales.",
+    "leads": "Leads",
+    "contacted": "Contacted",
+    "appointments": "Appointment booked",
+    "shows": "Showed",
+    "sales": "Sold",
+    "count": "Leads",
+    "ofPrevious": "of the step before",
+    "step": "Step",
+    "none": "-",
+    "showTable": "Show as table",
+    "showChart": "Show as chart",
+    "empty": "No leads in this period."
+  },
+  "error": {
+    "title": "The dashboard could not load.",
+    "invalid": "That period is not valid.",
+    "retry": "Try again"
+  },
+  "loading": "Loading"
 }
