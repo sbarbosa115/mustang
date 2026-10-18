@@ -66,11 +66,11 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 | `POST /api/v1/auth/mfa/verify` | Finish sign-in with a TOTP code or a recovery code; each is accepted once, five tries per five minutes. Until then every route but `/auth/*` answers 403 `mfa_required` | 200, 409, 422, 429 | Built |
 | `DELETE /api/v1/users/{id}/mfa` | Reset a user's MFA so they enroll again at next sign-in (admin) | 204, 403, 404 | Built |
 | `GET /api/v1/users` | The dealership's users, by name. Every signed-in user may read it (to pick an assignee) | 200 | Built |
-| `POST /api/v1/users` | Create a user (admin) | 201, 409, 422 | 501 until "users-admin" |
+| `POST /api/v1/users` | Create a user (admin) | 201, 403, 409, 422 | Built |
 | `GET /api/v1/users/{id}` | One user | 200, 404 | Built |
-| `PATCH /api/v1/users/{id}` | Change a user's name or role (admin) | 200, 404, 409, 422 | 501 until "users-admin" |
-| `POST /api/v1/users/{id}/deactivate` | Deactivate a user; they can no longer sign in (admin) | 200, 404, 409 | 501 until "users-admin" |
-| `POST /api/v1/users/{id}/activate` | Reactivate a user (admin) | 200, 404 | 501 until "users-admin" |
+| `PATCH /api/v1/users/{id}` | Change a user's name or role (admin) | 200, 404, 409, 422 | Built |
+| `POST /api/v1/users/{id}/deactivate` | Deactivate a user; they can no longer sign in (admin) | 200, 404, 409 | Built |
+| `POST /api/v1/users/{id}/activate` | Reactivate a user (admin) | 200, 404 | Built |
 | `GET /api/v1/appointments` | Appointments in a period | 200 | 501 until "appointments" |
 | `POST /api/v1/appointments` | Book an appointment | 201, 404, 409, 422 | 501 until "appointments" |
 | `GET /api/v1/appointments/{id}` | One appointment | 200, 404 | 501 until "appointments" |

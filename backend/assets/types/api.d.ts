@@ -2853,15 +2853,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "users-admin") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     get_api_users_get: {
@@ -2946,15 +2937,6 @@ export interface operations {
                     "application/json": components["schemas"]["ValidationError"];
                 };
             };
-            /** @description Not built yet (item "users-admin") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_users_deactivate: {
@@ -2995,15 +2977,6 @@ export interface operations {
                     "application/json": components["schemas"]["ApiError"];
                 };
             };
-            /** @description Not built yet (item "users-admin") */
-            501: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
         };
     };
     post_api_users_activate: {
@@ -3028,15 +3001,6 @@ export interface operations {
             };
             /** @description Not found, or another dealership's record */
             404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiError"];
-                };
-            };
-            /** @description Not built yet (item "users-admin") */
-            501: {
                 headers: {
                     [name: string]: unknown;
                 };
