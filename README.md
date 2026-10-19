@@ -179,6 +179,7 @@ JSON under `/api/v1`, `snake_case`. Errors are `{error, message, detail}`; valid
 
 ## Known gaps
 
+- Today: a row's reason can say "1 hour ago" while the time under it says "2 hr. ago" (different rounding); cosmetic.
 See "Left out on purpose" in [`docs/pdr/prd-mvp.md`](docs/pdr/prd-mvp.md): everything in the baseline's backlog, all
 integrations (no SMS carrier, DNC check, lead feeds, DMS or CRM migration), Spanish strings, and security work beyond
 the baseline (SOC 2, penetration test). Security policies are drafts to confirm: [`docs/security/policies.md`](docs/security/policies.md).
