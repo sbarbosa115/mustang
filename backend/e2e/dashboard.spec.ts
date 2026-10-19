@@ -65,8 +65,8 @@ test.describe('desktop', () => {
       page.getByRole('button', {name: 'Last 7 days'}),
     ).toHaveAttribute('aria-pressed', 'true');
 
-    await page.getByLabel('From').fill('2000-02-01');
-    await page.getByLabel('To').fill('2000-01-01');
+    await page.getByLabel('From', {exact: true}).fill('2000-02-01');
+    await page.getByLabel('To', {exact: true}).fill('2000-01-01');
     await expect(
       page.getByText('Pick a start that is not after the end.'),
     ).toBeVisible();

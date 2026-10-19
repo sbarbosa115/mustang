@@ -175,10 +175,9 @@ test.describe('desktop', () => {
     await expect(page.getByRole('heading', {name: 'Opt-outs'})).toBeVisible();
 
     await page.getByLabel('Search opt-outs').fill('813-555-9305');
-    await expect(
-      page.getByRole('cell', {name: '(813) 555-9305'}),
-    ).toBeVisible();
-    await expect(page.getByRole('cell', {name: 'Replied STOP'})).toBeVisible();
+    const row = page.getByRole('row', {name: /\(813\) 555-9305/});
+    await expect(row).toBeVisible();
+    await expect(row.getByRole('cell', {name: 'Replied STOP'})).toBeVisible();
 
     await page.getByLabel('Search opt-outs').fill('zzz-nobody');
     await expect(

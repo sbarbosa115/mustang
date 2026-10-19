@@ -37,7 +37,9 @@ export function SettingsRoutingPage() {
       <SettingsTabs />
       <Card className="max-w-2xl">
         <CardHeader>
-          <CardTitle>{t('routing.title')}</CardTitle>
+          <CardTitle>
+            <h2>{t('routing.title')}</h2>
+          </CardTitle>
           <CardDescription>{t('routing.description')}</CardDescription>
         </CardHeader>
         <CardContent>

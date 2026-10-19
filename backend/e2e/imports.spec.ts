@@ -67,7 +67,9 @@ test('IMP-01 · a manager imports a customers file and the customers are there',
   );
 
   await page.goto('/customers');
-  await page.getByLabel(/Search customers/).fill('Zero One');
+  await page
+    .getByRole('searchbox', {name: 'Search customers'})
+    .fill('Zero One');
   await expect(page.getByText('Imp Zero One').first()).toBeVisible();
   expect(errors).toEqual([]);
 });

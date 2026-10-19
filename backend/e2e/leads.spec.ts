@@ -53,7 +53,12 @@ test('LEAD-01 · capture a walk-in for a new customer', async ({signedInAs}) => 
   await expect(page.getByText('Assigned', {exact: true})).toBeVisible();
   await expect(page.getByText('Walk-in', {exact: true})).toBeVisible();
   await expect(page.getByText('2025 RAV4 Hybrid')).toBeVisible();
-  await expect(page.getByText(/Jordan Reyes|Sam Patel/).first()).toBeVisible();
+  // Whoever is next in the rotation (earlier specs add and move reps), but someone, never "Unassigned".
+  const assignee = page
+    .locator('dl > div')
+    .filter({has: page.getByText('Rep', {exact: true})});
+  await expect(assignee.locator('dd')).not.toHaveText('Unassigned');
+  await expect(assignee.locator('dd')).not.toBeEmpty();
 
   await page.getByRole('link', {name: 'LEAD-01 Test'}).click();
   await expect(
@@ -116,15 +121,28 @@ test.describe('desktop', () => {
     const list = page.getByRole('list').filter({hasText: 'Sam Patel'});
     await expect(list).toContainText('Jordan Reyes');
 
-    // Put the order to Sam Patel, then Jordan Reyes, whatever earlier runs left.
+    // Put the order to Sam Patel, then Jordan Reyes, whatever earlier runs left: other salespeople (an earlier
+    // spec adds some) are taken out of the rotation, and Sam is moved up until he is number 1.
     for (const name of ['Sam Patel', 'Jordan Reyes']) {
       const box = page.getByRole('checkbox', {name: `Include ${name}`});
       if (!(await box.isChecked())) await box.click();
     }
-    const first = list.getByRole('listitem').first();
-    if (!(await first.textContent())?.includes('Sam Patel')) {
+    for (const box of await page
+      .getByRole('checkbox', {name: /^Include /})
+      .all()) {
+      const label = (await box.getAttribute('aria-label')) ?? '';
+      if (/Sam Patel|Jordan Reyes/.test(label)) continue;
+      if (await box.isChecked()) await box.click();
+    }
+    const sam = list.getByRole('listitem').filter({hasText: 'Sam Patel'});
+    for (
+      let i = 0;
+      i < 10 && !(await sam.textContent())?.startsWith('1.');
+      i++
+    ) {
       await page.getByRole('button', {name: 'Move Sam Patel up'}).click();
     }
+    await expect(sam).toContainText(/^1\./);
     const save = page.getByRole('button', {name: 'Save order'});
     if (await save.isEnabled()) {
       await save.click();
