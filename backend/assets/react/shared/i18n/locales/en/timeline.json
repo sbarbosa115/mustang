@@ -1,0 +1,40 @@
+{
+  "_owner": "item 13",
+  "title": "Timeline",
+  "loading": "Loading the timeline",
+  "empty": "Nothing has happened with this customer yet.",
+  "empty_hint": "Messages, deals, appointments, notes and consent changes show up here as they happen.",
+  "error": "The timeline could not be loaded.",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "by": "by {{name}}",
+  "channel": {
+    "text": "Text",
+    "email": "Email",
+    "call": "Call"
+  },
+  "kind": {
+    "lead": "Lead",
+    "message_in": "Message received",
+    "message_out": "Message sent",
+    "stage": "Deal stage changed",
+    "appointment": "Appointment",
+    "note": "Note added",
+    "consent": "Consent changed",
+    "import": "Imported"
+  },
+  "event": {
+    "lead_captured": "Lead received",
+    "message_sent": "{{channel}} sent",
+    "message_received": "{{channel}} received",
+    "stage_changed": "Deal moved to {{stage}}",
+    "appointment_booked": "Appointment booked",
+    "appointment_rescheduled": "Appointment rescheduled",
+    "appointment_shown": "Customer showed for the appointment",
+    "appointment_no_show": "Customer did not show for the appointment",
+    "appointment_cancelled": "Appointment cancelled",
+    "note_added": "Note added",
+    "consent_recorded": "{{channel}} consent recorded",
+    "consent_revoked": "{{channel}} consent revoked"
+  }
+}

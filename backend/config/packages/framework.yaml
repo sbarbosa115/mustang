@@ -1,0 +1,24 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    trusted_proxies: '%env(default::TRUSTED_PROXIES)%'
+    session:
+        cookie_samesite: lax
+        cookie_httponly: true
+        cookie_secure: auto
+        name: MUSTANGSESSID
+    serializer:
+        name_converter: serializer.name_converter.camel_case_to_snake_case
+    property_info:
+        with_constructor_extractor: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+
+when@prod:
+    framework:
+        session:
+            # Production is HTTPS only; "auto" would trust the request and drop Secure behind a proxy that is not trusted.
+            cookie_secure: true

@@ -1,0 +1,12 @@
+when@dev:
+    web_profiler:
+        # The toolbar would sit over the SPA's phone tab bar; open /_profiler to inspect requests.
+        toolbar: false
+
+    framework:
+        profiler: true
+
+when@test:
+    framework:
+        profiler:
+            collect: false

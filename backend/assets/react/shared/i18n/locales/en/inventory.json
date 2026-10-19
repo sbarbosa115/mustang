@@ -1,0 +1,144 @@
+{
+  "_owner": "item 4",
+  "title": "Inventory",
+  "description": "Search the lot, add a vehicle or upload a spreadsheet.",
+  "price": {
+    "call": "Call for price"
+  },
+  "condition": {
+    "new": "New",
+    "used": "Used",
+    "cpo": "Certified"
+  },
+  "status": {
+    "label": "Status",
+    "available": "Available",
+    "hold": "On hold",
+    "sold": "Sold",
+    "in_transit": "In transit",
+    "changed": "Marked {{status}}.",
+    "failed": "The status could not be changed."
+  },
+  "columns": {
+    "vehicle": "Vehicle",
+    "stock": "Stock number",
+    "condition": "Condition",
+    "status": "Status",
+    "mileage": "Mileage",
+    "price": "Price"
+  },
+  "list": {
+    "empty": "No vehicles yet. Add one or upload a spreadsheet."
+  },
+  "search": {
+    "label": "Search inventory",
+    "placeholder": "Stock number, VIN, make, model"
+  },
+  "sort": {
+    "label": "Sort by",
+    "recent": "Recently added",
+    "price_asc": "Price: low to high",
+    "price_desc": "Price: high to low",
+    "year_desc": "Newest year",
+    "mileage_asc": "Lowest mileage"
+  },
+  "filters": {
+    "label": "Filter inventory",
+    "toggle": "Filters",
+    "active_one": "{{count}} filter applied",
+    "active_other": "{{count}} filters applied",
+    "clear": "Clear filters",
+    "any": "Any",
+    "option": "{{value}} ({{count}})",
+    "status": "Status",
+    "condition": "Condition",
+    "make": "Make",
+    "model": "Model",
+    "body": "Body",
+    "drivetrain": "Drivetrain",
+    "fuel": "Fuel",
+    "color": "Exterior color",
+    "year_from": "Year from",
+    "year_to": "Year to",
+    "price_from": "Price from ($)",
+    "price_to": "Price to ($)",
+    "mileage_max": "Mileage up to"
+  },
+  "form": {
+    "stock_number": "Stock number",
+    "year": "Year",
+    "make": "Make",
+    "model": "Model",
+    "condition": "Condition",
+    "trim": "Trim",
+    "vin": "VIN",
+    "body": "Body",
+    "drivetrain": "Drivetrain",
+    "fuel": "Fuel",
+    "exterior_color": "Exterior color",
+    "interior_color": "Interior color",
+    "mileage": "Mileage",
+    "price": "Price ($)",
+    "price_placeholder": "Leave empty for call for price",
+    "photo_url": "Photo address",
+    "description": "Description",
+    "save": "Save",
+    "cancel": "Cancel",
+    "error": {
+      "required": "This is required.",
+      "too_long": "This is too long.",
+      "year_range": "Enter a four-digit year from 1950 to 2100.",
+      "whole_number": "Enter a whole number.",
+      "price": "Enter an amount in dollars, like 24999 or 24999.50.",
+      "photo_url": "Enter an address starting with http:// or https://.",
+      "stock_number_taken": "This stock number is already in the inventory.",
+      "server": "This value was not accepted.",
+      "generic": "The vehicle could not be saved. Try again."
+    }
+  },
+  "add": {
+    "button": "Add vehicle",
+    "title": "Add a vehicle",
+    "description": "It appears in the inventory as soon as you save.",
+    "submit": "Add vehicle",
+    "done": "{{title}} was added."
+  },
+  "edit": {
+    "button": "Edit",
+    "title": "Edit {{title}}",
+    "description": "Change what the listing says. The stock number stays the same.",
+    "done": "{{title}} was saved."
+  },
+  "upload": {
+    "button": "Upload CSV",
+    "title": "Upload vehicles",
+    "description": "Add or update vehicles from a spreadsheet. A stock number that is already here is updated, not duplicated.",
+    "file": "CSV file",
+    "hint": "UTF-8, a header row, 10 MB at most.",
+    "sample": "Download a sample file",
+    "submit": "Upload",
+    "processing": "Processing your file. This can take a moment.",
+    "result": "{{ok}} of {{total}} rows imported, {{failed}} skipped.",
+    "failed": "The file could not be imported.",
+    "errors_title": "Rows skipped in {{name}}",
+    "row": "Row {{row}}:",
+    "another": "Upload another",
+    "done": "Done",
+    "error": {
+      "generic": "The file could not be uploaded. Try again.",
+      "file_required": "Choose a CSV file first.",
+      "file_not_csv": "The file must be a .csv file.",
+      "file_too_large": "The file is larger than 10 MB.",
+      "status": "The progress of the upload could not be read."
+    }
+  },
+  "detail": {
+    "back": "Back to inventory",
+    "loading": "Loading the vehicle",
+    "not_found": "This vehicle is not in your inventory.",
+    "error": "This vehicle could not be loaded.",
+    "retry": "Try again",
+    "description": "Description",
+    "specs": "Details"
+  }
+}

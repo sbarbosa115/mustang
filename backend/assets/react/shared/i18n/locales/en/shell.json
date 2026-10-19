@@ -1,0 +1,48 @@
+{
+  "_owner": "item 0",
+  "nav": {
+    "label": "Main",
+    "today": "Today",
+    "inbox": "Inbox",
+    "customers": "Customers",
+    "inventory": "Inventory",
+    "leads": "Leads",
+    "deals": "Deals",
+    "appointments": "Appointments",
+    "dashboard": "Dashboard",
+    "team": "Team",
+    "settings": "Settings",
+    "more": "More"
+  },
+  "search": {
+    "open": "Search customers and vehicles",
+    "placeholder": "Search by name, phone, email or stock number",
+    "shortcut": "⌘K",
+    "customers": "Customers",
+    "vehicles": "Vehicles",
+    "empty": "No matches.",
+    "hint": "Type at least 2 characters."
+  },
+  "add_customer": "Add customer",
+  "account": {
+    "menu": "Account",
+    "theme": "Theme",
+    "sign_out": "Sign out",
+    "settings": "Settings"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "toggle_sidebar": "Toggle navigation",
+  "placeholder": {
+    "title": "{{page}} is on its way",
+    "description": "This screen is built by the \"{{item}}\" part of the MVP. The navigation works so you can see where it will live."
+  },
+  "not_found": {
+    "title": "This page does not exist.",
+    "action": "Go to Today"
+  },
+  "loading": "Loading Mustang"
+}

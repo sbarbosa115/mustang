@@ -1,0 +1,126 @@
+{
+  "_owner": "item 5",
+  "source": {
+    "website": "Website",
+    "phone": "Phone call",
+    "walk_in": "Walk-in",
+    "manual": "Entered by hand",
+    "import": "Import",
+    "other": "Other"
+  },
+  "status": {
+    "new": "New",
+    "assigned": "Assigned",
+    "contacted": "Contacted",
+    "closed": "Closed"
+  },
+  "list": {
+    "title": "Leads",
+    "search_label": "Search leads",
+    "search_placeholder": "Name, phone, email or vehicle",
+    "status_label": "Status",
+    "source_label": "Source",
+    "scope_label": "Whose leads",
+    "all_statuses": "Every status",
+    "all_sources": "Every source",
+    "scope": {
+      "all": "All leads",
+      "mine": "My leads"
+    },
+    "column": {
+      "customer": "Customer",
+      "source": "Source",
+      "vehicle": "Vehicle of interest",
+      "assignee": "Rep",
+      "status": "Status",
+      "received": "Received"
+    },
+    "unassigned": "Unassigned",
+    "no_vehicle": "Not said",
+    "empty": "No leads yet. Capture the first walk-in or phone call."
+  },
+  "capture": {
+    "open": "Capture lead",
+    "title": "Capture a lead",
+    "description": "Mustang finds the customer by phone, then email, or adds a new one, and routes the lead to a rep.",
+    "source": "Source",
+    "source_placeholder": "Where did it come from?",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "phone": "Phone",
+    "email": "Email",
+    "contact_hint": "Enter a phone number or an email.",
+    "vehicle": "Vehicle of interest",
+    "vehicle_placeholder": "2025 RAV4 Hybrid, a used truck…",
+    "note": "How they reached us",
+    "note_placeholder": "Called the main line, Saturday walk-in…",
+    "assignee": "Rep",
+    "assignee_round_robin": "Next in the round robin",
+    "match": "Adds the lead to {{name}}, who is already a customer.",
+    "submit": "Capture lead",
+    "submitting": "Capturing…",
+    "captured": "Lead captured for {{name}}.",
+    "captured_assigned": "Lead captured for {{name}} and routed to {{rep}}."
+  },
+  "detail": {
+    "back": "Leads",
+    "loading": "Loading the lead",
+    "not_found": "This lead does not exist or is not in your dealership.",
+    "title": "Lead from {{name}}",
+    "actions": "Lead actions",
+    "customer": "Customer",
+    "open_customer": "Open the customer",
+    "source": "Source",
+    "note": "How they reached us",
+    "vehicle": "Vehicle of interest",
+    "status": "Status",
+    "assignee": "Rep",
+    "received": "Received",
+    "first_contacted": "First contacted",
+    "not_contacted": "Not contacted yet",
+    "deal": "Deal",
+    "open_deal": "Open the deal",
+    "no_deal": "The deal opens with the lead."
+  },
+  "assign": {
+    "label": "Hand to",
+    "placeholder": "Choose a rep",
+    "submit": "Assign",
+    "assigned": "Lead handed to {{name}}."
+  },
+  "close": {
+    "action": "Close lead",
+    "title": "Close the lead from {{name}}?",
+    "description": "A closed lead leaves the lists of new and assigned leads. The customer stays.",
+    "confirm": "Close lead",
+    "closed": "Lead closed."
+  },
+  "routing": {
+    "title": "Lead routing",
+    "description": "New leads without a rep go to these salespeople in turn. Leave someone out to stop their leads.",
+    "next": "Next lead goes to {{name}}.",
+    "nobody": "Nobody is in the rotation: new leads wait unassigned.",
+    "include": "Include {{name}}",
+    "move_up": "Move {{name}} up",
+    "move_down": "Move {{name}} down",
+    "out": "Not in the rotation",
+    "no_sales": "There are no active salespeople. Add one under Users.",
+    "save": "Save order",
+    "saving": "Saving…",
+    "saved": "Routing saved."
+  },
+  "error": {
+    "invalid_phone": "Enter a valid phone number.",
+    "invalid_email": "Enter a valid email address.",
+    "customer_name_required": "This is a new customer: enter a first and a last name.",
+    "customer_not_found": "This customer does not exist in your dealership.",
+    "contact_required": "Enter a phone number or an email.",
+    "received_in_future": "A lead cannot be received in the future.",
+    "assignee_not_found": "This rep is no longer active in the dealership.",
+    "assignee_wrong_role": "This person cannot take leads.",
+    "lead_closed": "This lead is closed.",
+    "duplicate_contact": "Another customer already has this contact.",
+    "routing_user_invalid": "Only active salespeople can be in the rotation.",
+    "routing_duplicate_user": "A rep can be in the rotation only once."
+  }
+}

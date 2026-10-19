@@ -1,0 +1,30 @@
+parameters:
+    app.url: '%env(APP_URL)%'
+    app.mail_from: '%env(MAIL_FROM)%'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        # Handlers say which bus they serve by the marker they implement, so Application code names no framework class.
+        App\Shared\Application\Bus\CommandHandler:
+            tags: [{ name: messenger.message_handler, bus: command.bus }]
+        App\Shared\Application\Bus\EventHandler:
+            tags: [{ name: messenger.message_handler, bus: event.bus }]
+        App\Shared\UI\Cli\DemoSeeder:
+            tags: [mustang.seeder]
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+            - '../src/*/Domain/Model/'
+            - '../src/*/Domain/Event/'
+            - '../src/*/UI/Http/Input/'
+            - '../src/*/UI/Http/Output/'
+
+    App\Shared\UI\Cli\SeedDemoCommand:
+        arguments:
+            $seeders: !tagged_iterator { tag: mustang.seeder, default_priority_method: priority }

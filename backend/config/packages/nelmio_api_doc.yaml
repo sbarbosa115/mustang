@@ -1,0 +1,34 @@
+nelmio_api_doc:
+    type_info: true
+    documentation:
+        info:
+            title: Mustang API
+            description: The JSON API the Mustang app calls. Generated from the controllers; regenerate with nelmio:apidoc:dump.
+            version: 1.0.0
+        components:
+            schemas:
+                ApiError:
+                    type: object
+                    required: [error, message]
+                    properties:
+                        error: { type: string, description: 'A stable code the UI translates, e.g. consent_missing' }
+                        message: { type: string, description: 'An English explanation for logs and developers' }
+                        detail: { type: object, additionalProperties: true }
+                ValidationError:
+                    type: object
+                    required: [error, message, violations]
+                    properties:
+                        error: { type: string, enum: [validation] }
+                        message: { type: string }
+                        violations:
+                            type: array
+                            items:
+                                type: object
+                                required: [field, code, message]
+                                properties:
+                                    field: { type: string }
+                                    code: { type: string }
+                                    message: { type: string }
+    areas:
+        path_patterns:
+            - ^/api/v1

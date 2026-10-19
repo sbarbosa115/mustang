@@ -1,0 +1,80 @@
+{
+  "_owner": "item 8",
+  "picker": {
+    "empty": "No templates for this channel yet."
+  },
+  "channel": {
+    "text": "Text",
+    "email": "Email"
+  },
+  "placeholder": {
+    "first_name": "Customer's first name",
+    "last_name": "Customer's last name",
+    "rep_name": "Your name",
+    "dealership": "Dealership name",
+    "vehicle": "Vehicle of interest",
+    "appointment_time": "Appointment time"
+  },
+  "sample": {
+    "first_name": "Maria",
+    "last_name": "Lopez",
+    "rep_name": "Sam",
+    "dealership": "Mustang Motors Tampa",
+    "vehicle": "2025 Toyota RAV4",
+    "appointment_time": "tomorrow at 3:00 PM"
+  },
+  "page": {
+    "title": "Message templates",
+    "description": "Texts and emails your team can pick in the inbox. Placeholders are filled in for each customer."
+  },
+  "list": {
+    "new": "New template",
+    "empty": "No templates yet. Create the first one so your team can reply faster.",
+    "column": {
+      "name": "Name",
+      "channel": "Channel",
+      "message": "Message",
+      "status": "Status",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit {{name}}",
+    "delete": "Delete {{name}}",
+    "all_channels": "Every channel"
+  },
+  "form": {
+    "create_title": "New template",
+    "edit_title": "Edit template",
+    "description": "Write the message once; Mustang fills in the placeholders when a rep picks it.",
+    "name": "Name",
+    "name_placeholder": "First reply, Appointment confirmation…",
+    "channel": "Channel",
+    "subject": "Subject",
+    "body": "Message",
+    "active": "Active",
+    "active_hint": "Inactive templates are kept but are not offered in the inbox.",
+    "placeholders": "Placeholders",
+    "placeholders_hint": "Tap one to add it to the message.",
+    "insert": "Insert {{name}}",
+    "preview": "Preview",
+    "preview_hint": "Shown with sample customer details.",
+    "unknown_placeholder_one": "Unknown placeholder: {{names}}. Use only the ones listed above.",
+    "unknown_placeholder_other": "Unknown placeholders: {{names}}. Use only the ones listed above.",
+    "submit": "Save template",
+    "submitting": "Saving…"
+  },
+  "delete": {
+    "title": "Delete {{name}}?",
+    "description": "The template disappears from the inbox. Messages already sent from it stay in their conversations.",
+    "confirm": "Delete template",
+    "deleted": "{{name}} was deleted."
+  },
+  "saved": "{{name}} was saved.",
+  "error": {
+    "template_not_found": "This template no longer exists.",
+    "subject_required": "An email template needs a subject.",
+    "template_channel_invalid": "Templates are for texts and emails."
+  }
+}

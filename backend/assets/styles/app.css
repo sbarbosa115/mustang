@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+@import './tokens.css';
+
+@source '../react';
+
+@layer base {
+  /* Phone text and every input are 16 px (no iOS zoom); desktop body text is 14 px (DESIGN.md "Typography"). */
+  html {
+    font-size: 16px;
+  }
+  @media (min-width: 640px) {
+    body {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

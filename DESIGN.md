@@ -2,7 +2,7 @@
 
 Mustang is a CRM for car dealers, and it is used all day on a sales floor, on phones and on desktop. The design system is built on **shadcn/ui** (Radix primitives and Tailwind CSS v4). The look is **clean, light, modern SaaS**, with a matching **dark theme**.
 
-- Tokens: [`design/tokens.css`](design/tokens.css), which holds both the light and dark themes.
+- Tokens: [`backend/assets/styles/tokens.css`](backend/assets/styles/tokens.css), which holds both the light and dark themes.
 - Requirements baseline: [Mustang Requirements Baseline](https://claude.ai/code/artifact/451f9e95-18fd-45ad-977f-b364ba233a9e).
 
 ## Principles

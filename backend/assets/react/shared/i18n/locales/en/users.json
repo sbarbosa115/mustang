@@ -1,0 +1,82 @@
+{
+  "_owner": "item 11",
+  "title": "Users",
+  "description": "Everyone who signs in to your dealership, and what they can do.",
+  "list": {
+    "search_label": "Search users",
+    "search_placeholder": "Name or email",
+    "empty": "No users yet.",
+    "actions": "Actions for {{name}}",
+    "actions_header": "Actions",
+    "you": "You",
+    "column": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "mfa": "Two-step sign-in",
+      "last_login": "Last signed in"
+    },
+    "never_signed_in": "Never",
+    "status": {
+      "active": "Active",
+      "inactive": "Deactivated"
+    },
+    "mfa": {
+      "on": "On",
+      "off": "Not set up"
+    }
+  },
+  "create": {
+    "action": "Add user",
+    "title": "Add a user",
+    "description": "They sign in with this email and password, then set up two-step sign-in.",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "email": "Email",
+    "role": "Role",
+    "password": "Temporary password",
+    "password_hint": "At least 12 characters. They can change it after signing in.",
+    "submit": "Add user",
+    "submitting": "Adding user",
+    "created": "{{name}} was added."
+  },
+  "edit": {
+    "action": "Edit",
+    "title": "Edit {{name}}",
+    "description": "Change the name or the role. A role change applies on their next request.",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "role": "Role",
+    "submit": "Save changes",
+    "submitting": "Saving changes",
+    "saved": "{{name}} was updated."
+  },
+  "deactivate": {
+    "action": "Deactivate",
+    "title": "Deactivate {{name}}?",
+    "description": "{{name}} will be signed out and will not be able to sign in. Their records stay. You can activate them again later.",
+    "confirm": "Deactivate {{name}}",
+    "done": "{{name}} was deactivated.",
+    "self": "You cannot deactivate your own account."
+  },
+  "activate": {
+    "action": "Activate",
+    "done": "{{name}} was activated."
+  },
+  "mfa": {
+    "action": "Reset two-step sign-in",
+    "title": "Reset two-step sign-in for {{name}}?",
+    "description": "{{name}} will set up an authenticator app again at their next sign-in. Their current app and recovery codes stop working.",
+    "confirm": "Reset for {{name}}",
+    "done": "Two-step sign-in was reset for {{name}}."
+  },
+  "error": {
+    "email_taken": "Another account already uses this email.",
+    "last_admin": "A dealership needs at least one active admin. Make someone else an admin first.",
+    "cannot_deactivate_self": "You cannot deactivate your own account.",
+    "invalid_name": "Enter a first and a last name.",
+    "invalid_email": "Enter a valid email address.",
+    "password_short": "Use at least 12 characters."
+  }
+}

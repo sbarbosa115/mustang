@@ -1,0 +1,58 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        mustang_users:
+            id: App\Access\Infrastructure\Security\UserProvider
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_MANAGER]
+        ROLE_MANAGER: [ROLE_SALES, ROLE_BDC]
+        ROLE_SALES: [ROLE_USER]
+        ROLE_BDC: [ROLE_USER]
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|build)/
+            security: false
+        main:
+            lazy: true
+            provider: mustang_users
+            user_checker: App\Access\Infrastructure\Security\UserChecker
+            entry_point: App\Access\UI\Http\Security\JsonEntryPoint
+            json_login:
+                check_path: /api/v1/auth/login
+                username_path: email
+                password_path: password
+                success_handler: App\Access\UI\Http\Security\LoginSuccessHandler
+                failure_handler: App\Access\UI\Http\Security\LoginFailureHandler
+            login_throttling:
+                max_attempts: 5
+                interval: '1 minute'
+            logout:
+                path: /api/v1/auth/logout
+            access_denied_handler: App\Access\UI\Http\Security\JsonAccessDeniedHandler
+
+    # The first matching rule applies. The SPA's own pages are public; the API is not.
+    access_control:
+        - { path: ^/api/v1/health$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/auth/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/v1/reports, roles: ROLE_MANAGER }
+        - { path: ^/api/v1/worklist/interventions, roles: ROLE_MANAGER }
+        - { path: ^/api/v1/settings/routing, roles: ROLE_MANAGER }
+        - { path: ^/api/v1/audit, roles: ROLE_ADMIN }
+        - { path: ^/api/v1/users$, roles: ROLE_ADMIN, methods: [POST] }
+        - { path: ^/api/v1/users/, roles: ROLE_ADMIN, methods: [POST, PATCH, PUT, DELETE] }
+        - { path: ^/api/v1/imports, roles: ROLE_MANAGER, methods: [POST] }
+        - { path: ^/api/v1/templates, roles: ROLE_MANAGER, methods: [POST, PATCH, PUT, DELETE] }
+        - { path: ^/api, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

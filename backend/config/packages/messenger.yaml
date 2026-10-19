@@ -1,0 +1,44 @@
+framework:
+    messenger:
+        default_bus: command.bus
+        failure_transport: failed
+
+        buses:
+            command.bus:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_transaction
+            event.bus:
+                default_middleware:
+                    enabled: true
+                    allow_no_handlers: true
+                middleware:
+                    - doctrine_ping_connection
+
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: async
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+            mail:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: mail
+                retry_strategy:
+                    max_retries: 5
+                    multiplier: 2
+            failed: 'doctrine://default?queue_name=failed'
+
+        routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: mail
+            App\Shared\Application\Bus\AsyncMessage: async
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async: 'in-memory://'
+                mail: 'in-memory://'

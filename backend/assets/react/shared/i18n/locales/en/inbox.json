@@ -1,0 +1,130 @@
+{
+  "_owner": "item 10 (inbox.transport.*: 3)",
+  "title": "Inbox",
+  "transport": {
+    "fake_sms": "Test texts",
+    "mailer": "Email"
+  },
+  "folders": {
+    "label": "Folders",
+    "all": "All",
+    "unreplied": "Unreplied",
+    "fumbled": "Fumbled",
+    "count_one": "{{count}} conversation",
+    "count_other": "{{count}} conversations"
+  },
+  "filters": {
+    "search": "Search conversations",
+    "search_placeholder": "Name, phone or email",
+    "rep": "Assigned rep",
+    "everyone": "Everyone",
+    "rep_option": "{{name}} · {{count}} unreplied"
+  },
+  "list": {
+    "label": "Conversations",
+    "column": "Conversation",
+    "empty": {
+      "all": "No conversations yet. They start when you text or email a customer, or when one writes in.",
+      "unreplied": "Nobody is waiting on a reply.",
+      "fumbled": "No customer has waited more than 30 minutes."
+    },
+    "unread_one": "{{count}} unread",
+    "unread_other": "{{count}} unread",
+    "unreplied": "Unreplied",
+    "fumbled": "Fumbled",
+    "you": "You: {{body}}",
+    "no_messages": "No messages yet",
+    "unassigned": "Unassigned"
+  },
+  "pick": {
+    "title": "Pick a conversation to read it and reply."
+  },
+  "thread": {
+    "back": "Back to inbox",
+    "loading": "Loading conversation",
+    "not_found": "This conversation does not exist or is not in your dealership.",
+    "error": "This conversation could not be loaded.",
+    "empty": "No messages yet. Send the first one below.",
+    "messages": "Messages",
+    "open_customer": "Open customer",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "blocked": "Not sent: {{reason}}",
+    "blocked_reason": {
+      "consent_missing": "no consent was recorded",
+      "opted_out": "the customer opted out",
+      "unknown": "consent did not allow it"
+    }
+  },
+  "composer": {
+    "label": "Reply",
+    "channel": "Send as",
+    "channel_blocked": "{{channel}}: {{reason}}",
+    "subject": "Subject",
+    "body": "Message",
+    "body_placeholder": "Write a message",
+    "send": "Send",
+    "sending": "Sending",
+    "sent": "Message sent.",
+    "queued": "Email queued. It goes out in a few seconds.",
+    "shortcut": "Ctrl+Enter sends",
+    "record_consent": "Record consent",
+    "add_contact": "Add a contact",
+    "no_contact": {
+      "text": "No phone number on file for texts",
+      "email": "No email address on file"
+    },
+    "unfilled": "Fill in {{placeholders}} before sending.",
+    "subject_needed": "An email needs a subject.",
+    "error": {
+      "consent_missing": "Not sent: no consent is recorded for this channel. The attempt is kept in the thread.",
+      "opted_out": "Not sent: the customer opted out of this channel. The attempt is kept in the thread.",
+      "contact_missing": "Not sent: the customer has no phone number or email for this channel.",
+      "subject_required": "An email needs a subject.",
+      "channel_not_sendable": "Calls cannot be sent from the inbox. Use the call button.",
+      "template_not_found": "That template was deleted. Pick another one or write the message.",
+      "not_found": "This conversation no longer exists."
+    }
+  },
+  "templates": {
+    "open": "Templates",
+    "title": "Insert a template",
+    "for_channel": "{{channel}} templates"
+  },
+  "vehicle": {
+    "open": "Vehicle",
+    "title": "Send a vehicle",
+    "description": "Find a vehicle in inventory and add its details to the message.",
+    "search": "Search inventory",
+    "search_placeholder": "Stock number, VIN, make or model",
+    "searching": "Searching inventory",
+    "no_results": "No vehicle matches this search.",
+    "pick": "Choose {{title}} ({{stock}})",
+    "add": "Add to message",
+    "message": {
+      "trim": "Trim: {{trim}}",
+      "stock": "Stock #{{stock}}",
+      "mileage": "Mileage: {{mileage}}",
+      "price": "Price: {{price}}",
+      "call_for_price": "Price: call for price",
+      "subject": "The {{title}} you asked about"
+    }
+  },
+  "simulate": {
+    "open": "Simulate a reply",
+    "title": "Simulate a customer reply",
+    "description": "Only in dev and test: a message from a customer's phone or email lands as if they wrote in.",
+    "channel": "Channel",
+    "from": "From",
+    "from_placeholder": "Phone number or email",
+    "subject": "Subject",
+    "body": "Message",
+    "submit": "Add reply",
+    "done": "The reply was added to the conversation.",
+    "error": {
+      "unknown_contact": "No customer of this dealership has that phone number or email.",
+      "invalid_phone": "That is not a valid phone number.",
+      "invalid_email": "That is not a valid email address."
+    }
+  }
+}

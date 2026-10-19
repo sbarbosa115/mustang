@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <title>Mustang</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%231d4ed8%22/><text x=%2216%22 y=%2222%22 font-size=%2218%22 font-family=%22sans-serif%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22white%22>M</text></svg>">
+        <script>
+            // Apply the stored theme before the first paint so dark mode never flashes white.
+            (function () {
+                try {
+                    var t = localStorage.getItem('mustang.theme') || 'system';
+                    var dark = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+                    if (dark) document.documentElement.classList.add('dark');
+                } catch (e) {}
+            })();
+        </script>
+        {{ vite_entry_link_tags('app') }}
+        {{ vite_entry_script_tags('app') }}
+    </head>
+    <body>
+        <div id="root"></div>
+    </body>
+</html>

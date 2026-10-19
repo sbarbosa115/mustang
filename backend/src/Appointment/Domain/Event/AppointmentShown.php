@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Appointment\Domain\Event;
+
+final readonly class AppointmentShown
+{
+    public function __construct(
+        public string $appointmentId,
+        public string $dealershipId,
+        public string $customerId,
+        public ?string $dealId,
+        public \DateTimeImmutable $occurredAt,
+    ) {
+    }
+}

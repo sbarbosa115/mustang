@@ -1,0 +1,5 @@
+stock_number,vin,year,make,model,trim,body,drivetrain,fuel,exterior_color,interior_color,mileage,condition,price,status,photo_url
+SAMPLE-001,1FTFW1E50NFA00001,2024,Ford,F-150,XLT,Truck,4WD,Gas,Blue,Black,18250,used,41900,available,
+SAMPLE-002,,2026,Toyota,RAV4,XLE,SUV,AWD,Hybrid,White,Gray,12,new,36400,available,
+SAMPLE-003,,2023,Honda,CR-V,EX-L,SUV,AWD,Gas,Silver,Tan,21400,cpo,"30,950",hold,
+SAMPLE-004,,2019,Chevrolet,Silverado 1500,LT,Truck,4WD,Gas,Black,Black,64300,used,,in_transit,

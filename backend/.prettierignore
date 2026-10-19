@@ -1,0 +1,24 @@
+public/build/
+vendor/
+var/
+node_modules/
+assets/types/api.d.ts
+assets/types/openapi.json
+*.min.js
+/public/bundles/
+/vendor/
+/var/
+/scripts/
+composer.lock
+package-lock.json
+*.md
+components.json
+
+# Symfony config keeps its own (4-space) YAML style.
+*.yaml
+*.yml
+*.neon
+composer.json
+config/
+migrations/
+templates/

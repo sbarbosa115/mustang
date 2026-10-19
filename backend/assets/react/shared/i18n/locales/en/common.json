@@ -1,0 +1,116 @@
+{
+  "_owner": "item 0",
+  "app_name": "Mustang",
+  "action": {
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "search": "Search",
+    "clear": "Clear"
+  },
+  "list": {
+    "loading": "Loading",
+    "error": "This list could not be loaded.",
+    "filtered_empty": "Nothing matches these filters.",
+    "show_all": "Show all",
+    "pagination": "Pages",
+    "range": "{{from}}–{{to}} of {{total}}",
+    "previous": "Previous page",
+    "next": "Next page"
+  },
+  "stage": {
+    "new": "New",
+    "engaged": "Engaged",
+    "appointment": "Appointment",
+    "visit": "Visit",
+    "proposal": "Proposal",
+    "sold": "Sold",
+    "delivered": "Delivered",
+    "lost": "Lost",
+    "days_in_stage_one": "· {{count}} day",
+    "days_in_stage_other": "· {{count}} days"
+  },
+  "channel": {
+    "text": "Text",
+    "email": "Email",
+    "call": "Call",
+    "video": "Video",
+    "actions": "Contact",
+    "action": {
+      "text": "Send a text",
+      "email": "Send an email",
+      "call": "Call"
+    },
+    "blocked": {
+      "missing": "No consent recorded for {{channel}}",
+      "revoked": "Consent for {{channel}} was revoked",
+      "opted_out": "This contact opted out of {{channel}}",
+      "granted": ""
+    }
+  },
+  "consent": {
+    "label": "Consent by channel",
+    "chip": "{{channel}}: {{state}}",
+    "state": {
+      "granted": "Granted",
+      "missing": "Missing",
+      "revoked": "Revoked",
+      "opted_out": "Opted out"
+    },
+    "help": {
+      "granted": "Consent is recorded; you can use this channel.",
+      "missing": "No consent recorded yet. Record it before contacting this way.",
+      "revoked": "The customer revoked consent for this channel.",
+      "opted_out": "This contact replied STOP or unsubscribed. Mustang will not send."
+    }
+  },
+  "message": {
+    "status": {
+      "queued": "Sending",
+      "failed": "Not delivered"
+    }
+  },
+  "priority": {
+    "hot": "Contact now"
+  },
+  "intervention": {
+    "assignee": "Assigned to {{name}}",
+    "unassigned": "Unassigned",
+    "at_risk": "{{amount}} at risk",
+    "assign_to_me": "Assign to me"
+  },
+  "kpi": {
+    "delta": {
+      "up": "Up from the previous period",
+      "down": "Down from the previous period",
+      "flat": "Same as the previous period"
+    }
+  },
+  "vehicle": {
+    "condition": {
+      "new": "New",
+      "used": "Used",
+      "cpo": "Certified"
+    },
+    "status": {
+      "available": "Available",
+      "hold": "On hold",
+      "sold": "Sold",
+      "in_transit": "In transit"
+    },
+    "call_for_price": "Call for price"
+  },
+  "error": {
+    "generic": "Something went wrong. Try again.",
+    "not_found": "This record does not exist or is not in your dealership.",
+    "forbidden": "You do not have access to this.",
+    "validation": "Some fields need attention.",
+    "not_implemented": "This part of Mustang is not built yet.",
+    "too_many_attempts": "Too many attempts. Wait a minute and try again.",
+    "cross_origin": "This request must come from the Mustang app."
+  }
+}

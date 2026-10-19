@@ -1,0 +1,32 @@
+# Deptrac: the layers inside every context (steps/04-build.md §4.1). UI -> Application -> Domain;
+# Infrastructure -> Application, Domain. The Domain and the Application name no framework class (Doctrine's mapping
+# attributes, collections and Symfony's Uid excepted). Run: composer deptrac (both configs).
+deptrac:
+  paths: [./src]
+  layers:
+    - name: Domain
+      collectors:
+        - { type: classLike, value: '^App\\[A-Za-z]+\\Domain\\.*' }
+    - name: Application
+      collectors:
+        - { type: classLike, value: '^App\\[A-Za-z]+\\Application\\.*' }
+    - name: Infrastructure
+      collectors:
+        - { type: classLike, value: '^App\\[A-Za-z]+\\Infrastructure\\.*' }
+    - name: UI
+      collectors:
+        - { type: classLike, value: '^App\\[A-Za-z]+\\UI\\.*' }
+    - name: Framework
+      collectors:
+        - type: bool
+          must:
+            - { type: classLike, value: '^(Symfony|Doctrine|Nelmio|OpenApi|Psr)\\.*' }
+          must_not:
+            - { type: classLike, value: '^Doctrine\\ORM\\Mapping\\.*' }
+            - { type: classLike, value: '^Doctrine\\Common\\Collections\\.*' }
+            - { type: classLike, value: '^Symfony\\Component\\Uid\\.*' }
+  ruleset:
+    Domain: ~
+    Application: [Domain]
+    Infrastructure: [Application, Domain, Framework]
+    UI: [Application, Domain, Framework]
