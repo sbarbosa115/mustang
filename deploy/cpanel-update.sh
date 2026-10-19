@@ -287,27 +287,32 @@ else
         --default-character-set=utf8mb4 --add-drop-table "$@" "$DB_NAME" > "$BACKUP" ); }
 
     if ! dump 2>"$DB_CONF.err"; then
-        # A MariaDB client against a MySQL server (or the reverse) refuses the server's self-signed certificate.
-        # On a loopback connection there is nothing to protect, so retry without the check rather than block the
-        # deploy; the flag differs between the two clients.
+        # The client and the server disagree about TLS: a MariaDB 11 client insists on it while cPanel's local
+        # database often has none, and a MariaDB client refuses a MySQL server's self-signed certificate. On a
+        # loopback connection there is nothing to protect, so retry without it rather than block the deploy; the
+        # flags differ between the two clients.
         DB_HOST="$(grep '^host=' "$DB_CONF" | cut -d= -f2-)"
-        TLS_OFF=""
+        TLS_RETRIES=()
         case "$DB_HOST" in
             localhost|127.0.0.1|::1)
                 if mysqldump --help 2>/dev/null | grep -q -- '--ssl-mode'; then
-                    TLS_OFF="--ssl-mode=DISABLED"
+                    TLS_RETRIES=(--ssl-mode=DISABLED)
                 else
-                    TLS_OFF="--skip-ssl-verify-server-cert"
+                    TLS_RETRIES=(--skip-ssl-verify-server-cert --skip-ssl)
                 fi
                 ;;
         esac
-        if [[ -z "$TLS_OFF" ]] || ! dump "$TLS_OFF"; then
+        DUMPED=0
+        for flag in "${TLS_RETRIES[@]}"; do
+            if dump "$flag" 2>>"$DB_CONF.err"; then DUMPED=1; break; fi
+        done
+        if [[ "$DUMPED" != "1" ]]; then
             sed 's/^/    /' "$DB_CONF.err" >&2
             # Leave no half-written file behind: an empty .sql in the home directory reads like a real backup.
             rm -f "$DB_CONF.err" "$BACKUP"
             fail "The backup failed, so nothing was migrated. The database is untouched."
         fi
-        warn "The database refused a verified TLS connection; the backup was taken over plain loopback."
+        warn "The database refused the client's TLS settings; the backup was taken over plain loopback ($flag)."
     fi
     rm -f "$DB_CONF.err"
 

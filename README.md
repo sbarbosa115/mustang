@@ -35,8 +35,8 @@ docker compose exec php php bin/console mustang:seed-demo
 
 ## Production
 
-There is no production deployment yet. Whoever builds it sets these in the real environment (or `.env.prod.local`,
-or Symfony secrets), never in a committed file: `backend/.env` holds development values only.
+Production settings go in the real environment (or `backend/.env.local`, or Symfony secrets), never in a committed
+file: `backend/.env` holds development values only.
 
 | Variable | Production value |
 |---|---|
@@ -47,8 +47,30 @@ or Symfony secrets), never in a committed file: `backend/.env` holds development
 | `APP_URL` | The public `https://` origin: the same-origin check on state-changing requests compares `Origin` with it |
 | `TRUSTED_PROXIES` | The TLS-terminating proxy, so client IPs (sign-in throttling, audit log) and HTTPS are seen correctly |
 
-The session cookie is `Secure` in prod whatever the proxy says. The TLS proxy adds HSTS
-(`Strict-Transport-Security: max-age=31536000`); the app sets the other security headers itself.
+The session cookie is `Secure` in prod whatever the proxy says. Whatever terminates TLS adds HSTS
+(`Strict-Transport-Security: max-age=31536000`; on cPanel the deployed `.htaccess` does); the app sets the other
+security headers itself.
+
+### On a cPanel account
+
+`deploy/cpanel-update.sh` installs and updates Mustang on a cPanel account over SSH. The first-time steps are at
+its top. In short:
+
+1. Clone the repository to `~/mustang` and point the domain's document root at `~/mustang/backend/public`, with SSL on.
+2. Create the database and its user (MySQL Databases), then copy `deploy/env.local.example` to `backend/.env.local`,
+   fill it in and `chmod 600` it.
+3. Run `./deploy/cpanel-update.sh`. It checks the settings and both PHPs (command line and the one Apache uses), pulls, installs,
+   builds the UI with Vite (Node 20.19+ or 22.12+; cPanel › Setup Node.js App), backs the database up before any
+   migration, writes the Apache rules between markers in cPanel's own `.htaccess`, and checks the cron line.
+4. Open the first dealership: `php backend/bin/console mustang:dealership:open "Name" admin@example.com
+   --first-name=… --last-name=… --timezone=America/New_York --env=prod`. It asks for the admin's password (or makes
+   one and shows it once); the admin sets up two-step sign-in on the first sign-in and adds the team from Settings.
+5. Add the one cron line it prints (every minute): the queue worker that sends email and appointment reminders and
+   runs the spreadsheet imports.
+
+After that, every update is `cd ~/mustang && ./deploy/cpanel-update.sh`. It assumes PHP runs as the account (cPanel's
+PHP-FPM or suPHP), so the `chmod 600` settings file stays readable to the site. Texts still use the fake carrier: they
+show as sent but never leave the server, and the script says so on every run.
 
 ## Stack
 

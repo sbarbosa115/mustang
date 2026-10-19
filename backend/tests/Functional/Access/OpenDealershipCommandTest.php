@@ -3,11 +3,15 @@
 namespace App\Tests\Functional\Access;
 
 use App\Tests\Support\ApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 final class OpenDealershipCommandTest extends ApiTestCase
 {
+    /**
+     * @param array<string, string> $input
+     */
     private function open(array $input): CommandTester
     {
         $tester = new CommandTester(new Application(static::$kernel ?? static::bootKernel())->find('mustang:dealership:open'));
@@ -73,7 +77,10 @@ final class OpenDealershipCommandTest extends ApiTestCase
         yield 'no last name' => [['--last-name' => ''], 'name'];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('badInput')]
+    /**
+     * @param array<string, string> $override
+     */
+    #[DataProvider('badInput')]
     public function testBadInputIsRefusedWithTheReason(array $override, string $reason): void
     {
         $tester = $this->open($override + ['name' => 'Bad Input Motors', 'email' => 'x@badinput.example', '--first-name' => 'A', '--last-name' => 'B']);
