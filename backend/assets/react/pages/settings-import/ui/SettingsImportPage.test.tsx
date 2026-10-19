@@ -14,7 +14,10 @@ describe('SettingsImportPage', () => {
     renderWithProviders(<SettingsImportPage />, {route: '/settings/import'});
 
     expect(
-      screen.getByRole('heading', {level: 2, name: 'Import customers and leads'}),
+      screen.getByRole('heading', {
+        level: 2,
+        name: 'Import customers and leads',
+      }),
       'a screen reader lists headings; a styled div is not one',
     ).toBeVisible();
   });
