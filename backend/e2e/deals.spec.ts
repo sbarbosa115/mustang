@@ -51,6 +51,9 @@ test('DEAL-01 · a rep sees the open deals by stage', async ({signedInAs}) => {
   await expect(page.getByText('James Rodriguez')).toBeVisible();
 
   await page.getByText('Open deals', {exact: true}).click();
+  // Wait for the view to switch before typing: both write the URL, and a search typed in the same tick as the
+  // switch is merged into the previous URL and brings the Lost view back.
+  await expect(page.getByRole('radio', {name: 'Open deals'})).toBeChecked();
   await page.getByLabel('Search by customer or vehicle').fill('zzz');
   await expect(page.getByText('No deals match these filters.')).toBeVisible();
   await page.getByRole('button', {name: 'Show all'}).click();

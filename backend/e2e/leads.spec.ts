@@ -56,7 +56,7 @@ test('LEAD-01 · capture a walk-in for a new customer', async ({signedInAs}) => 
   // Whoever is next in the rotation (earlier specs add and move reps), but someone, never "Unassigned".
   const assignee = page
     .locator('dl > div')
-    .filter({has: page.getByText('Assignee', {exact: true})});
+    .filter({has: page.getByText('Rep', {exact: true})});
   await expect(assignee.locator('dd')).not.toHaveText('Unassigned');
   await expect(assignee.locator('dd')).not.toBeEmpty();
 
