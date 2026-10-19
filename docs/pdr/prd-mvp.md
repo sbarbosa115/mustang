@@ -401,3 +401,43 @@ coordinator writes `docs/security/policies.md` content at finish and the user co
   hosting's disk encryption plus field-level encryption of MFA secrets (NFR-01); the retention, incident-response and
   subprocessor documents (NFR-05) are drafted for the user to confirm; audit entries are never pruned.
 - Pilot KPI targets (Success metrics) are not set; the dashboard shows values and deltas only.
+
+## Timeline
+
+Recorded with `timeline.py`, from 2026-10-18 15:59 to 2026-10-18 20:32. Active time leaves out the pauses.
+
+| Step | Started | Active | Wall clock |
+|---|---|---|---|
+| Plan | 2026-10-18 15:59 | 7m | 7m |
+| Item 0 (contract) | 2026-10-18 16:05 | 1h 30m | 1h 30m |
+| Build test-first | 2026-10-18 17:37 | 18m | 18m |
+| Merging the items | 2026-10-18 17:54 | 1h 21m | 1h 21m |
+| Barrier (waiting for the items) | 2026-10-18 19:16 | 9m | 9m |
+| Gate | 2026-10-18 17:36 | 3m | 3m |
+| Full PHPUnit + Vitest | 2026-10-18 19:26 | 3m | 3m |
+| Security audit | 2026-10-18 19:28 | 1m | 1m |
+| Regression run (smoke, then manual) | 2026-10-18 19:30 | 58m | 58m |
+| Definition of done | 2026-10-18 20:28 | 4m | 4m |
+| Pull request | 2026-10-18 20:32 | 1m | 1m |
+| **Total** | | **4h 33m** | **4h 33m** |
+
+The items of the split (from git: branch created → merged into the base branch):
+
+| Item | Started | Merged | Took |
+|---|---|---|---|
+| appointments | 2026-10-18 18:28 | 2026-10-18 18:53 | 25m |
+| audit-log | 2026-10-18 18:54 | 2026-10-18 19:14 | 20m |
+| compliance | 2026-10-18 17:58 | 2026-10-18 18:20 | 23m |
+| customers | 2026-10-18 17:37 | 2026-10-18 17:54 | 18m |
+| dashboard | 2026-10-18 18:54 | 2026-10-18 19:10 | 15m |
+| data-import | 2026-10-18 18:21 | 2026-10-18 18:44 | 23m |
+| deals | 2026-10-18 17:58 | 2026-10-18 18:27 | 30m |
+| inbox-ui | 2026-10-18 18:30 | 2026-10-18 18:54 | 24m |
+| inventory | 2026-10-18 17:37 | 2026-10-18 17:56 | 20m |
+| leads | 2026-10-18 17:55 | 2026-10-18 18:16 | 21m |
+| messaging-api | 2026-10-18 17:37 | 2026-10-18 17:57 | 20m |
+| mfa | 2026-10-18 17:37 | 2026-10-18 18:01 | 24m |
+| templates | 2026-10-18 18:17 | 2026-10-18 18:29 | 13m |
+| timeline | 2026-10-18 18:54 | 2026-10-18 19:07 | 13m |
+| users-admin | 2026-10-18 18:17 | 2026-10-18 18:39 | 22m |
+| worklist | 2026-10-18 18:54 | 2026-10-18 19:23 | 29m |
